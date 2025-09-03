@@ -1,6 +1,6 @@
 # Membership Manager WordPress Plugin
 
-En simpel WordPress-plugin til at håndtere medlemskaber, fornyelser og udsende påmindelsesmails.
+Et simpelt WordPress-plugin til at håndtere medlemskaber, fornyelser og udsende påmindelsesmails.
 
 ## Funktioner
 
@@ -8,7 +8,7 @@ En simpel WordPress-plugin til at håndtere medlemskaber, fornyelser og udsende 
 *   **Automatiske E-mail Påmindelser:** Sender automatisk påmindelser ud til medlemmer, hvis medlemskab er ved at udløbe.
 *   **Skabelonbaserede E-mails:** E-mail skabeloner for 1, 7, 14 og 30 dage før udløb.
 *   **Manuelle Fornyelser:** Understøtter processer for manuelle fornyelser.
-*   **Indstillingsside:** Konfigurer plugin-indstillinger fra WordPress-administratoren.
+*   **Indstillingsside:** Konfigurer plugin-indstillinger.
 *   **Klar til oversættelse:** Inkluderer en `.pot`-fil til nem oversættelse.
 
 ## Installation
