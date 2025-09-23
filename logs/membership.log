@@ -1,0 +1,1312 @@
+[2025-09-22 02:45:48] [INFO] - Starting WooCommerce subscription migration.
+[2025-09-22 02:49:42] [INFO] - Starting WooCommerce subscription migration.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 434
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 825
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 809
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 787
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 786
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 656
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 784
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 781
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 780
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 772
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 229
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 683
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 771
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 770
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 769
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 768
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 767
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 766
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 765
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 400
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 763
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 558
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 762
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 761
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 24
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 24. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 759
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 759. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 758
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 397
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 670
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 755
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 74
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 754
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 23
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 1
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 753
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 752
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 751
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 750
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 747
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 746
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 745
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 744
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 743
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 742
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 741
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 740
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 737
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 736
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 735
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 734
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 733
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 732
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 731
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 730
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 729
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 728
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 727
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 725
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 724
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 723
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 723. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 722
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 721
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 720
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 719
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 718
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 716
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 712
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 709
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 708
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 707
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 707. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 706
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 705
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 704
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 701
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 700
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 699
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 697
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 695
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 693
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 692
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 691
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 690
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 687
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 449
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 681
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 680
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 679
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 678
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 677
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 675
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 237
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 57
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 302
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 228
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 673
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 672
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 177
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 549
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 217
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 447
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 435
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 670. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 671
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 365
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 244
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 669
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 668
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 667
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 666
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 665
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 661
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 664
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 663
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 662
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 661. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 660
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 659
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 658
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 657
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 654
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 652
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 651
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 650
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 649
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 648
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 647
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 647. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 314
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 646
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 644
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 643
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 642
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 32
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 638
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 637
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 636
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 635
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 55
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 634
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 555
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 633
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 632
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 631
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 630
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 628
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 627
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 625
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 624
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 11
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 623
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 622
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 620
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 619
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 618
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 617
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 616
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 615
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 614
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 613
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 611
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 610
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 609
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 606
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 604
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 603
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 602
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 601
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 600
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 62
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 599
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 599. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 598
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 597
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 596
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 595
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 165
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 592
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 591
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 351
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 155
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 590
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 586
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 291
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 17
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 62. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 123
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 374
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 59
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 334
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 167
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 202
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 263
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 179
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 16
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 414
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 584
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 279
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 87
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 324
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 28
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 160
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 82
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 262
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 99
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 583
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 37
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 53
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 56
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 580
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 581
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 579
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 578
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 575
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 440
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 573
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 572
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 562
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 571
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 101
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 563
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 566
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 568
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 564
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 567
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 569
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 565
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 561
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 562. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 274
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 197
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 560
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 436
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 204
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 363
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 254
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 394
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 557
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 559
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 558. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 254. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 556
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 554
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 552
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 551
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 550
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 548
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 546
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 544
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 545
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 543
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 547
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 536
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 541
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 530
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 535
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 531
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 530. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 542
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 532
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 540
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 537
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 538
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 533
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 534
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 96
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 529
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 528
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 527
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 525
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 525. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 522
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 518
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 521
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 519
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 510
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 514
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 520
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 515
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 512
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 513
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 507
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 481
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 491
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 499
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 479
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 487
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 502
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 485
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 506
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 488
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 490
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 501
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 480
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 496
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 500
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 504
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 494
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 498
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 486
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 503
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 478
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 505
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 489
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 492
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 497
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 483
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 484
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 477
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 473
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 467
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 466
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 468
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 471
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 472
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 469
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 470
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 465
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 475
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 459
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 458
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 450
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 457
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 463
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 462
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 461
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 474
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 456
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 454
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 453
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 449. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 445
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 444
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 442
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 443
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 438
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 437
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 428
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 424
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 41
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 422
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 88
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 420
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 418
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 416
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 415
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 412
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 406
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 403
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 402
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 402. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 401
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 400. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 398
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 396
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 76
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 395
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 240
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 44
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 388
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 386
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 382
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 362
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 360
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 358
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 218
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 355
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 352
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 2
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 264
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 248
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 207
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 349
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 12
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 277
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 303
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 344
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 201
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 337
+[2025-09-22 02:49:44] [INFO] - Subscription already exists for user ID: 334. Skipping.
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 333
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 330
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 328
+[2025-09-22 02:49:44] [INFO] - Migrated subscription for user ID: 326
+[2025-09-22 02:49:45] [INFO] - Subscription already exists for user ID: 74. Skipping.
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 162
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 321
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 85
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 313
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 305
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 301
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 288
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 272
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 84
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 256
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 238
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 233
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 103
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 222
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 156
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 219
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 213
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 187
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 208
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 200
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 191
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 180
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 174
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 166
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 161
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 140
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 132
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 121
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 108
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 98
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 50
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 60
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 52
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 47
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 45
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 36
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 27
+[2025-09-22 02:49:45] [INFO] - Migrated subscription for user ID: 14
+[2025-09-22 02:49:45] [INFO] - Finished WooCommerce subscription migration. Migrated 407 subscriptions.
+[2025-09-22 03:17:37] [INFO] - Starting WooCommerce subscription migration.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 434. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 825: 2026-08-13 06:02:24
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 825. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 809: 2026-08-05 12:25:54
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 809. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 787: 2026-06-29 10:54:04
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 787. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 786: 2026-06-22 01:12:27
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 786. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 656. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 784: 2026-06-03 01:16:17
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 784. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 781: 2026-05-03 01:13:14
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 781. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 780: 2026-05-01 03:34:06
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 780. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 772: 2026-04-14 00:19:37
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 772. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 229: 2026-04-05 00:20:06
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 229. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 683: 2026-04-05 00:18:44
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 683. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 771: 2026-04-02 00:21:19
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 771. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 770: 2026-04-01 05:18:25
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 770. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 769: 2026-04-01 05:17:46
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 769. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 768: 2026-03-30 13:15:48
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 768. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 767: 2026-04-01 05:11:25
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 767. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 766: 2026-03-31 01:48:19
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 766. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 765: 2026-03-31 01:49:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 765. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 400: 2026-03-31 01:47:20
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 400. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 763: 2026-03-21 01:18:07
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 763. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 558: 2026-03-18 19:25:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 558. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 762: 2026-03-20 01:15:55
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 762. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 761: 2026-03-04 01:25:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 761. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 24: 2026-02-19 13:18:41
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 24. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 24. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 759: 2026-02-17 11:48:22
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 759. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 759: 2026-02-10 19:17:44
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 759. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 758: 2026-02-08 01:18:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 758. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 397: 2026-02-07 01:19:01
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 397. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 670: 2026-01-07 01:20:09
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 670. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 755: 2026-01-07 01:18:41
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 755. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 74: 2026-01-05 01:17:30
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 74. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 754: 2026-01-01 03:39:29
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 754. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 23: 2025-12-30 02:41:39
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 23. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 1: 2025-12-21 01:28:45
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 1. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 753: 2025-12-13 01:21:50
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 753. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 752. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 751: 2025-10-22 10:35:35
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 751. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 750: 2025-10-22 00:20:36
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 750. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 747: 2025-09-02 02:08:52
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 747. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 746: 2025-09-02 02:07:58
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 746. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 745: 2025-09-02 02:08:52
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 745. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 744: 2025-09-02 02:07:50
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 744. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 743: 2025-09-02 02:09:23
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 743. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 742: 2025-09-02 02:06:43
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 742. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 741: 2025-09-02 02:07:23
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 741. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 740: 2025-09-02 02:05:57
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 740. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 737: 2025-09-02 02:05:12
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 737. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 736: 2025-09-02 02:04:21
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 736. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 735: 2025-09-02 02:04:12
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 735. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 734: 2025-09-02 02:03:29
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 734. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 733: 2025-08-31 08:06:04
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 733. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 732: 2025-09-02 02:04:24
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 732. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 731: 2025-08-30 01:22:53
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 731. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 730: 2025-08-30 01:25:36
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 730. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 729: 2025-08-28 18:37:57
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 729. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 728: 2025-08-30 01:23:04
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 728. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 727: 2025-08-30 01:24:22
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 727. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 725: 2025-08-17 21:32:46
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 725. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 724: 2025-08-19 00:20:18
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 724. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 723: 2025-07-26 00:06:18
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 723. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 723: 2025-07-26 00:06:28
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 723. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 722: 2025-07-25 00:08:00
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 722. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 721: 2025-07-25 00:07:47
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 721. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 720: 2025-07-21 00:23:00
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 720. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 719: 2025-07-02 17:56:32
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 719. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 718: 2025-06-29 21:59:47
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 718. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 716: 2025-05-22 23:18:06
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 716. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 712: 2025-05-14 23:25:04
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 712. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 709: 2025-05-07 23:21:37
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 709. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 708: 2025-05-05 20:48:26
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 708. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 707: 2025-05-06 23:43:44
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 707. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 707: 2025-05-06 23:42:39
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 707. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 706: 2025-05-06 23:43:42
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 706. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 705: 2025-05-06 23:43:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 705. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 704: 2025-05-06 23:42:57
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 704. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 701. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 700: 2025-05-06 23:40:45
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 700. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 699: 2025-05-05 11:06:54
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 699. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 697: 2025-05-06 23:41:38
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 697. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 695: 2025-05-06 23:41:24
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 695. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 693: 2025-05-06 23:41:38
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 693. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 692: 2025-05-06 23:42:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 692. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 691: 2025-05-06 23:42:29
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 691. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 690: 2025-05-05 09:24:13
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 690. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 687: 2025-04-30 01:29:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 687. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 449: 2025-04-25 12:41:46
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 449. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 681: 2025-04-05 00:25:58
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 681. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 680: 2025-04-05 00:23:42
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 680. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 679: 2025-04-03 23:29:45
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 679. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 678: 2025-04-01 03:29:02
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 678. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 677: 2025-03-30 08:37:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 677. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 675: 2025-03-14 00:28:21
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 675. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 237: 2025-03-11 16:26:20
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 237. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 57: 2025-03-12 03:21:13
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 57. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 302: 2025-03-09 01:33:19
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 302. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 228: 2025-03-06 16:21:08
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 228. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 673: 2025-03-06 14:36:20
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 673. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 672: 2025-03-06 01:21:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 672. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 177: 2025-03-05 01:16:37
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 177. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 549: 2025-03-02 01:36:19
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 549. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 217: 2025-03-01 10:11:06
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 217. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 447: 2025-03-02 01:35:03
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 447. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 435: 2025-03-02 01:13:57
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 435. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 670: 2025-04-05 00:15:49
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 670. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 671: 2025-02-26 01:40:29
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 671. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 365: 2025-02-24 01:25:50
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 365. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 244: 2025-02-24 01:10:41
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 244. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 669: 2025-02-20 01:11:36
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 669. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 668: 2025-02-14 01:02:14
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 668. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 667: 2025-02-13 01:16:19
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 667. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 666: 2025-02-13 01:20:35
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 666. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 665. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 661. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 664: 2025-02-13 01:20:09
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 664. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 663: 2025-02-13 01:21:14
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 663. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 662: 2025-02-13 01:30:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 662. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 661: 2025-02-13 01:29:11
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 661. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 660: 2025-02-13 01:22:36
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 660. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 659: 2025-02-13 22:56:22
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 659. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 658: 2025-02-11 09:50:12
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 658. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 657: 2025-02-13 01:18:30
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 657. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 654: 2025-02-10 01:11:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 654. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 652: 2025-02-05 04:30:35
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 652. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 651: 2025-02-05 01:12:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 651. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 650: 2025-02-05 01:31:08
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 650. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 649. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 648: 2025-02-03 01:16:46
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 648. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 647: 2025-02-03 01:15:00
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 647. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 647: 2025-02-03 01:08:11
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 647. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 314: 2025-04-26 09:49:18
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 314. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 646: 2025-02-01 01:52:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 646. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 644: 2025-02-01 01:39:55
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 644. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 643: 2025-02-01 03:26:11
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 643. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 642. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 32: 2025-01-31 01:32:45
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 32. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 638: 2025-01-29 01:09:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 638. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 637: 2025-01-28 01:36:45
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 637. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 636: 2025-01-28 01:31:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 636. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 635: 2025-01-28 01:02:45
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 635. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 55: 2025-01-28 01:23:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 55. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 634: 2025-01-27 20:22:25
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 634. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 555: 2025-01-27 01:26:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 555. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 633: 2025-01-27 01:04:25
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 633. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 632: 2025-01-25 18:04:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 632. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 631: 2025-01-27 01:00:30
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 631. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 630: 2025-01-27 01:05:11
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 630. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 628: 2025-01-25 09:47:01
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 628. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 627: 2025-01-27 01:03:55
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 627. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 625: 2025-01-26 01:00:48
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 625. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 624: 2025-01-25 01:12:58
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 624. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 11: 2025-01-24 01:08:27
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 11. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 623: 2025-01-24 01:13:42
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 623. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 622: 2025-01-24 01:11:02
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 622. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 620: 2025-01-24 01:03:02
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 620. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 619: 2025-01-23 01:19:02
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 619. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 618: 2025-03-30 14:10:36
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 618. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 617: 2025-01-22 01:33:28
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 617. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 616: 2025-01-22 01:24:43
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 616. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 615: 2025-01-22 01:17:48
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 615. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 614: 2025-01-22 01:14:22
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 614. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 613: 2025-01-16 01:10:10
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 613. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 611: 2024-12-13 01:15:00
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 611. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 610: 2024-11-26 01:06:12
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 610. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 609: 2024-11-20 10:29:27
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 609. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 606: 2024-10-14 00:04:56
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 606. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 604: 2024-08-20 14:35:58
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 604. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 603: 2024-08-21 00:11:21
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 603. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 602: 2024-08-21 00:08:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 602. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 601: 2024-08-21 00:19:21
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 601. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 600: 2024-08-21 00:47:35
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 600. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 62: 2024-08-10 00:13:02
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 62. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 599: 2024-06-19 09:55:18
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 599. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 599: 2024-06-19 09:50:28
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 599. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 598: 2024-06-12 00:25:19
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 598. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 597: 2024-06-10 00:24:03
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 597. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 596: 2024-06-09 00:13:48
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 596. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 595: 2024-06-05 00:07:24
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 595. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 165: 2024-05-30 00:18:18
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 165. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 592: 2024-04-26 15:44:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 592. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 591: 2024-04-22 00:34:44
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 591. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 351: 2024-04-20 00:15:09
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 351. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 155: 2024-04-18 00:16:43
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 155. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 590: 2024-04-18 00:09:08
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 590. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 586: 2024-04-14 00:21:32
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 586. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 291: 2024-04-14 00:10:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 291. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 17: 2024-04-13 00:12:22
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 17. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 62: 2024-04-09 00:04:32
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 62. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 123: 2024-04-09 00:17:00
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 123. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 374: 2024-04-06 00:04:22
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 374. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 59: 2024-04-06 00:36:49
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 59. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 334: 2024-04-04 08:09:20
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 334. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 167: 2024-04-05 00:27:29
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 167. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 202: 2024-04-05 00:12:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 202. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 263: 2024-04-03 13:45:47
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 263. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 179: 2024-04-05 00:52:30
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 179. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 16: 2024-04-05 00:09:01
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 16. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 414: 2024-04-05 00:16:00
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 414. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 584: 2024-04-04 00:03:47
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 584. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 279: 2024-04-04 00:17:01
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 279. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 87: 2024-04-04 00:46:36
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 87. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 324: 2024-04-02 13:01:52
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 324. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 28: 2024-04-04 00:26:22
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 28. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 160: 2024-04-04 00:34:56
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 160. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 82: 2024-04-04 00:00:57
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 82. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 262: 2024-04-04 00:33:11
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 262. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 99: 2024-04-04 00:26:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 99. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 583: 2024-04-04 00:16:02
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 583. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 37: 2024-04-04 00:41:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 37. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 53: 2024-04-04 00:45:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 53. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 56: 2024-04-04 00:08:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 56. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 580: 2024-03-28 00:33:46
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 580. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 581: 2024-03-28 00:10:48
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 581. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 579: 2024-03-20 01:08:32
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 579. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 578: 2024-03-12 01:10:17
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 578. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 575: 2024-03-09 01:30:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 575. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 440: 2024-03-09 01:05:19
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 440. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 573. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 572: 2024-03-07 01:21:11
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 572. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 562: 2024-03-02 01:30:28
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 562. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 571: 2024-03-01 03:00:40
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 571. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 101: 2024-02-23 01:11:19
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 101. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 563: 2024-02-21 01:30:35
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 563. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 566: 2024-02-21 01:28:47
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 566. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 568: 2024-02-21 01:25:15
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 568. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 564: 2024-02-21 01:24:35
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 564. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 567: 2024-02-21 01:24:26
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 567. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 569: 2024-02-21 01:10:12
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 569. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 565: 2024-02-21 01:02:32
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 565. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 561: 2024-02-18 01:28:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 561. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 562: 2024-02-18 01:15:28
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 562. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 274: 2024-02-17 05:46:33
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 274. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 197: 2024-02-13 01:04:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 197. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 560: 2024-02-10 01:17:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 560. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 436: 2024-02-09 01:20:25
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 436. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 204: 2024-02-07 01:19:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 204. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 363: 2024-02-07 01:04:41
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 363. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 254: 2024-02-06 16:42:06
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 254. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 394: 2024-02-06 01:17:53
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 394. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 557: 2024-02-04 01:35:14
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 557. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 559: 2024-02-02 19:50:48
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 559. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 558: 2024-02-02 17:50:54
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 558. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 254: 2024-02-02 14:46:25
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 254. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 556: 2024-02-02 09:11:58
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 556. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 554: 2024-01-20 08:50:28
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 554. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 552: 2024-01-04 01:22:35
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 552. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 551: 2023-12-28 01:08:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 551. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 550: 2023-12-12 12:15:06
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 550. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 548: 2023-12-09 01:04:13
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 548. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 546: 2023-12-07 01:20:58
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 546. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 544: 2023-12-07 01:12:40
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 544. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 545: 2023-12-07 01:11:23
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 545. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 543: 2023-12-07 01:10:28
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 543. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 547: 2023-12-06 07:52:15
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 547. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 536: 2023-11-28 01:38:39
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 536. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 541: 2023-11-28 01:30:33
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 541. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 530. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 535. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 531: 2023-11-28 01:29:10
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 531. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 530: 2023-11-28 01:26:30
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 530. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 542: 2023-11-28 01:22:55
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 542. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 532. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 540: 2023-11-28 01:18:59
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 540. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 537: 2023-11-28 01:17:54
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 537. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 538: 2023-11-28 01:17:04
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 538. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 533: 2023-11-28 01:09:14
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 533. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 534: 2023-11-28 01:08:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 534. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 96: 2023-11-28 01:01:45
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 96. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 529: 2023-10-07 00:17:10
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 529. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 528: 2023-09-02 07:01:36
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 528. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 527: 2023-09-01 03:21:08
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 527. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 525: 2023-07-30 00:01:37
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 525. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 525: 2023-07-30 00:01:26
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 525. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 522: 2023-06-26 00:16:37
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 522. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 518: 2023-06-25 11:39:14
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 518. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 521. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 519: 2023-06-25 00:29:30
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 519. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 510: 2023-06-25 00:28:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 510. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 514: 2023-06-25 00:22:50
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 514. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 520: 2023-06-25 00:17:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 520. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 515: 2023-06-25 00:17:04
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 515. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 512: 2023-06-25 00:16:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 512. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 513: 2023-06-25 00:00:52
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 513. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 507: 2023-06-21 06:18:21
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 507. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 481: 2023-06-18 06:43:11
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 481. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 491: 2023-06-18 00:28:06
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 491. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 499. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 479: 2023-06-18 00:21:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 479. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 487: 2023-06-18 00:20:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 487. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 502: 2023-06-18 00:19:22
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 502. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 485. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 506: 2023-06-18 00:17:15
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 506. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 488: 2023-06-18 00:17:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 488. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 490: 2023-06-18 00:15:27
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 490. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 501: 2023-06-18 00:14:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 501. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 480. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 496: 2023-06-18 00:11:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 496. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 500: 2023-06-18 00:11:06
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 500. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 504: 2023-06-18 00:10:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 504. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 494: 2023-06-18 00:10:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 494. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 498. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 486: 2023-06-18 00:09:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 486. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 503. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 478: 2023-06-18 00:08:57
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 478. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 505: 2023-06-18 00:05:12
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 505. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 489: 2023-06-18 00:03:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 489. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 492: 2023-06-18 00:03:01
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 492. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 497: 2023-06-18 00:02:15
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 497. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 483: 2023-06-18 00:00:57
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 483. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 484: 2023-06-18 00:00:32
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 484. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 477. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 473: 2023-06-08 00:06:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 473. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 467: 2023-06-07 00:31:24
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 467. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 466: 2023-06-07 00:30:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 466. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 468: 2023-06-07 00:29:40
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 468. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 471: 2023-06-07 00:23:55
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 471. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 472: 2023-06-07 00:21:59
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 472. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 469. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 470. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 465: 2023-06-06 00:54:50
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 465. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 475. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:52:00
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:51:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 458: 2023-06-06 00:47:15
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 458. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:45:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 450: 2023-06-06 00:39:29
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 450. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 457: 2023-06-06 00:38:00
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 457. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:37:55
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:37:06
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:35:55
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:35:20
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:34:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:33:20
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:33:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:28:50
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 463. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:25:14
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:25:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 462: 2023-06-06 00:24:20
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 462. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:17:55
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:17:35
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:17:30
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 461: 2023-06-06 00:16:07
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 461. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 474: 2023-06-06 00:16:07
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 474. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:15:59
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:15:59
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:15:58
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:15:58
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 459: 2023-06-06 00:15:50
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 459. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 456. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 454: 2023-05-31 00:31:48
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 454. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 453: 2023-05-28 14:34:09
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 453. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 449: 2023-03-26 17:46:15
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 449. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 445: 2023-03-25 07:53:56
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 445. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 444: 2023-03-24 15:13:54
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 444. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 442: 2023-03-24 13:21:02
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 442. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 443: 2023-03-24 09:40:08
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 443. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 438: 2023-03-23 17:08:15
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 438. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 437: 2023-03-23 11:13:20
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 437. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 428: 2023-03-12 08:10:29
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 428. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 424: 2023-03-10 19:23:39
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 424. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 41: 2023-03-10 07:35:45
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 41. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 422: 2023-03-09 18:48:20
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 422. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 88. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 420: 2023-03-09 17:04:35
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 420. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 418: 2023-03-09 16:48:49
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 418. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 416: 2023-03-09 12:43:26
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 416. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 415: 2023-03-09 11:20:12
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 415. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 412: 2023-03-09 05:28:55
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 412. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 406: 2023-03-08 20:27:10
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 406. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 403: 2023-03-08 19:26:37
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 403. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 402: 2023-03-08 19:19:32
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 402. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 402: 2023-03-08 19:10:16
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 402. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 401: 2023-03-08 18:42:37
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 401. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 400: 2023-03-08 18:39:12
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 400. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 398: 2023-03-08 18:04:59
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 398. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 396: 2023-03-08 17:06:32
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 396. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 76. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 395: 2023-03-06 21:45:04
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 395. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 240: 2023-02-02 11:00:46
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 240. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 44: 2023-02-01 10:43:40
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 44. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 388: 2023-01-03 15:40:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 388. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 386: 2022-11-26 16:55:46
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 386. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 382: 2022-09-01 04:39:59
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 382. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 362: 2022-06-15 15:04:52
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 362. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 360. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 358: 2022-05-19 19:02:56
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 358. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 218: 2022-04-28 18:48:31
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 218. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 355: 2022-04-25 10:18:40
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 355. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 352: 2022-04-03 08:57:05
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 352. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 2. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 264: 2022-03-27 08:58:41
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 264. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 248: 2022-03-27 08:22:58
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 248. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 207: 2022-03-26 12:10:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 207. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 349: 2022-03-05 16:44:48
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 349. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 12: 2022-02-09 19:16:52
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 12. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 277: 2022-02-07 14:01:20
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 277. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 303: 2022-02-07 13:39:53
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 303. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 344. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 201: 2021-06-12 10:15:04
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 201. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 337: 2021-05-23 07:57:17
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 337. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 334: 2021-05-01 07:01:33
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 334. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 333: 2021-04-16 07:51:42
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 333. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 330: 2021-03-11 18:55:24
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 330. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 328: 2021-03-05 12:45:45
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 328. Skipping.
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 326. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 74: 2021-03-02 09:31:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 74. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 162: 2021-02-19 10:31:45
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 162. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 321: 2021-02-17 09:52:00
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 321. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 85: 2021-02-01 20:30:11
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 85. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 313: 2021-01-31 09:35:47
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 313. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 305: 2020-12-29 07:33:17
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 305. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 301: 2020-11-21 12:28:04
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 301. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 288: 2020-09-08 08:28:36
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 288. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 272: 2020-07-06 15:12:50
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 272. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 84: 2020-05-17 10:04:11
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 84. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 256: 2020-05-04 09:04:44
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 256. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 238: 2020-04-07 07:11:36
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 238. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 233: 2020-03-20 18:01:47
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 233. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 103: 2020-02-26 22:06:47
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 103. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 222: 2020-02-15 11:03:03
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 222. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 156: 2020-02-08 19:53:36
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 156. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 219: 2020-02-07 19:10:33
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 219. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 213: 2020-02-04 12:35:14
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 213. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 187: 2020-02-03 16:39:40
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 187. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 208: 2020-02-01 19:14:15
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 208. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 200: 2020-01-31 10:49:26
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 200. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 191: 2020-01-28 15:31:30
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 191. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 180: 2020-01-26 08:08:11
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 180. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 174: 2020-01-25 15:34:51
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 174. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 166: 2020-01-25 09:50:23
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 166. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 161: 2020-01-25 07:50:15
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 161. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 140: 2019-06-13 20:56:25
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 140. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 132: 2019-05-02 13:02:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 132. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 121: 2019-03-03 07:40:17
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 121. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 108: 2019-03-01 05:23:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 108. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 98: 2019-02-28 16:56:14
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 98. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 50: 2019-02-18 23:39:21
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 50. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 60: 2019-02-18 18:18:15
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 60. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 52: 2019-02-17 09:49:10
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 52. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 47: 2019-02-14 12:42:00
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 47. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 45: 2019-02-11 14:11:10
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 45. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 36: 2019-02-09 20:27:43
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 36. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 27: 2019-02-05 06:34:34
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 27. Skipping.
+[2025-09-22 03:17:39] [INFO] - Generated end_date for subscription user ID 14: 2019-02-01 07:08:47
+[2025-09-22 03:17:39] [INFO] - Subscription already exists for user ID: 14. Skipping.
+[2025-09-22 03:17:39] [INFO] - Finished WooCommerce subscription migration. Migrated 0 subscriptions.
