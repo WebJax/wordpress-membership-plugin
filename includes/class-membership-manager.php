@@ -220,11 +220,8 @@ class Membership_Manager {
             wp_die( __( 'Please select at least one product to migrate.', 'membership-manager' ) );
         }
 
-        // Get renewal type
-        $renewal_type = isset( $_POST['renewal_type'] ) ? sanitize_text_field( $_POST['renewal_type'] ) : 'automatic';
-
         // Perform migration
-        $migrated_count = self::migrate_woocommerce_subscription( $selected_products, $renewal_type );
+        $migrated_count = self::migrate_woocommerce_subscription( $selected_products );
         
         // Redirect with success/error message
         $redirect_url = add_query_arg( 
@@ -240,7 +237,7 @@ class Membership_Manager {
         exit;
     }
 
-    public static function migrate_woocommerce_subscription( $selected_products = array(), $renewal_type = 'automatic' ) {
+    public static function migrate_woocommerce_subscription( $selected_products = array() ) {
         self::log( sprintf( __( 'Starting WooCommerce subscription migration with products: %s', 'membership-manager' ), implode( ', ', $selected_products ) ) );
         
         if ( ! class_exists( 'WC_Subscriptions' ) ) {
@@ -259,13 +256,25 @@ class Membership_Manager {
             foreach ( $subscriptions as $subscription ) {
                 $user_id = $subscription->get_user_id();
                 
-                // Check if subscription contains any of the selected products
+                // Check if subscription contains any of the selected products and determine renewal type
                 $has_selected_product = false;
+                $renewal_type = 'manual';
+                
                 foreach ( $subscription->get_items() as $item ) {
                     /** @var \WC_Order_Item_Product $item */
                     $product_id = $item->get_product_id();
+                    
                     if ( in_array( $product_id, $selected_products ) ) {
                         $has_selected_product = true;
+                        
+                        // Check if product is a subscription product
+                        $product = $item->get_product();
+                        if ( $product && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+                            $renewal_type = 'automatic';
+                            self::log( sprintf( __( 'Product ID %d is a subscription product - setting as automatic renewal.', 'membership-manager' ), $product_id ) );
+                        } else {
+                            $renewal_type = 'manual';
+                        }
                         break;
                     }
                 }
@@ -308,7 +317,7 @@ class Membership_Manager {
                     
                     if ( $result !== false ) {
                         $migrated_count++;
-                        self::log( sprintf( __( 'Migrated subscription for user ID: %d', 'membership-manager' ), $user_id ) );
+                        self::log( sprintf( __( 'Migrated subscription for user ID: %d with renewal type: %s', 'membership-manager' ), $user_id, $renewal_type ) );
                     } else {
                         self::log( sprintf( __( 'Failed to migrate subscription for user ID: %d', 'membership-manager' ), $user_id ), 'ERROR' );
                     }

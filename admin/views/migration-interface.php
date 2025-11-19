@@ -68,24 +68,10 @@
                                 <button type="button" id="deselect-all-products" class="button button-secondary"><?php _e( 'Deselect All', 'membership-manager' ); ?></button>
                             </p>
                         </fieldset>
-                        <p class="description"><?php _e( 'Select the products that should be considered membership products. Only subscriptions or orders containing these products will be migrated.', 'membership-manager' ); ?></p>
+                        <p class="description"><?php _e( 'Select the products that should be considered membership products. Only subscriptions or orders containing these products will be migrated. Subscription products will automatically be set as automatic renewal.', 'membership-manager' ); ?></p>
                     <?php else : ?>
                         <p><?php _e( 'No products found. Make sure WooCommerce is active and you have products created.', 'membership-manager' ); ?></p>
                     <?php endif; ?>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row"><?php _e( 'Renewal Type', 'membership-manager' ); ?></th>
-                <td>
-                    <label>
-                        <input type="radio" name="renewal_type" value="automatic" checked>
-                        <?php _e( 'Automatic', 'membership-manager' ); ?>
-                    </label><br>
-                    <label style="margin-top: 5px; display: inline-block;">
-                        <input type="radio" name="renewal_type" value="manual">
-                        <?php _e( 'Manual', 'membership-manager' ); ?>
-                    </label>
-                    <p class="description"><?php _e( 'Choose whether migrated memberships should be set as automatic or manual renewal.', 'membership-manager' ); ?></p>
                 </td>
             </tr>
         </table>
