@@ -5,7 +5,8 @@
     // Show migration result messages
     if ( isset( $_GET['migration'] ) ) {
         if ( $_GET['migration'] === 'success' ) {
-            echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Migration completed successfully!', 'membership-manager' ) . '</p></div>';
+            $count = isset( $_GET['count'] ) ? absint( $_GET['count'] ) : 0;
+            echo '<div class="notice notice-success is-dismissible"><p>' . sprintf( __( 'Migration completed successfully! %d subscriptions migrated.', 'membership-manager' ), $count ) . '</p></div>';
         } elseif ( $_GET['migration'] === 'error' ) {
             echo '<div class="notice notice-error is-dismissible"><p>' . __( 'Migration failed. Please check the logs for more details.', 'membership-manager' ) . '</p></div>';
         }
@@ -22,12 +23,87 @@
     ?>
     
     <h2><?php _e( 'WooCommerce Subscriptions Migration', 'membership-manager' ); ?></h2>
-    <p><?php _e( 'Click the button below to migrate your existing WooCommerce Subscriptions to the new membership system.', 'membership-manager' ); ?></p>
-    <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" style="display: inline-block; margin-right: 20px;">
+    <p><?php _e( 'Select which subscription products you want to migrate to the membership system. Only subscriptions containing the selected products will be migrated.', 'membership-manager' ); ?></p>
+    
+    <?php
+    // Get all products (not just subscription products)
+    $all_products_list = array();
+    if ( function_exists( 'wc_get_products' ) ) {
+        $products = wc_get_products( array(
+            'limit' => -1,
+            'status' => 'publish',
+        ) );
+        
+        foreach ( $products as $product ) {
+            $all_products_list[] = array(
+                'id' => $product->get_id(),
+                'name' => $product->get_name(),
+                'type' => $product->get_type(),
+            );
+        }
+    }
+    ?>
+    
+    <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" style="margin-bottom: 30px;">
         <?php wp_nonce_field( 'migrate_subscriptions_nonce' ); ?>
         <input type="hidden" name="action" value="migrate_subscriptions">
-        <?php submit_button( __( 'Migrate WC Subscriptions', 'membership-manager' ), 'primary', 'submit', false ); ?>
+        
+        <table class="form-table">
+            <tr>
+                <th scope="row"><?php _e( 'Select Products to Migrate', 'membership-manager' ); ?></th>
+                <td>
+                    <?php if ( ! empty( $all_products_list ) ) : ?>
+                        <fieldset>
+                            <legend class="screen-reader-text"><?php _e( 'Select Products', 'membership-manager' ); ?></legend>
+                            <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #fff;">
+                                <?php foreach ( $all_products_list as $product ) : ?>
+                                    <label style="display: block; margin-bottom: 8px;">
+                                        <input type="checkbox" name="migration_products[]" value="<?php echo esc_attr( $product['id'] ); ?>">
+                                        <?php echo esc_html( $product['name'] ) . ' (ID: ' . $product['id'] . ' - ' . ucfirst( $product['type'] ) . ')'; ?>
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                            <p style="margin-top: 10px;">
+                                <button type="button" id="select-all-products" class="button button-secondary"><?php _e( 'Select All', 'membership-manager' ); ?></button>
+                                <button type="button" id="deselect-all-products" class="button button-secondary"><?php _e( 'Deselect All', 'membership-manager' ); ?></button>
+                            </p>
+                        </fieldset>
+                        <p class="description"><?php _e( 'Select the products that should be considered membership products. Only subscriptions or orders containing these products will be migrated.', 'membership-manager' ); ?></p>
+                    <?php else : ?>
+                        <p><?php _e( 'No products found. Make sure WooCommerce is active and you have products created.', 'membership-manager' ); ?></p>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e( 'Renewal Type', 'membership-manager' ); ?></th>
+                <td>
+                    <label>
+                        <input type="radio" name="renewal_type" value="automatic" checked>
+                        <?php _e( 'Automatic', 'membership-manager' ); ?>
+                    </label><br>
+                    <label style="margin-top: 5px; display: inline-block;">
+                        <input type="radio" name="renewal_type" value="manual">
+                        <?php _e( 'Manual', 'membership-manager' ); ?>
+                    </label>
+                    <p class="description"><?php _e( 'Choose whether migrated memberships should be set as automatic or manual renewal.', 'membership-manager' ); ?></p>
+                </td>
+            </tr>
+        </table>
+        
+        <?php submit_button( __( 'Migrate Selected Subscriptions', 'membership-manager' ), 'primary' ); ?>
     </form>
+    
+    <script>
+    jQuery(document).ready(function($) {
+        $('#select-all-products').on('click', function() {
+            $('input[name="migration_products[]"]').prop('checked', true);
+        });
+        
+        $('#deselect-all-products').on('click', function() {
+            $('input[name="migration_products[]"]').prop('checked', false);
+        });
+    });
+    </script>
     
     <h2><?php _e( 'Data Cleanup', 'membership-manager' ); ?></h2>
     <p><?php _e( 'If you see invalid dates (like "30. november -0001") in your membership list, use this button to fix them.', 'membership-manager' ); ?></p>

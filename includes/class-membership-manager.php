@@ -211,14 +211,27 @@ class Membership_Manager {
             wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
         }
 
+        // Get selected products
+        $selected_products = isset( $_POST['migration_products'] ) && is_array( $_POST['migration_products'] ) 
+            ? array_map( 'absint', $_POST['migration_products'] ) 
+            : array();
+        
+        if ( empty( $selected_products ) ) {
+            wp_die( __( 'Please select at least one product to migrate.', 'membership-manager' ) );
+        }
+
+        // Get renewal type
+        $renewal_type = isset( $_POST['renewal_type'] ) ? sanitize_text_field( $_POST['renewal_type'] ) : 'automatic';
+
         // Perform migration
-        $result = self::migrate_woocommerce_subscription();
+        $migrated_count = self::migrate_woocommerce_subscription( $selected_products, $renewal_type );
         
         // Redirect with success/error message
         $redirect_url = add_query_arg( 
             array( 
                 'page' => 'membership-migration',
-                'migration' => $result ? 'success' : 'error'
+                'migration' => $migrated_count !== false ? 'success' : 'error',
+                'count' => $migrated_count
             ),
             admin_url( 'admin.php' )
         );
@@ -227,8 +240,8 @@ class Membership_Manager {
         exit;
     }
 
-    public static function migrate_woocommerce_subscription() {
-        self::log( __( 'Starting WooCommerce subscription migration.', 'membership-manager' ) );
+    public static function migrate_woocommerce_subscription( $selected_products = array(), $renewal_type = 'automatic' ) {
+        self::log( sprintf( __( 'Starting WooCommerce subscription migration with products: %s', 'membership-manager' ), implode( ', ', $selected_products ) ) );
         
         if ( ! class_exists( 'WC_Subscriptions' ) ) {
             self::log( __( 'WooCommerce Subscriptions not active for migration.', 'membership-manager' ), 'ERROR' );
@@ -241,9 +254,28 @@ class Membership_Manager {
             global $wpdb;
             $table_name = $wpdb->prefix . 'membership_subscriptions';
             $migrated_count = 0;
+            $skipped_count = 0;
 
             foreach ( $subscriptions as $subscription ) {
                 $user_id = $subscription->get_user_id();
+                
+                // Check if subscription contains any of the selected products
+                $has_selected_product = false;
+                foreach ( $subscription->get_items() as $item ) {
+                    /** @var \WC_Order_Item_Product $item */
+                    $product_id = $item->get_product_id();
+                    if ( in_array( $product_id, $selected_products ) ) {
+                        $has_selected_product = true;
+                        break;
+                    }
+                }
+                
+                if ( ! $has_selected_product ) {
+                    $skipped_count++;
+                    self::log( sprintf( __( 'Skipped subscription for user ID %d - does not contain selected products.', 'membership-manager' ), $user_id ) );
+                    continue;
+                }
+                
                 $start_date = $subscription->get_date( 'start_date' );
                 $end_date = $subscription->get_date( 'end_date' );
                 $status = $subscription->get_status();
@@ -270,7 +302,7 @@ class Membership_Manager {
                             'start_date' => $start_date,
                             'end_date' => $end_date,
                             'status' => $status,
-                            'renewal_type' => 'automatic', // Assuming WC subscriptions are automatic
+                            'renewal_type' => $renewal_type,
                         )
                     );
                     
@@ -285,8 +317,8 @@ class Membership_Manager {
                 }
             }
 
-            self::log( sprintf( __( 'Finished WooCommerce subscription migration. Migrated %d subscriptions.', 'membership-manager' ), $migrated_count ) );
-            return true;
+            self::log( sprintf( __( 'Finished WooCommerce subscription migration. Migrated %d subscriptions, skipped %d.', 'membership-manager' ), $migrated_count, $skipped_count ) );
+            return $migrated_count;
             
         } catch ( Exception $e ) {
             self::log( sprintf( __( 'Migration failed with error: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
@@ -319,6 +351,7 @@ class Membership_Manager {
         $renewal_type = 'manual';
 
         foreach ( $order->get_items() as $item ) {
+            /** @var \WC_Order_Item_Product $item */
             $product_id = $item->get_product_id();
             if ( in_array( $product_id, $all_membership_products ) ) {
                 $found_membership_product = true;
