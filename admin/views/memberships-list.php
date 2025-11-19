@@ -1,5 +1,7 @@
 <div class="wrap">
-    <h1><?php _e( 'Memberships', 'membership-manager' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php _e( 'Memberships', 'membership-manager' ); ?></h1>
+    <a href="<?php echo admin_url( 'admin.php?page=membership-manager&action=add' ); ?>" class="page-title-action"><?php _e( 'Add New', 'membership-manager' ); ?></a>
+    <hr class="wp-header-end">
 
     <!-- Status Overview -->
     <div id="status-overview" style="margin-bottom: 20px;">

@@ -24,6 +24,11 @@ class Membership_Manager {
 
         // Handle migration
         add_action( 'admin_post_migrate_subscriptions', array( __CLASS__, 'handle_migrate_subscriptions' ) );
+
+        // Handle updates and deletion
+        add_action( 'admin_post_update_membership_details', array( __CLASS__, 'handle_update_membership_details' ) );
+        add_action( 'admin_post_delete_membership', array( __CLASS__, 'handle_delete_membership' ) );
+        add_action( 'admin_post_add_new_membership', array( __CLASS__, 'handle_add_new_membership' ) );
     }
 
     public static function load_textdomain() {
@@ -93,6 +98,8 @@ class Membership_Manager {
         
         if ( $action === 'view' && $membership_id > 0 ) {
             include_once plugin_dir_path( __FILE__ ) . '../admin/views/membership-details.php';
+        } elseif ( $action === 'add' ) {
+            include_once plugin_dir_path( __FILE__ ) . '../admin/views/add-membership.php';
         } else {
             include_once plugin_dir_path( __FILE__ ) . '../admin/views/memberships-list.php';
         }
@@ -176,7 +183,10 @@ class Membership_Manager {
                 $html .= '<td>' . $end_date_display . '</td>';
                 $html .= '<td><span class="status-' . esc_attr( $membership->status ) . '">' . esc_html( self::get_status_display_name( $membership->status ) ) . '</span></td>';
                 $html .= '<td>' . esc_html( ucfirst( $membership->renewal_type ) ) . '</td>';
-                $html .= '<td><a href="' . admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership->id ) . '" class="button button-small">' . __( 'View Details', 'membership-manager' ) . '</a></td>';
+                $html .= '<td>';
+                $html .= '<a href="' . admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership->id ) . '" class="button button-small">' . __( 'View Details', 'membership-manager' ) . '</a> ';
+                $html .= '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=delete_membership&membership_id=' . $membership->id ), 'delete_membership_nonce' ) . '" class="button button-small button-link-delete" onclick="return confirm(\'' . __( 'Are you sure?', 'membership-manager' ) . '\');" style="color: #a00;">' . __( 'Delete', 'membership-manager' ) . '</a>';
+                $html .= '</td>';
                 $html .= '</tr>';
             }
         } else {
@@ -288,10 +298,39 @@ class Membership_Manager {
     public static function create_membership_subscription( $order_id ) {
         self::log( sprintf( __( 'Creating or extending membership for order ID: %d', 'membership-manager' ), $order_id ) );
         $order = wc_get_order( $order_id );
+        
+        if ( ! $order ) {
+            return;
+        }
+
         $user_id = $order->get_user_id();
 
         if ( ! $user_id ) {
             self::log( sprintf( __( 'No user ID found for order ID: %d. Aborting.', 'membership-manager' ), $order_id ), 'WARNING' );
+            return;
+        }
+
+        // Check if order contains membership product
+        $automatic_products = get_option( 'membership_automatic_renewal_products', array() );
+        $manual_products = get_option( 'membership_manual_renewal_products', array() );
+        $all_membership_products = array_merge( $automatic_products, $manual_products );
+        
+        $found_membership_product = false;
+        $renewal_type = 'manual';
+
+        foreach ( $order->get_items() as $item ) {
+            $product_id = $item->get_product_id();
+            if ( in_array( $product_id, $all_membership_products ) ) {
+                $found_membership_product = true;
+                if ( in_array( $product_id, $automatic_products ) ) {
+                    $renewal_type = 'automatic';
+                }
+                break; 
+            }
+        }
+
+        if ( ! $found_membership_product ) {
+            self::log( sprintf( __( 'Order ID: %d does not contain any membership products. Skipping.', 'membership-manager' ), $order_id ) );
             return;
         }
 
@@ -307,10 +346,23 @@ class Membership_Manager {
         if ( $existing_subscription ) {
             // Extend the existing subscription
             $end_date = new DateTime( $existing_subscription->end_date );
+            
+            // If subscription was expired but marked active (edge case) or we want to ensure we add to current time if it's in the past?
+            // Usually for renewals we add to the existing end date.
+            // But if the end date is in the past, we should probably start from today.
+            $now = new DateTime();
+            if ( $end_date < $now ) {
+                $end_date = $now;
+            }
+
             $end_date->modify( '+1 year' );
+            
             $wpdb->update(
                 $table_name,
-                array( 'end_date' => $end_date->format( 'Y-m-d H:i:s' ) ),
+                array( 
+                    'end_date' => $end_date->format( 'Y-m-d H:i:s' ),
+                    'renewal_type' => $renewal_type // Update renewal type based on latest purchase
+                ),
                 array( 'id' => $existing_subscription->id )
             );
             self::log( sprintf( __( 'Extended membership for user ID: %d', 'membership-manager' ), $user_id ) );
@@ -327,7 +379,7 @@ class Membership_Manager {
                     'start_date' => $start_date->format( 'Y-m-d H:i:s' ),
                     'end_date' => $end_date->format( 'Y-m-d H:i:s' ),
                     'status' => 'active',
-                    'renewal_type' => 'manual', // a
+                    'renewal_type' => $renewal_type,
                 )
             );
             self::log( sprintf( __( 'Created new membership for user ID: %d', 'membership-manager' ), $user_id ) );
@@ -512,6 +564,120 @@ class Membership_Manager {
             self::log( sprintf( 'Cleanup failed with fatal error: %s', $e->getMessage() ), 'ERROR' );
             return false;
         }
+    }
+
+    public static function handle_update_membership_details() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+        }
+
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'update_membership_details_nonce' ) ) {
+            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+        }
+
+        $membership_id = isset( $_POST['membership_id'] ) ? absint( $_POST['membership_id'] ) : 0;
+        if ( ! $membership_id ) {
+            wp_die( __( 'Invalid membership ID.', 'membership-manager' ) );
+        }
+
+        $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( $_POST['start_date'] ) : '';
+        $end_date = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ) : '';
+        $status = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : '';
+        $renewal_type = isset( $_POST['renewal_type'] ) ? sanitize_text_field( $_POST['renewal_type'] ) : '';
+
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+
+        $wpdb->update(
+            $table_name,
+            array(
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'status' => $status,
+                'renewal_type' => $renewal_type
+            ),
+            array( 'id' => $membership_id )
+        );
+
+        self::log( sprintf( __( 'Updated membership ID: %d by user ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
+
+        wp_redirect( admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership_id . '&updated=true' ) );
+        exit;
+    }
+
+    public static function handle_delete_membership() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+        }
+
+        if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'delete_membership_nonce' ) ) {
+            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+        }
+
+        $membership_id = isset( $_GET['membership_id'] ) ? absint( $_GET['membership_id'] ) : 0;
+        if ( ! $membership_id ) {
+            wp_die( __( 'Invalid membership ID.', 'membership-manager' ) );
+        }
+
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+
+        $wpdb->delete(
+            $table_name,
+            array( 'id' => $membership_id )
+        );
+
+        self::log( sprintf( __( 'Deleted membership ID: %d by user ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
+
+        wp_redirect( admin_url( 'admin.php?page=membership-manager&deleted=true' ) );
+        exit;
+    }
+
+    public static function handle_add_new_membership() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+        }
+
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'add_new_membership_nonce' ) ) {
+            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+        }
+
+        $user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
+        if ( ! $user_id || ! get_user_by( 'ID', $user_id ) ) {
+            wp_die( __( 'Invalid User ID.', 'membership-manager' ) );
+        }
+
+        $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( $_POST['start_date'] ) : '';
+        $end_date = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ) : '';
+        $status = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : 'active';
+        $renewal_type = isset( $_POST['renewal_type'] ) ? sanitize_text_field( $_POST['renewal_type'] ) : 'manual';
+
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+
+        // Check if user already has a membership
+        $existing = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %d", $user_id ) );
+        if ( $existing ) {
+            wp_die( sprintf( __( 'User ID %d already has a membership (ID: %d). Please edit the existing membership instead.', 'membership-manager' ), $user_id, $existing->id ) );
+        }
+
+        $wpdb->insert(
+            $table_name,
+            array(
+                'user_id' => $user_id,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'status' => $status,
+                'renewal_type' => $renewal_type
+            )
+        );
+
+        $membership_id = $wpdb->insert_id;
+
+        self::log( sprintf( __( 'Created new membership ID: %d for user ID: %d by admin.', 'membership-manager' ), $membership_id, $user_id ) );
+
+        wp_redirect( admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership_id . '&created=true' ) );
+        exit;
     }
 
     public static function log( $message, $type = 'INFO' ) {

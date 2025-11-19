@@ -23,11 +23,13 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-membership-manager.ph
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-membership-emails.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-membership-renewals.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-membership-admin.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-membership-shortcodes.php';
 
 
 // Initialize the plugin.
 Membership_Manager::init();
 new Membership_Admin();
+Membership_Shortcodes::init();
 
 // Activation hook.
 register_activation_hook( __FILE__, array( 'Membership_Manager', 'activate' ) );

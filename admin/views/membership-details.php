@@ -53,34 +53,63 @@ $user_meta = get_user_meta( $user->ID );
                 <h2 class="hndle"><?php _e( 'Membership Information', 'membership-manager' ); ?></h2>
             </div>
             <div class="inside">
-                <table class="form-table">
-                    <tr>
-                        <th scope="row"><?php _e( 'Membership ID', 'membership-manager' ); ?></th>
-                        <td><?php echo esc_html( $membership->id ); ?></td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><?php _e( 'Start Date', 'membership-manager' ); ?></th>
-                        <td><?php echo esc_html( Membership_Manager::format_date_safely( $membership->start_date ) ); ?></td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><?php _e( 'End Date', 'membership-manager' ); ?></th>
-                        <td><?php echo Membership_Manager::format_end_date_with_status( $membership ); ?></td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><?php _e( 'Status', 'membership-manager' ); ?></th>
-                        <td>
-                            <span class="status-<?php echo esc_attr( $membership->status ); ?>" style="padding: 4px 8px; border-radius: 3px; font-weight: 600; 
-                                background: <?php echo $membership->status === 'active' ? '#00a32a' : ($membership->status === 'expired' ? '#d63638' : '#646970'); ?>; 
-                                color: white; font-size: 12px;">
-                                <?php echo esc_html( Membership_Manager::get_status_display_name( $membership->status ) ); ?>
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><?php _e( 'Renewal Type', 'membership-manager' ); ?></th>
-                        <td><?php echo esc_html( ucfirst( $membership->renewal_type ) ); ?></td>
-                    </tr>
-                </table>
+                <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>">
+                    <input type="hidden" name="action" value="update_membership_details">
+                    <input type="hidden" name="membership_id" value="<?php echo esc_attr( $membership->id ); ?>">
+                    <?php wp_nonce_field( 'update_membership_details_nonce', '_wpnonce' ); ?>
+
+                    <table class="form-table">
+                        <tr>
+                            <th scope="row"><?php _e( 'Membership ID', 'membership-manager' ); ?></th>
+                            <td><?php echo esc_html( $membership->id ); ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="start_date"><?php _e( 'Start Date', 'membership-manager' ); ?></label></th>
+                            <td>
+                                <input type="datetime-local" id="start_date" name="start_date" value="<?php echo esc_attr( date( 'Y-m-d\TH:i', strtotime( $membership->start_date ) ) ); ?>" class="regular-text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="end_date"><?php _e( 'End Date', 'membership-manager' ); ?></label></th>
+                            <td>
+                                <input type="datetime-local" id="end_date" name="end_date" value="<?php echo esc_attr( date( 'Y-m-d\TH:i', strtotime( $membership->end_date ) ) ); ?>" class="regular-text">
+                                <p class="description"><?php _e( 'Leave empty for no expiration.', 'membership-manager' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="status"><?php _e( 'Status', 'membership-manager' ); ?></label></th>
+                            <td>
+                                <select id="status" name="status">
+                                    <?php
+                                    $statuses = array( 'active', 'expired', 'pending-cancel', 'cancelled', 'on-hold' );
+                                    foreach ( $statuses as $status ) {
+                                        echo '<option value="' . esc_attr( $status ) . '" ' . selected( $membership->status, $status, false ) . '>' . esc_html( Membership_Manager::get_status_display_name( $status ) ) . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="renewal_type"><?php _e( 'Renewal Type', 'membership-manager' ); ?></label></th>
+                            <td>
+                                <select id="renewal_type" name="renewal_type">
+                                    <option value="manual" <?php selected( $membership->renewal_type, 'manual' ); ?>><?php _e( 'Manual', 'membership-manager' ); ?></option>
+                                    <option value="automatic" <?php selected( $membership->renewal_type, 'automatic' ); ?>><?php _e( 'Automatic', 'membership-manager' ); ?></option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <div style="margin-top: 15px; display: flex; justify-content: space-between;">
+                        <button type="submit" class="button button-primary"><?php _e( 'Update Membership', 'membership-manager' ); ?></button>
+                        
+                        <a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=delete_membership&membership_id=' . $membership->id ), 'delete_membership_nonce' ); ?>" 
+                           class="button button-link-delete" 
+                           onclick="return confirm('<?php _e( 'Are you sure you want to delete this membership? This cannot be undone.', 'membership-manager' ); ?>');">
+                            <?php _e( 'Delete Membership', 'membership-manager' ); ?>
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
 
