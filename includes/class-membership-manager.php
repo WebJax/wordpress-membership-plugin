@@ -353,12 +353,23 @@ class Membership_Manager {
         foreach ( $order->get_items() as $item ) {
             /** @var \WC_Order_Item_Product $item */
             $product_id = $item->get_product_id();
+            $product = $item->get_product();
+            
+            // Check if it's a configured membership product
             if ( in_array( $product_id, $all_membership_products ) ) {
                 $found_membership_product = true;
                 if ( in_array( $product_id, $automatic_products ) ) {
                     $renewal_type = 'automatic';
                 }
                 break; 
+            }
+            
+            // Auto-detect subscription products and set as automatic renewal
+            if ( $product && class_exists( 'WC_Subscriptions_Product' ) && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+                $found_membership_product = true;
+                $renewal_type = 'automatic'; // Subscription products are always automatic
+                self::log( sprintf( __( 'Detected subscription product (ID: %d) in order %d - setting as automatic renewal.', 'membership-manager' ), $product_id, $order_id ) );
+                break;
             }
         }
 
