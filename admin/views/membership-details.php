@@ -114,6 +114,20 @@ $user_meta = get_user_meta( $user->ID );
                                 </select>
                             </td>
                         </tr>
+                        <?php if ( ! empty( $membership->status_changed_date ) ): ?>
+                        <tr>
+                            <th scope="row"><?php _e( 'Status Changed', 'membership-manager' ); ?></th>
+                            <td><?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $membership->status_changed_date ) ); ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if ( $membership->status === 'on-hold' && ! empty( $membership->paused_date ) ): ?>
+                        <tr>
+                            <th scope="row"><?php _e( 'Paused Date', 'membership-manager' ); ?></th>
+                            <td>
+                                <strong style="color: #826eb4;"><?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $membership->paused_date ) ); ?></strong>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                     </table>
                     
                     <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">

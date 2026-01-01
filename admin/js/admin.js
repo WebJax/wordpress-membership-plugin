@@ -6,6 +6,7 @@ jQuery(document).ready(function($) {
         $('#active-count').text(counts.active || 0);
         $('#expired-count').text(counts.expired || 0);
         $('#pending-cancel-count').text(counts['pending-cancel'] || 0);
+        $('#on-hold-count').text(counts['on-hold'] || 0);
         $('#cancelled-count').text(counts.cancelled || 0);
         $('#total-count').text(counts.total || 0);
     }

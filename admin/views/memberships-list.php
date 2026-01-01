@@ -19,6 +19,10 @@
                 <span id="pending-cancel-count" style="font-size: 24px; font-weight: 600; color: #f0b849;">-</span>
             </div>
             <div class="status-card" style="background: #fff; border: 1px solid #c3c4c7; border-radius: 4px; padding: 15px; min-width: 120px;">
+                <h3 style="margin: 0 0 5px 0; font-size: 14px; color: #50575e;"><?php _e( 'On Hold', 'membership-manager' ); ?></h3>
+                <span id="on-hold-count" style="font-size: 24px; font-weight: 600; color: #826eb4;">-</span>
+            </div>
+            <div class="status-card" style="background: #fff; border: 1px solid #c3c4c7; border-radius: 4px; padding: 15px; min-width: 120px;">
                 <h3 style="margin: 0 0 5px 0; font-size: 14px; color: #50575e;"><?php _e( 'Cancelled', 'membership-manager' ); ?></h3>
                 <span id="cancelled-count" style="font-size: 24px; font-weight: 600; color: #646970;">-</span>
             </div>

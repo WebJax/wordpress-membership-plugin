@@ -36,6 +36,9 @@ class Membership_Manager {
         // Register renewal endpoint
         add_action( 'init', array( __CLASS__, 'register_renewal_endpoint' ) );
         add_action( 'template_redirect', array( __CLASS__, 'handle_renewal_token' ) );
+        
+        // Handle cleanup of invalid dates
+        add_action( 'admin_post_cleanup_invalid_dates', array( __CLASS__, 'handle_cleanup_invalid_dates' ) );
     }
 
     public static function load_textdomain() {
@@ -55,6 +58,8 @@ class Membership_Manager {
             status varchar(20) DEFAULT '' NOT NULL,
             renewal_type varchar(20) DEFAULT 'manual' NOT NULL,
             renewal_token varchar(64) DEFAULT '' NOT NULL,
+            paused_date datetime DEFAULT NULL,
+            status_changed_date datetime DEFAULT NULL,
             PRIMARY KEY  (id),
             KEY user_id (user_id),
             KEY renewal_token (renewal_token)
@@ -97,9 +102,6 @@ class Membership_Manager {
             'membership-migration',
             array( __CLASS__, 'render_migration_page' )
         );
-
-        // Handle cleanup of invalid dates
-        add_action( 'admin_post_cleanup_invalid_dates', array( __CLASS__, 'handle_cleanup_invalid_dates' ) );
     }
 
     public static function render_admin_page() {
@@ -204,6 +206,16 @@ class Membership_Manager {
                 $user = get_user_by( 'ID', $membership->user_id );
                 $user_display = $user ? $user->display_name . ' (' . $membership->user_id . ')' : $membership->user_id;
                 
+                // Get My Account URL for the user - use a special preview parameter
+                $my_account_url = '';
+                if ( function_exists( 'wc_get_page_permalink' ) && $user ) {
+                    $base_url = wc_get_page_permalink( 'myaccount' );
+                    // Add membership endpoint to show membership details
+                    $my_account_url = trailingslashit( $base_url ) . 'membership/';
+                    // Add admin preview parameter to potentially show as this user
+                    $my_account_url = add_query_arg( 'preview_user', $membership->user_id, $my_account_url );
+                }
+                
                 // Safe date formatting and status logic
                 $start_date_formatted = self::format_date_safely( $membership->start_date );
                 $end_date_display = self::format_end_date_with_status( $membership );
@@ -215,8 +227,14 @@ class Membership_Manager {
                 $html .= '<td><span class="status-' . esc_attr( $membership->status ) . '">' . esc_html( self::get_status_display_name( $membership->status ) ) . '</span></td>';
                 $html .= '<td>' . esc_html( ucfirst( $membership->renewal_type ) ) . '</td>';
                 $html .= '<td>';
-                $html .= '<a href="' . admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership->id ) . '" class="button button-small">' . __( 'View Details', 'membership-manager' ) . '</a> ';
-                $html .= '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=delete_membership&membership_id=' . $membership->id ), 'delete_membership_nonce' ) . '" class="button button-small button-link-delete" onclick="return confirm(\'' . __( 'Are you sure?', 'membership-manager' ) . '\');" style="color: #a00;">' . __( 'Delete', 'membership-manager' ) . '</a>';
+                $html .= '<a href="' . admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership->id ) . '" class="button button-small">' . __( 'View', 'membership-manager' ) . '</a> ';
+                
+                // Add "View My Account" button if WooCommerce is active and user exists
+                if ( ! empty( $my_account_url ) && $user ) {
+                    $html .= '<a href="' . esc_url( $my_account_url ) . '" class="button button-small" target="_blank" title="' . esc_attr__( 'View customer membership page', 'membership-manager' ) . '"><span class="dashicons dashicons-admin-users" style="font-size: 14px; line-height: 1.4;"></span></a> ';
+                }
+                
+                $html .= '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=delete_membership&membership_id=' . $membership->id ), 'delete_membership_nonce' ) . '" class="button button-small button-link-delete" onclick="return confirm(\'' . __( 'Are you sure?', 'membership-manager' ) . '\');" style="color: #a00;"><span class="dashicons dashicons-trash"></span></a>';
                 $html .= '</td>';
                 $html .= '</tr>';
             }
@@ -256,6 +274,74 @@ class Membership_Manager {
         ) );
     }
 
+    /**
+     * Parse subscription order notes to extract status change dates
+     * 
+     * @param WC_Subscription $subscription The subscription object
+     * @return array Array with 'paused_date' and 'status_changed_date'
+     */
+    public static function parse_subscription_status_dates( $subscription ) {
+        $dates = array(
+            'paused_date' => null,
+            'status_changed_date' => null,
+        );
+        
+        if ( ! function_exists( 'wc_get_order_notes' ) ) {
+            return $dates;
+        }
+        
+        try {
+            // Get all order notes for this subscription
+            $notes = wc_get_order_notes( array(
+                'order_id' => $subscription->get_id(),
+                'type'     => 'internal',
+                'orderby'  => 'date_created',
+                'order'    => 'DESC', // Most recent first
+            ) );
+            
+            if ( empty( $notes ) ) {
+                return $dates;
+            }
+            
+            // Current status to check for on-hold
+            $current_status = $subscription->get_status();
+            
+            foreach ( $notes as $note ) {
+                $content = strtolower( $note->content );
+                $note_date = $note->date_created->date( 'Y-m-d H:i:s' );
+                
+                // Check for status change to on-hold (multiple language variations)
+                if ( ! $dates['paused_date'] && $current_status === 'on-hold' ) {
+                    if ( strpos( $content, 'to on-hold' ) !== false || 
+                         strpos( $content, 'to on hold' ) !== false ||
+                         strpos( $content, 'status set to on-hold' ) !== false ) {
+                        $dates['paused_date'] = $note_date;
+                        self::log( sprintf( 'Found paused_date from order notes for subscription #%d: %s', $subscription->get_id(), $note_date ) );
+                    }
+                }
+                
+                // Get the most recent status change (first one we encounter since we're DESC)
+                if ( ! $dates['status_changed_date'] ) {
+                    if ( strpos( $content, 'status changed' ) !== false || 
+                         strpos( $content, 'status set to' ) !== false ) {
+                        $dates['status_changed_date'] = $note_date;
+                        self::log( sprintf( 'Found status_changed_date from order notes for subscription #%d: %s', $subscription->get_id(), $note_date ) );
+                    }
+                }
+                
+                // Break if we found both dates
+                if ( $dates['paused_date'] && $dates['status_changed_date'] ) {
+                    break;
+                }
+            }
+            
+        } catch ( Exception $e ) {
+            self::log( sprintf( 'Error parsing order notes for subscription #%d: %s', $subscription->get_id(), $e->getMessage() ), 'WARNING' );
+        }
+        
+        return $dates;
+    }
+
     public static function handle_migrate_subscriptions() {
         // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
@@ -278,17 +364,22 @@ class Membership_Manager {
         }
 
         // Perform migration
-        $migrated_count = self::migrate_woocommerce_subscription( $selected_products );
+        $migration_results = self::migrate_woocommerce_subscription( $selected_products );
+        
+        // Prepare redirect URL parameters
+        $redirect_params = array( 'page' => 'membership-migration' );
+        
+        if ( $migration_results !== false ) {
+            $redirect_params['migration'] = 'success';
+            $redirect_params['count'] = $migration_results['subscriptions'];
+            $redirect_params['products_converted'] = $migration_results['products']['converted'];
+            $redirect_params['products_skipped'] = $migration_results['products']['skipped'] + $migration_results['products']['already_migrated'];
+        } else {
+            $redirect_params['migration'] = 'error';
+        }
         
         // Redirect with success/error message
-        $redirect_url = add_query_arg( 
-            array( 
-                'page' => 'membership-migration',
-                'migration' => $migrated_count !== false ? 'success' : 'error',
-                'count' => $migrated_count
-            ),
-            admin_url( 'admin.php' )
-        );
+        $redirect_url = add_query_arg( $redirect_params, admin_url( 'admin.php' ) );
         
         wp_redirect( $redirect_url );
         exit;
@@ -303,6 +394,10 @@ class Membership_Manager {
         }
 
         try {
+            // First, migrate products to new product types
+            $product_migration_results = self::migrate_subscription_products( $selected_products );
+            self::log( sprintf( __( 'Product migration completed: %d products converted', 'membership-manager' ), $product_migration_results['converted'] ) );
+            
             $subscriptions = wcs_get_subscriptions( array( 'subscriptions_per_page' => -1 ) );
 
             global $wpdb;
@@ -356,25 +451,41 @@ class Membership_Manager {
                     
                     self::log( sprintf( __( 'Generated end_date for subscription user ID %d: %s', 'membership-manager' ), $user_id, $end_date ) );
                 }
+                
+                // Parse order notes to extract status change dates
+                $status_dates = self::parse_subscription_status_dates( $subscription );
+                $paused_date = $status_dates['paused_date'];
+                $status_changed_date = $status_dates['status_changed_date'];
 
                 // Check if subscription already exists
                 $existing = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %d", $user_id ) );
 
                 if ( ! $existing ) {
-                    $result = $wpdb->insert(
-                        $table_name,
-                        array(
-                            'user_id' => $user_id,
-                            'start_date' => $start_date,
-                            'end_date' => $end_date,
-                            'status' => $status,
-                            'renewal_type' => $renewal_type,
-                        )
+                    $insert_data = array(
+                        'user_id' => $user_id,
+                        'start_date' => $start_date,
+                        'end_date' => $end_date,
+                        'status' => $status,
+                        'renewal_type' => $renewal_type,
                     );
+                    
+                    // Add optional date fields if found
+                    if ( $paused_date ) {
+                        $insert_data['paused_date'] = $paused_date;
+                    }
+                    if ( $status_changed_date ) {
+                        $insert_data['status_changed_date'] = $status_changed_date;
+                    }
+                    
+                    $result = $wpdb->insert( $table_name, $insert_data );
                     
                     if ( $result !== false ) {
                         $migrated_count++;
-                        self::log( sprintf( __( 'Migrated subscription for user ID: %d with renewal type: %s', 'membership-manager' ), $user_id, $renewal_type ) );
+                        $log_msg = sprintf( __( 'Migrated subscription for user ID: %d with renewal type: %s', 'membership-manager' ), $user_id, $renewal_type );
+                        if ( $paused_date || $status_changed_date ) {
+                            $log_msg .= ' (with status dates from order notes)';
+                        }
+                        self::log( $log_msg );
                     } else {
                         self::log( sprintf( __( 'Failed to migrate subscription for user ID: %d', 'membership-manager' ), $user_id ), 'ERROR' );
                     }
@@ -384,12 +495,144 @@ class Membership_Manager {
             }
 
             self::log( sprintf( __( 'Finished WooCommerce subscription migration. Migrated %d subscriptions, skipped %d.', 'membership-manager' ), $migrated_count, $skipped_count ) );
-            return $migrated_count;
+            
+            return array(
+                'subscriptions' => $migrated_count,
+                'products' => $product_migration_results
+            );
             
         } catch ( Exception $e ) {
             self::log( sprintf( __( 'Migration failed with error: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
             return false;
         }
+    }
+
+    /**
+     * Migrate WooCommerce Subscription products to our custom product types
+     * 
+     * @param array $selected_products Array of product IDs to migrate
+     * @return array Results with 'converted' and 'skipped' counts
+     */
+    public static function migrate_subscription_products( $selected_products = array() ) {
+        $results = array(
+            'converted' => 0,
+            'skipped' => 0,
+            'already_migrated' => 0,
+        );
+        
+        if ( empty( $selected_products ) ) {
+            self::log( __( 'No products selected for migration.', 'membership-manager' ) );
+            return $results;
+        }
+        
+        foreach ( $selected_products as $product_id ) {
+            $product = wc_get_product( $product_id );
+            
+            if ( ! $product ) {
+                self::log( sprintf( __( 'Product ID %d not found. Skipping.', 'membership-manager' ), $product_id ), 'WARNING' );
+                $results['skipped']++;
+                continue;
+            }
+            
+            $current_type = $product->get_type();
+            
+            // Skip if already our custom type
+            if ( $current_type === 'membership_auto' || $current_type === 'membership_manual' ) {
+                self::log( sprintf( __( 'Product ID %d is already a membership product type. Skipping.', 'membership-manager' ), $product_id ) );
+                $results['already_migrated']++;
+                continue;
+            }
+            
+            // Determine new product type based on WooCommerce Subscriptions
+            $new_type = 'membership_manual'; // Default to manual
+            $is_subscription = false;
+            
+            if ( class_exists( 'WC_Subscriptions_Product' ) && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+                $is_subscription = true;
+                $new_type = 'membership_auto';
+                self::log( sprintf( __( 'Product ID %d is a WooCommerce subscription - converting to membership_auto', 'membership-manager' ), $product_id ) );
+            } else {
+                self::log( sprintf( __( 'Product ID %d is not a subscription - converting to membership_manual', 'membership-manager' ), $product_id ) );
+            }
+            
+            // Get subscription metadata to preserve
+            $metadata_to_preserve = array();
+            if ( $is_subscription ) {
+                // Preserve subscription period, interval, length
+                $subscription_period = get_post_meta( $product_id, '_subscription_period', true );
+                $subscription_period_interval = get_post_meta( $product_id, '_subscription_period_interval', true );
+                $subscription_length = get_post_meta( $product_id, '_subscription_length', true );
+                
+                if ( $subscription_period ) {
+                    $metadata_to_preserve['_original_subscription_period'] = $subscription_period;
+                }
+                if ( $subscription_period_interval ) {
+                    $metadata_to_preserve['_original_subscription_interval'] = $subscription_period_interval;
+                }
+                if ( $subscription_length ) {
+                    $metadata_to_preserve['_original_subscription_length'] = $subscription_length;
+                }
+            }
+            
+            // Update product type
+            wp_set_object_terms( $product_id, $new_type, 'product_type' );
+            
+            // Update meta to match our custom type
+            update_post_meta( $product_id, '_membership_type', $new_type );
+            
+            // Set product as virtual (memberships don't need shipping)
+            update_post_meta( $product_id, '_virtual', 'yes' );
+            
+            // Save preserved metadata with prefix to avoid conflicts
+            foreach ( $metadata_to_preserve as $key => $value ) {
+                update_post_meta( $product_id, $key, $value );
+            }
+            
+            // Add migration flag
+            update_post_meta( $product_id, '_migrated_from_wc_subscriptions', current_time( 'mysql' ) );
+            
+            // For auto renewal, set default renewal period if not set
+            if ( $new_type === 'membership_auto' ) {
+                $renewal_period = get_post_meta( $product_id, '_membership_renewal_period', true );
+                if ( empty( $renewal_period ) ) {
+                    update_post_meta( $product_id, '_membership_renewal_period', '1' );
+                    update_post_meta( $product_id, '_membership_renewal_unit', 'year' );
+                    self::log( sprintf( __( 'Set default renewal period (1 year) for product ID %d', 'membership-manager' ), $product_id ) );
+                }
+            }
+            
+            // Clear product cache
+            wc_delete_product_transients( $product_id );
+            
+            // Add product to appropriate settings list
+            if ( $new_type === 'membership_auto' ) {
+                $automatic_products = get_option( 'membership_automatic_renewal_products', array() );
+                if ( ! in_array( $product_id, $automatic_products ) ) {
+                    $automatic_products[] = $product_id;
+                    update_option( 'membership_automatic_renewal_products', $automatic_products );
+                    self::log( sprintf( __( 'Added product ID %d to automatic renewal products list', 'membership-manager' ), $product_id ) );
+                }
+            } else {
+                $manual_products = get_option( 'membership_manual_renewal_products', array() );
+                if ( ! in_array( $product_id, $manual_products ) ) {
+                    $manual_products[] = $product_id;
+                    update_option( 'membership_manual_renewal_products', $manual_products );
+                    self::log( sprintf( __( 'Added product ID %d to manual renewal products list', 'membership-manager' ), $product_id ) );
+                }
+            }
+            
+            $results['converted']++;
+            self::log( sprintf( __( 'Successfully converted product ID %d from %s to %s', 'membership-manager' ), $product_id, $current_type, $new_type ) );
+        }
+        
+        self::log( sprintf( 
+            __( 'Product migration summary: %d converted, %d already migrated, %d skipped', 'membership-manager' ),
+            $results['converted'],
+            $results['already_migrated'],
+            $results['skipped']
+        ) );
+        
+        return $results;
     }
 
 
@@ -494,6 +737,7 @@ class Membership_Manager {
                     'status' => 'active',
                     'renewal_type' => $renewal_type,
                     'renewal_token' => $renewal_token,
+                    'status_changed_date' => current_time( 'mysql' ),
                 )
             );
             
@@ -556,15 +800,15 @@ class Membership_Manager {
             $membership->end_date === '0000-00-00 00:00:00' || 
             strtotime( $membership->end_date ) === false 
         ) ) {
-            return '<span style="color: #00a32a; font-weight: 600;">' . __( 'Active - No expiration', 'membership-manager' ) . '</span>';
+            return '<span style="color: #00a32a; font-weight: 600;">' . __( 'Uden udløb', 'membership-manager' ) . '</span>';
         }
         
-        // For non-active statuses, don't show end date prominently
-        if ( $membership->status !== 'active' ) {
-            return '<span style="color: #646970;">' . self::get_status_display_name( $membership->status ) . '</span>';
+        // If on-hold, show when it was paused
+        if ( $membership->status === 'on-hold' && ! empty( $membership->paused_date ) ) {
+            return '<span style="color: #826eb4;">' . __( 'Pauseret: ', 'membership-manager' ) . esc_html( self::format_date_safely( $membership->paused_date ) ) . '</span>';
         }
         
-        // For active with valid end date
+        // For all statuses, show the end date if valid
         return esc_html( self::format_date_safely( $membership->end_date ) );
     }
 
@@ -585,28 +829,43 @@ class Membership_Manager {
     }
 
     public static function handle_cleanup_invalid_dates() {
+        error_log( 'Membership Manager: Cleanup handler called.' );
         self::log( 'Cleanup handler called.' );
         
         // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
+            error_log( 'Membership Manager: Cleanup failed - insufficient permissions' );
             self::log( 'Cleanup failed: insufficient permissions', 'ERROR' );
-            wp_die( 'You do not have sufficient permissions to access this page.' );
+            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
         }
         
+        error_log( 'Membership Manager: User permissions verified.' );
         self::log( 'User permissions verified.' );
 
         // Verify nonce
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'cleanup_invalid_dates_nonce' ) ) {
+            error_log( 'Membership Manager: Cleanup failed - nonce verification failed' );
             self::log( 'Cleanup failed: nonce verification failed', 'ERROR' );
-            wp_die( 'Security check failed. Please try again.' );
+            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
         }
         
+        error_log( 'Membership Manager: Nonce verified, starting cleanup.' );
         self::log( 'Nonce verified, starting cleanup.' );
 
-        // Perform cleanup
-        $result = self::cleanup_invalid_dates();
-        
-        self::log( sprintf( 'Cleanup completed with result: %s', $result ? 'success' : 'failed' ) );
+        // Perform cleanup with error handling
+        try {
+            $result = self::cleanup_invalid_dates();
+            error_log( 'Membership Manager: Cleanup completed with result: ' . ( $result ? 'success' : 'failed' ) );
+            self::log( sprintf( 'Cleanup completed with result: %s', $result ? 'success' : 'failed' ) );
+        } catch ( \Exception $e ) {
+            error_log( 'Membership Manager: Cleanup handler caught exception: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
+            self::log( sprintf( 'Cleanup handler caught exception: %s', $e->getMessage() ), 'ERROR' );
+            $result = false;
+        } catch ( \Error $e ) {
+            error_log( 'Membership Manager: Cleanup handler caught error: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
+            self::log( sprintf( 'Cleanup handler caught error: %s', $e->getMessage() ), 'ERROR' );
+            $result = false;
+        }
         
         // Redirect with success/error message
         $redirect_url = add_query_arg( 
@@ -617,71 +876,109 @@ class Membership_Manager {
             admin_url( 'admin.php' )
         );
         
+        error_log( 'Membership Manager: Redirecting to: ' . $redirect_url );
         wp_redirect( $redirect_url );
         exit;
     }
 
     public static function cleanup_invalid_dates() {
+        error_log( 'Membership Manager: Starting cleanup of invalid end dates.' );
         self::log( 'Starting cleanup of invalid end dates.' );
         
         global $wpdb;
         $table_name = $wpdb->prefix . 'membership_subscriptions';
         
         try {
-            // Find memberships with invalid end dates
+            // Find memberships with invalid end dates - compatible with MySQL strict mode
             $query = "SELECT * FROM $table_name 
                      WHERE end_date IS NULL 
-                        OR end_date = '' 
-                        OR end_date = '0000-00-00 00:00:00' 
-                        OR end_date = '0000-00-00'";
+                        OR end_date < '1970-01-01'
+                        OR YEAR(end_date) < 1970";
             
+            error_log( 'Membership Manager: Executing query: ' . $query );
             self::log( 'Executing query: ' . $query );
             $invalid_memberships = $wpdb->get_results( $query );
             
             if ( $wpdb->last_error ) {
+                error_log( 'Membership Manager: SQL Error: ' . $wpdb->last_error );
                 self::log( 'SQL Error: ' . $wpdb->last_error, 'ERROR' );
                 return false;
             }
             
-            self::log( 'Found ' . count( $invalid_memberships ) . ' memberships with invalid dates.' );
+            $count = is_array( $invalid_memberships ) ? count( $invalid_memberships ) : 0;
+            error_log( 'Membership Manager: Found ' . $count . ' memberships with invalid dates.' );
+            self::log( 'Found ' . $count . ' memberships with invalid dates.' );
+
+            if ( $count === 0 ) {
+                error_log( 'Membership Manager: No invalid dates to clean up.' );
+                self::log( 'No invalid dates to clean up.' );
+                return true;
+            }
 
             $updated_count = 0;
             
             foreach ( $invalid_memberships as $membership ) {
-                // Generate a new end date based on start date + 1 year
-                $start_datetime = !empty( $membership->start_date ) && $membership->start_date !== '0000-00-00 00:00:00' 
-                    ? new DateTime( $membership->start_date ) 
-                    : new DateTime();
+                try {
+                    // Validate membership object
+                    if ( ! isset( $membership->id ) || ! isset( $membership->user_id ) ) {
+                        self::log( 'Invalid membership object found, skipping.', 'WARNING' );
+                        continue;
+                    }
                     
-                $end_datetime = clone $start_datetime;
-                $end_datetime->modify( '+1 year' );
-                
-                $result = $wpdb->update(
-                    $table_name,
-                    array( 'end_date' => $end_datetime->format( 'Y-m-d H:i:s' ) ),
-                    array( 'id' => $membership->id ),
-                    array( '%s' ),
-                    array( '%d' )
-                );
-                
-                if ( $result !== false ) {
-                    $updated_count++;
-                    self::log( sprintf( 'Fixed end_date for membership ID %d (user %d): %s', 
-                        $membership->id, $membership->user_id, $end_datetime->format( 'Y-m-d H:i:s' ) ) );
-                } else {
-                    self::log( sprintf( 'Failed to update membership ID %d (user %d)', 
-                        $membership->id, $membership->user_id ), 'ERROR' );
+                    // Generate a new end date based on start date + 1 year
+                    if ( !empty( $membership->start_date ) && $membership->start_date !== '0000-00-00 00:00:00' ) {
+                        try {
+                            $start_datetime = new \DateTime( $membership->start_date );
+                        } catch ( \Exception $e ) {
+                            self::log( sprintf( 'Invalid start_date for membership ID %d: %s', $membership->id, $e->getMessage() ), 'WARNING' );
+                            $start_datetime = new \DateTime();
+                        }
+                    } else {
+                        $start_datetime = new \DateTime();
+                    }
+                        
+                    $end_datetime = clone $start_datetime;
+                    $end_datetime->modify( '+1 year' );
+                    
+                    $result = $wpdb->update(
+                        $table_name,
+                        array( 'end_date' => $end_datetime->format( 'Y-m-d H:i:s' ) ),
+                        array( 'id' => $membership->id ),
+                        array( '%s' ),
+                        array( '%d' )
+                    );
+                    
+                    if ( $result !== false ) {
+                        $updated_count++;
+                        error_log( sprintf( 'Membership Manager: Fixed end_date for membership ID %d (user %d): %s', 
+                            $membership->id, $membership->user_id, $end_datetime->format( 'Y-m-d H:i:s' ) ) );
+                        self::log( sprintf( 'Fixed end_date for membership ID %d (user %d): %s', 
+                            $membership->id, $membership->user_id, $end_datetime->format( 'Y-m-d H:i:s' ) ) );
+                    } else {
+                        error_log( sprintf( 'Membership Manager: Failed to update membership ID %d (user %d): %s', 
+                            $membership->id, $membership->user_id, $wpdb->last_error ) );
+                        self::log( sprintf( 'Failed to update membership ID %d (user %d): %s', 
+                            $membership->id, $membership->user_id, $wpdb->last_error ), 'ERROR' );
+                    }
+                } catch ( \Exception $e ) {
+                    error_log( sprintf( 'Membership Manager: Exception processing membership ID %d: %s', 
+                        isset($membership->id) ? $membership->id : 'unknown', $e->getMessage() ) );
+                    self::log( sprintf( 'Exception processing membership ID %d: %s', 
+                        isset($membership->id) ? $membership->id : 'unknown', $e->getMessage() ), 'ERROR' );
+                    continue;
                 }
             }
 
-            self::log( sprintf( 'Finished cleanup. Updated %d memberships with invalid end dates.', $updated_count ) );
+            error_log( sprintf( 'Membership Manager: Finished cleanup. Updated %d out of %d memberships with invalid end dates.', $updated_count, $count ) );
+            self::log( sprintf( 'Finished cleanup. Updated %d out of %d memberships with invalid end dates.', $updated_count, $count ) );
             return true;
             
-        } catch ( Exception $e ) {
-            self::log( sprintf( 'Cleanup failed with error: %s', $e->getMessage() ), 'ERROR' );
+        } catch ( \Exception $e ) {
+            error_log( sprintf( 'Membership Manager: Cleanup failed with exception: %s in %s:%d', $e->getMessage(), $e->getFile(), $e->getLine() ) );
+            self::log( sprintf( 'Cleanup failed with exception: %s in %s:%d', $e->getMessage(), $e->getFile(), $e->getLine() ), 'ERROR' );
             return false;
-        } catch ( Error $e ) {
-            self::log( sprintf( 'Cleanup failed with fatal error: %s', $e->getMessage() ), 'ERROR' );
+        } catch ( \Error $e ) {
+            self::log( sprintf( 'Cleanup failed with fatal error: %s in %s:%d', $e->getMessage(), $e->getFile(), $e->getLine() ), 'ERROR' );
             return false;
         }
     }
@@ -707,19 +1004,44 @@ class Membership_Manager {
 
         global $wpdb;
         $table_name = $wpdb->prefix . 'membership_subscriptions';
+        
+        // Get current membership to check if status changed
+        $current = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $membership_id ) );
+        $old_status = $current ? $current->status : '';
+        
+        $update_data = array(
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'status' => $status,
+            'renewal_type' => $renewal_type
+        );
+        
+        // If status changed, update status_changed_date
+        if ( $old_status !== $status ) {
+            $update_data['status_changed_date'] = current_time( 'mysql' );
+            
+            // If changing to on-hold, set paused_date
+            if ( $status === 'on-hold' && $old_status !== 'on-hold' ) {
+                $update_data['paused_date'] = current_time( 'mysql' );
+            }
+            // If changing from on-hold to another status, clear paused_date
+            elseif ( $old_status === 'on-hold' && $status !== 'on-hold' ) {
+                $update_data['paused_date'] = NULL;
+            }
+        }
 
         $wpdb->update(
             $table_name,
-            array(
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'status' => $status,
-                'renewal_type' => $renewal_type
-            ),
+            $update_data,
             array( 'id' => $membership_id )
         );
 
         self::log( sprintf( __( 'Updated membership ID: %d by user ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
+        
+        // Trigger status change hook if status changed
+        if ( $old_status !== $status ) {
+            do_action( 'membership_manager_status_changed', $membership_id, $old_status, $status );
+        }
 
         wp_redirect( admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership_id . '&updated=true' ) );
         exit;
@@ -883,7 +1205,11 @@ class Membership_Manager {
 
         $wpdb->update(
             $table_name,
-            array( 'status' => 'on-hold' ),
+            array( 
+                'status' => 'on-hold',
+                'paused_date' => current_time( 'mysql' ),
+                'status_changed_date' => current_time( 'mysql' )
+            ),
             array( 'id' => $membership_id )
         );
 
@@ -924,7 +1250,11 @@ class Membership_Manager {
 
         $wpdb->update(
             $table_name,
-            array( 'status' => 'active' ),
+            array( 
+                'status' => 'active',
+                'paused_date' => NULL,
+                'status_changed_date' => current_time( 'mysql' )
+            ),
             array( 'id' => $membership_id )
         );
 

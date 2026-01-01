@@ -30,7 +30,27 @@ class Membership_Admin {
     }
 
     public function membership_endpoint_content() {
-        $user_id = get_current_user_id();
+        // Check if admin is previewing another user's membership
+        $preview_user_id = isset( $_GET['preview_user'] ) ? absint( $_GET['preview_user'] ) : 0;
+        
+        // Only allow admins to preview other users
+        if ( $preview_user_id && current_user_can( 'manage_options' ) ) {
+            $user_id = $preview_user_id;
+            $preview_user = get_user_by( 'ID', $preview_user_id );
+            
+            if ( $preview_user ) {
+                echo '<div class="woocommerce-info" style="margin-bottom: 20px; padding: 15px; background: #f0f6fc; border-left: 4px solid #2271b1;">';
+                echo '<strong>' . __( 'Admin Preview Mode:', 'membership-manager' ) . '</strong> ';
+                echo sprintf( __( 'Viewing membership for %s (User ID: %d)', 'membership-manager' ), esc_html( $preview_user->display_name ), $preview_user_id );
+                echo '</div>';
+            } else {
+                echo '<div class="woocommerce-error">' . __( 'User not found.', 'membership-manager' ) . '</div>';
+                return;
+            }
+        } else {
+            $user_id = get_current_user_id();
+        }
+        
         global $wpdb;
         $table_name = $wpdb->prefix . 'membership_subscriptions';
 
@@ -51,9 +71,10 @@ class Membership_Admin {
     }
 
     public function add_settings_page() {
-        add_options_page(
+        add_submenu_page(
+            'membership-manager',
             __( 'Membership Settings', 'membership-manager' ),
-            __( 'Membership Settings', 'membership-manager' ),
+            __( 'Indstillinger', 'membership-manager' ),
             'manage_options',
             'membership-settings',
             array( $this, 'render_settings_page' )

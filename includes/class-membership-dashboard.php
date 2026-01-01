@@ -61,6 +61,14 @@ class Membership_Dashboard {
                     <div style="font-size: 32px; font-weight: bold;"><?php echo esc_html( $counts['pending-cancel'] ); ?></div>
                     <div style="opacity: 0.9;"><?php _e( 'Pending Cancel', 'membership-manager' ); ?></div>
                 </div>
+                <div style="background: #826eb4; color: white; padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 32px; font-weight: bold;"><?php echo esc_html( $counts['on-hold'] ); ?></div>
+                    <div style="opacity: 0.9;"><?php _e( 'On Hold', 'membership-manager' ); ?></div>
+                </div>
+                <div style="background: #646970; color: white; padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 32px; font-weight: bold;"><?php echo esc_html( $counts['cancelled'] ); ?></div>
+                    <div style="opacity: 0.9;"><?php _e( 'Cancelled', 'membership-manager' ); ?></div>
+                </div>
             </div>
             
             <?php if ( ! empty( $expiring_soon ) ): ?>

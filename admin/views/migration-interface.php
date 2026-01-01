@@ -6,7 +6,14 @@
     if ( isset( $_GET['migration'] ) ) {
         if ( $_GET['migration'] === 'success' ) {
             $count = isset( $_GET['count'] ) ? absint( $_GET['count'] ) : 0;
-            echo '<div class="notice notice-success is-dismissible"><p>' . sprintf( __( 'Migration completed successfully! %d subscriptions migrated.', 'membership-manager' ), $count ) . '</p></div>';
+            $products_converted = isset( $_GET['products_converted'] ) ? absint( $_GET['products_converted'] ) : 0;
+            $products_skipped = isset( $_GET['products_skipped'] ) ? absint( $_GET['products_skipped'] ) : 0;
+            
+            $message = sprintf( __( 'Migration completed successfully! %d subscriptions migrated.', 'membership-manager' ), $count );
+            if ( $products_converted > 0 || $products_skipped > 0 ) {
+                $message .= '<br>' . sprintf( __( 'Products: %d converted to membership types, %d skipped/already migrated.', 'membership-manager' ), $products_converted, $products_skipped );
+            }
+            echo '<div class="notice notice-success is-dismissible"><p>' . $message . '</p></div>';
         } elseif ( $_GET['migration'] === 'error' ) {
             echo '<div class="notice notice-error is-dismissible"><p>' . __( 'Migration failed. Please check the logs for more details.', 'membership-manager' ) . '</p></div>';
         }
@@ -29,7 +36,13 @@
     ?>
     
     <h2><?php _e( 'WooCommerce Subscriptions Migration', 'membership-manager' ); ?></h2>
-    <p><?php _e( 'Select which subscription products you want to migrate to the membership system. Only subscriptions containing the selected products will be migrated.', 'membership-manager' ); ?></p>
+    <p><?php _e( 'Select which subscription products you want to migrate to the membership system. This will:', 'membership-manager' ); ?></p>
+    <ul style="list-style: disc; margin-left: 30px; margin-bottom: 20px;">
+        <li><?php _e( '<strong>Convert products:</strong> WooCommerce Subscription products will be converted to "Membership Auto" product type, and regular products to "Membership Manual" type.', 'membership-manager' ); ?></li>
+        <li><?php _e( '<strong>Auto-configure settings:</strong> Converted products will automatically be added to the appropriate membership renewal lists in settings.', 'membership-manager' ); ?></li>
+        <li><?php _e( '<strong>Migrate subscriptions:</strong> All active subscriptions containing the selected products will be migrated to the membership system.', 'membership-manager' ); ?></li>
+        <li><?php _e( '<strong>Preserve data:</strong> Original subscription metadata (period, interval, length) will be preserved for reference.', 'membership-manager' ); ?></li>
+    </ul>
     
     <?php
     // Get all products (not just subscription products)
@@ -62,10 +75,19 @@
                         <fieldset>
                             <legend class="screen-reader-text"><?php _e( 'Select Products', 'membership-manager' ); ?></legend>
                             <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #fff;">
-                                <?php foreach ( $all_products_list as $product ) : ?>
+                                <?php foreach ( $all_products_list as $product ) : 
+                                    $type_badge = '';
+                                    if ( $product['type'] === 'membership_auto' ) {
+                                        $type_badge = '<span style="background: #00a32a; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 5px;">✓ Membership Auto</span>';
+                                    } elseif ( $product['type'] === 'membership_manual' ) {
+                                        $type_badge = '<span style="background: #2271b1; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 5px;">✓ Membership Manual</span>';
+                                    } elseif ( $product['type'] === 'subscription' || $product['type'] === 'variable-subscription' ) {
+                                        $type_badge = '<span style="background: #f0f0f1; color: #2c3338; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 5px;">→ Will convert to Auto</span>';
+                                    }
+                                ?>
                                     <label style="display: block; margin-bottom: 8px;">
                                         <input type="checkbox" name="migration_products[]" value="<?php echo esc_attr( $product['id'] ); ?>">
-                                        <?php echo esc_html( $product['name'] ) . ' (ID: ' . $product['id'] . ' - ' . ucfirst( $product['type'] ) . ')'; ?>
+                                        <?php echo esc_html( $product['name'] ) . ' (ID: ' . $product['id'] . ')'; ?> <?php echo $type_badge; ?>
                                     </label>
                                 <?php endforeach; ?>
                             </div>
@@ -74,7 +96,12 @@
                                 <button type="button" id="deselect-all-products" class="button button-secondary"><?php _e( 'Deselect All', 'membership-manager' ); ?></button>
                             </p>
                         </fieldset>
-                        <p class="description"><?php _e( 'Select the products that should be considered membership products. Only subscriptions or orders containing these products will be migrated. Subscription products will automatically be set as automatic renewal.', 'membership-manager' ); ?></p>
+                        <p class="description">
+                            <?php _e( '<strong>Product Conversion:</strong>', 'membership-manager' ); ?><br>
+                            • <?php _e( 'WooCommerce Subscription products → <strong>Membership Auto</strong> (automatic renewal)', 'membership-manager' ); ?><br>
+                            • <?php _e( 'Regular products → <strong>Membership Manual</strong> (manual renewal)', 'membership-manager' ); ?><br>
+                            • <?php _e( 'Products already converted will be skipped', 'membership-manager' ); ?>
+                        </p>
                     <?php else : ?>
                         <p><?php _e( 'No products found. Make sure WooCommerce is active and you have products created.', 'membership-manager' ); ?></p>
                     <?php endif; ?>
@@ -82,7 +109,14 @@
             </tr>
         </table>
         
-        <?php submit_button( __( 'Migrate Selected Subscriptions', 'membership-manager' ), 'primary' ); ?>
+        <div class="notice notice-info inline" style="margin-top: 0; margin-bottom: 20px;">
+            <p>
+                <strong><?php _e( 'Note:', 'membership-manager' ); ?></strong>
+                <?php _e( 'After migration, you can edit the converted products in WooCommerce → Products to adjust pricing, descriptions, or renewal periods. The products will maintain their new membership type.', 'membership-manager' ); ?>
+            </p>
+        </div>
+        
+        <?php submit_button( __( 'Migrate Products & Subscriptions', 'membership-manager' ), 'primary' ); ?>
     </form>
     
     <script>
