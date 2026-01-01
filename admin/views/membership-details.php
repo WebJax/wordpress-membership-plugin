@@ -44,6 +44,22 @@ $user_meta = get_user_meta( $user->ID );
         <?php _e( 'Membership Details', 'membership-manager' ); ?>
         <a href="<?php echo admin_url( 'admin.php?page=membership-manager' ); ?>" class="page-title-action"><?php _e( 'Back to List', 'membership-manager' ); ?></a>
     </h1>
+    
+    <?php
+    // Show success messages
+    if ( isset( $_GET['updated'] ) && $_GET['updated'] === 'true' ) {
+        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Membership updated successfully!', 'membership-manager' ) . '</p></div>';
+    }
+    if ( isset( $_GET['paused'] ) && $_GET['paused'] === 'true' ) {
+        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Membership paused successfully!', 'membership-manager' ) . '</p></div>';
+    }
+    if ( isset( $_GET['resumed'] ) && $_GET['resumed'] === 'true' ) {
+        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Membership resumed successfully!', 'membership-manager' ) . '</p></div>';
+    }
+    if ( isset( $_GET['created'] ) && $_GET['created'] === 'true' ) {
+        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Membership created successfully!', 'membership-manager' ) . '</p></div>';
+    }
+    ?>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
         
@@ -100,8 +116,34 @@ $user_meta = get_user_meta( $user->ID );
                         </tr>
                     </table>
                     
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between;">
-                        <button type="submit" class="button button-primary"><?php _e( 'Update Membership', 'membership-manager' ); ?></button>
+                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" class="button button-primary"><?php _e( 'Update Membership', 'membership-manager' ); ?></button>
+                            
+                            <?php if ( $membership->status === 'active' ): ?>
+                                <a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=pause_membership&membership_id=' . $membership->id ), 'pause_membership_nonce' ); ?>" 
+                                   class="button button-secondary"
+                                   onclick="return confirm('<?php _e( 'Are you sure you want to pause this membership?', 'membership-manager' ); ?>');">
+                                    <span class="dashicons dashicons-controls-pause" style="vertical-align: middle;"></span>
+                                    <?php _e( 'Pause Membership', 'membership-manager' ); ?>
+                                </a>
+                            <?php elseif ( $membership->status === 'on-hold' ): ?>
+                                <a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=resume_membership&membership_id=' . $membership->id ), 'resume_membership_nonce' ); ?>" 
+                                   class="button button-secondary"
+                                   onclick="return confirm('<?php _e( 'Are you sure you want to resume this membership?', 'membership-manager' ); ?>');">
+                                    <span class="dashicons dashicons-controls-play" style="vertical-align: middle;"></span>
+                                    <?php _e( 'Resume Membership', 'membership-manager' ); ?>
+                                </a>
+                            <?php endif; ?>
+                            
+                            <?php if ( $membership->renewal_type === 'manual' && ! empty( $membership->renewal_token ) ): ?>
+                                <?php $renewal_link = Membership_Manager::get_renewal_link( $membership ); ?>
+                                <button type="button" class="button button-secondary" onclick="copyToClipboard('<?php echo esc_js( $renewal_link ); ?>')">
+                                    <span class="dashicons dashicons-admin-links" style="vertical-align: middle;"></span>
+                                    <?php _e( 'Copy Renewal Link', 'membership-manager' ); ?>
+                                </button>
+                            <?php endif; ?>
+                        </div>
                         
                         <a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=delete_membership&membership_id=' . $membership->id ), 'delete_membership_nonce' ); ?>" 
                            class="button button-link-delete" 
@@ -109,6 +151,14 @@ $user_meta = get_user_meta( $user->ID );
                             <?php _e( 'Delete Membership', 'membership-manager' ); ?>
                         </a>
                     </div>
+                    
+                    <script>
+                    function copyToClipboard(text) {
+                        navigator.clipboard.writeText(text).then(function() {
+                            alert('<?php _e( 'Renewal link copied to clipboard!', 'membership-manager' ); ?>');
+                        });
+                    }
+                    </script>
                 </form>
             </div>
         </div>

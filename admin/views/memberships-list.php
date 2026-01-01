@@ -47,10 +47,30 @@
     <table class="wp-list-table widefat fixed striped">
         <thead>
             <tr>
-                <th><?php _e( 'User', 'membership-manager' ); ?></th>
-                <th><?php _e( 'Start Date', 'membership-manager' ); ?></th>
-                <th><?php _e( 'End Date / Status', 'membership-manager' ); ?></th>
-                <th><?php _e( 'Status', 'membership-manager' ); ?></th>
+                <th class="sortable" data-column="user_id">
+                    <a href="#" class="sort-link">
+                        <?php _e( 'User', 'membership-manager' ); ?>
+                        <span class="dashicons dashicons-sort" style="font-size: 14px; vertical-align: middle;"></span>
+                    </a>
+                </th>
+                <th class="sortable" data-column="start_date">
+                    <a href="#" class="sort-link">
+                        <?php _e( 'Start Date', 'membership-manager' ); ?>
+                        <span class="dashicons dashicons-sort" style="font-size: 14px; vertical-align: middle;"></span>
+                    </a>
+                </th>
+                <th class="sortable" data-column="end_date">
+                    <a href="#" class="sort-link">
+                        <?php _e( 'End Date / Status', 'membership-manager' ); ?>
+                        <span class="dashicons dashicons-sort" style="font-size: 14px; vertical-align: middle;"></span>
+                    </a>
+                </th>
+                <th class="sortable" data-column="status">
+                    <a href="#" class="sort-link">
+                        <?php _e( 'Status', 'membership-manager' ); ?>
+                        <span class="dashicons dashicons-sort" style="font-size: 14px; vertical-align: middle;"></span>
+                    </a>
+                </th>
                 <th><?php _e( 'Renewal Type', 'membership-manager' ); ?></th>
                 <th><?php _e( 'Actions', 'membership-manager' ); ?></th>
             </tr>

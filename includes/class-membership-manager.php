@@ -29,6 +29,13 @@ class Membership_Manager {
         add_action( 'admin_post_update_membership_details', array( __CLASS__, 'handle_update_membership_details' ) );
         add_action( 'admin_post_delete_membership', array( __CLASS__, 'handle_delete_membership' ) );
         add_action( 'admin_post_add_new_membership', array( __CLASS__, 'handle_add_new_membership' ) );
+        add_action( 'admin_post_generate_renewal_tokens', array( __CLASS__, 'handle_generate_renewal_tokens' ) );
+        add_action( 'admin_post_pause_membership', array( __CLASS__, 'handle_pause_membership' ) );
+        add_action( 'admin_post_resume_membership', array( __CLASS__, 'handle_resume_membership' ) );
+        
+        // Register renewal endpoint
+        add_action( 'init', array( __CLASS__, 'register_renewal_endpoint' ) );
+        add_action( 'template_redirect', array( __CLASS__, 'handle_renewal_token' ) );
     }
 
     public static function load_textdomain() {
@@ -47,7 +54,10 @@ class Membership_Manager {
             end_date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             status varchar(20) DEFAULT '' NOT NULL,
             renewal_type varchar(20) DEFAULT 'manual' NOT NULL,
-            PRIMARY KEY  (id)
+            renewal_token varchar(64) DEFAULT '' NOT NULL,
+            PRIMARY KEY  (id),
+            KEY user_id (user_id),
+            KEY renewal_token (renewal_token)
         ) $charset_collate;";
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -114,6 +124,11 @@ class Membership_Manager {
         if ( 'toplevel_page_membership-manager' !== $hook && 'memberships_page_membership-migration' !== $hook ) {
             return;
         }
+        
+        // Enqueue CSS
+        wp_enqueue_style( 'membership-admin', plugin_dir_url( __FILE__ ) . '../admin/css/admin.css', array(), '1.0.0' );
+        
+        // Enqueue JS
         wp_enqueue_script( 'membership-admin', plugin_dir_url( __FILE__ ) . '../admin/js/admin.js', array( 'jquery' ), '1.0.0', true );
         
         // Localize script with nonce for AJAX calls
@@ -135,6 +150,22 @@ class Membership_Manager {
         // Get filter parameters
         $status = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : '';
         $renewal_date = isset( $_POST['renewal_date'] ) ? sanitize_text_field( $_POST['renewal_date'] ) : '';
+        
+        // Get sort parameters
+        $sort_column = isset( $_POST['sort_column'] ) ? sanitize_text_field( $_POST['sort_column'] ) : 'end_date';
+        $sort_order = isset( $_POST['sort_order'] ) ? sanitize_text_field( $_POST['sort_order'] ) : 'ASC';
+        
+        // Validate sort column
+        $allowed_columns = array( 'user_id', 'start_date', 'end_date', 'status' );
+        if ( ! in_array( $sort_column, $allowed_columns ) ) {
+            $sort_column = 'end_date';
+        }
+        
+        // Validate sort order
+        $sort_order = strtoupper( $sort_order );
+        if ( ! in_array( $sort_order, array( 'ASC', 'DESC' ) ) ) {
+            $sort_order = 'ASC';
+        }
         
         // First get status counts for dashboard
         $status_counts = self::get_membership_status_counts();
@@ -158,7 +189,7 @@ class Membership_Manager {
             $where_sql = 'WHERE ' . implode( ' AND ', $where_clauses );
         }
         
-        $query = "SELECT * FROM $table_name $where_sql ORDER BY end_date ASC";
+        $query = "SELECT * FROM $table_name $where_sql ORDER BY $sort_column $sort_order";
         
         if ( ! empty( $where_values ) ) {
             $memberships = $wpdb->get_results( $wpdb->prepare( $query, $where_values ) );
@@ -196,6 +227,32 @@ class Membership_Manager {
         wp_send_json_success( array( 
             'html' => $html, 
             'counts' => $status_counts 
+        ) );
+    }
+
+    /**
+     * Get a single membership by ID
+     */
+    public static function get_membership( $membership_id ) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+        
+        return $wpdb->get_row( $wpdb->prepare(
+            "SELECT * FROM $table_name WHERE id = %d",
+            $membership_id
+        ) );
+    }
+
+    /**
+     * Get user's membership
+     */
+    public static function get_user_membership( $user_id ) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+        
+        return $wpdb->get_row( $wpdb->prepare(
+            "SELECT * FROM $table_name WHERE user_id = %d ORDER BY end_date DESC LIMIT 1",
+            $user_id
         ) );
     }
 
@@ -424,6 +481,9 @@ class Membership_Manager {
             $start_date = new DateTime();
             $end_date = new DateTime();
             $end_date->modify( '+1 year' );
+            
+            // Generate unique renewal token
+            $renewal_token = self::generate_renewal_token();
 
             $wpdb->insert(
                 $table_name,
@@ -433,9 +493,16 @@ class Membership_Manager {
                     'end_date' => $end_date->format( 'Y-m-d H:i:s' ),
                     'status' => 'active',
                     'renewal_type' => $renewal_type,
+                    'renewal_token' => $renewal_token,
                 )
             );
+            
+            $subscription_id = $wpdb->insert_id;
+            
             self::log( sprintf( __( 'Created new membership for user ID: %d', 'membership-manager' ), $user_id ) );
+            
+            // Trigger activation hook
+            do_action( 'membership_manager_subscription_activated', $user_id, $subscription_id );
         }
     }
 
@@ -714,6 +781,8 @@ class Membership_Manager {
             wp_die( sprintf( __( 'User ID %d already has a membership (ID: %d). Please edit the existing membership instead.', 'membership-manager' ), $user_id, $existing->id ) );
         }
 
+        $renewal_token = self::generate_renewal_token();
+
         $wpdb->insert(
             $table_name,
             array(
@@ -721,7 +790,8 @@ class Membership_Manager {
                 'start_date' => $start_date,
                 'end_date' => $end_date,
                 'status' => $status,
-                'renewal_type' => $renewal_type
+                'renewal_type' => $renewal_type,
+                'renewal_token' => $renewal_token
             )
         );
 
@@ -729,7 +799,141 @@ class Membership_Manager {
 
         self::log( sprintf( __( 'Created new membership ID: %d for user ID: %d by admin.', 'membership-manager' ), $membership_id, $user_id ) );
 
+        // Trigger activation if status is active
+        if ( $status === 'active' ) {
+            do_action( 'membership_manager_subscription_activated', $user_id, $membership_id );
+        }
+
         wp_redirect( admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership_id . '&created=true' ) );
+        exit;
+    }
+
+    public static function handle_generate_renewal_tokens() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+        }
+
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'generate_renewal_tokens_nonce' ) ) {
+            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+        }
+
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+
+        // Find memberships without tokens
+        $memberships = $wpdb->get_results( 
+            "SELECT * FROM $table_name WHERE renewal_token IS NULL OR renewal_token = ''"
+        );
+
+        $updated_count = 0;
+
+        foreach ( $memberships as $membership ) {
+            $token = self::generate_renewal_token();
+            
+            $result = $wpdb->update(
+                $table_name,
+                array( 'renewal_token' => $token ),
+                array( 'id' => $membership->id )
+            );
+
+            if ( $result !== false ) {
+                $updated_count++;
+            }
+        }
+
+        self::log( sprintf( __( 'Generated renewal tokens for %d memberships.', 'membership-manager' ), $updated_count ) );
+
+        $redirect_url = add_query_arg(
+            array(
+                'page' => 'membership-migration',
+                'tokens_generated' => $updated_count
+            ),
+            admin_url( 'admin.php' )
+        );
+
+        wp_redirect( $redirect_url );
+        exit;
+    }
+    
+    public static function handle_pause_membership() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+        }
+
+        if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'pause_membership_nonce' ) ) {
+            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+        }
+
+        $membership_id = isset( $_GET['membership_id'] ) ? absint( $_GET['membership_id'] ) : 0;
+        if ( ! $membership_id ) {
+            wp_die( __( 'Invalid membership ID.', 'membership-manager' ) );
+        }
+
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+        
+        // Get current status
+        $current = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $membership_id ) );
+        
+        if ( ! $current ) {
+            wp_die( __( 'Membership not found.', 'membership-manager' ) );
+        }
+        
+        $old_status = $current->status;
+
+        $wpdb->update(
+            $table_name,
+            array( 'status' => 'on-hold' ),
+            array( 'id' => $membership_id )
+        );
+
+        self::log( sprintf( __( 'Paused membership ID: %d by user ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
+        
+        // Trigger status change hook
+        do_action( 'membership_manager_status_changed', $membership_id, $old_status, 'on-hold' );
+
+        wp_redirect( admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership_id . '&paused=true' ) );
+        exit;
+    }
+    
+    public static function handle_resume_membership() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+        }
+
+        if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'resume_membership_nonce' ) ) {
+            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+        }
+
+        $membership_id = isset( $_GET['membership_id'] ) ? absint( $_GET['membership_id'] ) : 0;
+        if ( ! $membership_id ) {
+            wp_die( __( 'Invalid membership ID.', 'membership-manager' ) );
+        }
+
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+        
+        // Get current status
+        $current = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $membership_id ) );
+        
+        if ( ! $current ) {
+            wp_die( __( 'Membership not found.', 'membership-manager' ) );
+        }
+        
+        $old_status = $current->status;
+
+        $wpdb->update(
+            $table_name,
+            array( 'status' => 'active' ),
+            array( 'id' => $membership_id )
+        );
+
+        self::log( sprintf( __( 'Resumed membership ID: %d by user ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
+        
+        // Trigger status change hook (will also trigger activation if coming from on-hold)
+        do_action( 'membership_manager_status_changed', $membership_id, $old_status, 'active' );
+
+        wp_redirect( admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership_id . '&resumed=true' ) );
         exit;
     }
 
@@ -738,5 +942,121 @@ class Membership_Manager {
         $timestamp = date( 'Y-m-d H:i:s' );
         $log_message = "[$timestamp] [$type] - $message" . PHP_EOL;
         file_put_contents( $log_file, $log_message, FILE_APPEND );
+    }
+    
+    /**
+     * Generate a unique renewal token
+     * 
+     * @return string Unique token
+     */
+    public static function generate_renewal_token() {
+        return bin2hex( random_bytes( 32 ) );
+    }
+    
+    /**
+     * Get renewal link for a subscription
+     * 
+     * @param object $subscription The subscription object
+     * @return string The renewal URL
+     */
+    public static function get_renewal_link( $subscription ) {
+        // Ensure token exists
+        if ( empty( $subscription->renewal_token ) ) {
+            global $wpdb;
+            $table_name = $wpdb->prefix . 'membership_subscriptions';
+            $token = self::generate_renewal_token();
+            
+            $wpdb->update(
+                $table_name,
+                array( 'renewal_token' => $token ),
+                array( 'id' => $subscription->id )
+            );
+            
+            $subscription->renewal_token = $token;
+        }
+        
+        return home_url( '/membership-renewal/' . $subscription->renewal_token . '/' );
+    }
+    
+    /**
+     * Register renewal endpoint
+     */
+    public static function register_renewal_endpoint() {
+        add_rewrite_rule( '^membership-renewal/([a-f0-9]+)/?$', 'index.php?membership_renewal_token=$matches[1]', 'top' );
+        add_rewrite_tag( '%membership_renewal_token%', '([a-f0-9]+)' );
+    }
+    
+    /**
+     * Handle renewal token when accessed
+     */
+    public static function handle_renewal_token() {
+        $token = get_query_var( 'membership_renewal_token' );
+        
+        if ( empty( $token ) ) {
+            return;
+        }
+        
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+        
+        // Find subscription by token
+        $subscription = $wpdb->get_row( $wpdb->prepare(
+            "SELECT * FROM $table_name WHERE renewal_token = %s",
+            $token
+        ) );
+        
+        if ( ! $subscription ) {
+            wp_die( __( 'Invalid renewal link. Please contact support.', 'membership-manager' ) );
+        }
+        
+        // Get manual renewal product
+        $manual_products = get_option( 'membership_manual_renewal_products', array() );
+        
+        if ( empty( $manual_products ) ) {
+            wp_die( __( 'No renewal product configured. Please contact support.', 'membership-manager' ) );
+        }
+        
+        $product_id = $manual_products[0];
+        
+        // Clear cart
+        WC()->cart->empty_cart();
+        
+        // Add product to cart
+        WC()->cart->add_to_cart( $product_id, 1 );
+        
+        // Add subscription ID to cart for reference
+        WC()->session->set( 'renewing_membership_id', $subscription->id );
+        
+        self::log( sprintf( __( 'User accessed renewal link for subscription ID: %d, redirecting to checkout', 'membership-manager' ), $subscription->id ) );
+        
+        // Redirect to checkout
+        wp_redirect( wc_get_checkout_url() );
+        exit;
+    }
+    
+    /**
+     * Regenerate renewal token for a subscription
+     * 
+     * @param int $subscription_id The subscription ID
+     * @return string|false New token or false on failure
+     */
+    public static function regenerate_renewal_token( $subscription_id ) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+        
+        $token = self::generate_renewal_token();
+        
+        $result = $wpdb->update(
+            $table_name,
+            array( 'renewal_token' => $token ),
+            array( 'id' => $subscription_id )
+        );
+        
+        if ( $result !== false ) {
+            self::log( sprintf( __( 'Regenerated renewal token for subscription ID: %d', 'membership-manager' ), $subscription_id ) );
+            return $token;
+        }
+        
+        return false;
     }
 }

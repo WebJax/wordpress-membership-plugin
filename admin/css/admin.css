@@ -1,0 +1,96 @@
+/* Sortable column styling */
+.wp-list-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.wp-list-table th.sortable:hover {
+    background-color: #f6f7f7;
+}
+
+.wp-list-table th.sortable .sort-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    width: 100%;
+}
+
+.wp-list-table th.sortable .dashicons {
+    color: #8c8f94;
+    transition: color 0.2s;
+}
+
+.wp-list-table th.sortable:hover .dashicons {
+    color: #2271b1;
+}
+
+.wp-list-table th.sortable .dashicons-arrow-up,
+.wp-list-table th.sortable .dashicons-arrow-down {
+    color: #2271b1;
+}
+
+/* Membership status badges */
+.status-active {
+    background: #00a32a;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.status-expired {
+    background: #d63638;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.status-pending-cancel {
+    background: #f0b849;
+    color: #000;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.status-cancelled {
+    background: #646970;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.status-on-hold {
+    background: #826eb4;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+/* Membership product info box */
+.membership-product-info {
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Status cards in dashboard */
+.status-card {
+    transition: box-shadow 0.2s;
+}
+
+.status-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}

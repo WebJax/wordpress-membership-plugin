@@ -12,6 +12,12 @@
         }
     }
     
+    // Show token generation result
+    if ( isset( $_GET['tokens_generated'] ) ) {
+        $count = absint( $_GET['tokens_generated'] );
+        echo '<div class="notice notice-success is-dismissible"><p>' . sprintf( __( 'Generated renewal tokens for %d memberships.', 'membership-manager' ), $count ) . '</p></div>';
+    }
+    
     // Show cleanup result messages
     if ( isset( $_GET['cleanup'] ) ) {
         if ( $_GET['cleanup'] === 'success' ) {
@@ -90,6 +96,14 @@
         });
     });
     </script>
+    
+    <h2><?php _e( 'Generate Renewal Tokens', 'membership-manager' ); ?></h2>
+    <p><?php _e( 'If you upgraded from an older version without renewal tokens, use this to generate tokens for existing memberships.', 'membership-manager' ); ?></p>
+    <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" style="display: inline-block; margin-right: 10px;">
+        <?php wp_nonce_field( 'generate_renewal_tokens_nonce' ); ?>
+        <input type="hidden" name="action" value="generate_renewal_tokens">
+        <?php submit_button( __( 'Generate Missing Tokens', 'membership-manager' ), 'secondary', 'submit', false ); ?>
+    </form>
     
     <h2><?php _e( 'Data Cleanup', 'membership-manager' ); ?></h2>
     <p><?php _e( 'If you see invalid dates (like "30. november -0001") in your membership list, use this button to fix them.', 'membership-manager' ); ?></p>
