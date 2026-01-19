@@ -206,9 +206,9 @@
                             break;
                     }
                     
-                    echo '<div style="margin-bottom: 10px; padding: 10px; background: #fff; border-left: 4px solid ' . $color . ';">';
+                    echo '<div style="margin-bottom: 10px; padding: 10px; background: #fff; border-left: 4px solid ' . esc_attr( $color ) . ';">';
                     echo '<span style="font-size: 16px;">' . $icon . '</span> ';
-                    echo '<strong style="text-transform: uppercase; color: ' . $color . ';">' . esc_html( $issue['type'] ) . ':</strong> ';
+                    echo '<strong style="text-transform: uppercase; color: ' . esc_attr( $color ) . ';">' . esc_html( $issue['type'] ) . ':</strong> ';
                     echo esc_html( $issue['message'] );
                     
                     if ( isset( $issue['order_id'] ) ) {
