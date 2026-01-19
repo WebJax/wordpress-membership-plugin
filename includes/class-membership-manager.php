@@ -161,8 +161,9 @@ class Membership_Manager {
     }
 
     public static function filter_memberships() {
-        // Apply rate limiting (100 requests per hour)
-        Membership_Security::check_rate_limit( 'filter_memberships', 100, HOUR_IN_SECONDS );
+        // Apply rate limiting with higher limits for admin users
+        $max_requests = current_user_can( 'manage_options' ) ? 500 : 100;
+        Membership_Security::check_rate_limit( 'filter_memberships', $max_requests, HOUR_IN_SECONDS );
         
         // Verify nonce if provided (optional for read operations)
         if ( isset( $_POST['nonce'] ) && ! Membership_Security::verify_nonce( $_POST['nonce'], 'filter_memberships_nonce' ) ) {

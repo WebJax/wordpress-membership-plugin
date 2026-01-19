@@ -80,12 +80,12 @@ class Membership_Security {
     }
     
     /**
-     * Get time until rate limit resets
+     * Get time until rate limit resets (made public for testing)
      * 
      * @param string $key Transient key
      * @return int Seconds until reset
      */
-    private static function get_rate_limit_reset_time( $key ) {
+    public static function get_rate_limit_reset_time( $key ) {
         global $wpdb;
         
         $timeout = $wpdb->get_var( $wpdb->prepare(
@@ -255,14 +255,14 @@ class Membership_Security {
     }
     
     /**
-     * Create security log table
+     * Create security log table (protected for override capability)
      */
-    private static function create_security_log_table() {
+    protected static function create_security_log_table() {
         global $wpdb;
         $table_name = $wpdb->prefix . 'membership_security_log';
         $charset_collate = $wpdb->get_charset_collate();
         
-        $sql = "CREATE TABLE $table_name (
+        $sql = "CREATE TABLE IF NOT EXISTS `" . esc_sql( $table_name ) . "` (
             id bigint(20) NOT NULL AUTO_INCREMENT,
             event varchar(255) NOT NULL,
             user_id bigint(20) DEFAULT NULL,

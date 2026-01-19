@@ -254,16 +254,27 @@ class Membership_Utils {
     }
     
     /**
-     * Get plugin version
+     * Get plugin version (cached for performance)
      * 
      * @return string
      */
     public static function get_plugin_version() {
-        $plugin_data = get_file_data(
-            dirname( __DIR__ ) . '/membership-manager.php',
-            array( 'Version' => 'Version' )
-        );
+        // Use already defined constant if available
+        if ( defined( 'MEMBERSHIP_MANAGER_VERSION' ) ) {
+            return MEMBERSHIP_MANAGER_VERSION;
+        }
         
-        return isset( $plugin_data['Version'] ) ? $plugin_data['Version'] : '1.0.0';
+        // Fallback to reading from file (cached statically)
+        static $version = null;
+        
+        if ( $version === null ) {
+            $plugin_data = get_file_data(
+                dirname( __DIR__ ) . '/membership-manager.php',
+                array( 'Version' => 'Version' )
+            );
+            $version = isset( $plugin_data['Version'] ) ? $plugin_data['Version'] : '1.0.0';
+        }
+        
+        return $version;
     }
 }
