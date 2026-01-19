@@ -1,5 +1,4 @@
 /.DS_Store
-/*.md
 /logs/*.log
 /logs/*.bak
 /vendor/
