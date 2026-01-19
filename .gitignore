@@ -1,2 +1,9 @@
 /.DS_Store
 /*.md
+/logs/*.log
+/logs/*.bak
+/vendor/
+/node_modules/
+.phpunit.result.cache
+/tests/_output/
+/tests/_support/_generated

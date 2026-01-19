@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<phpunit
+    bootstrap="tests/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    >
+    <testsuites>
+        <testsuite name="Membership Manager Test Suite">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./includes/</directory>
+            <exclude>
+                <file>./includes/index.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+    <php>
+        <const name="WP_TESTS_DOMAIN" value="example.org" />
+        <const name="WP_TESTS_EMAIL" value="admin@example.org" />
+        <const name="WP_TESTS_TITLE" value="Test Site" />
+        <const name="WP_PHP_BINARY" value="php" />
+        <const name="WP_DEBUG" value="true" />
+    </php>
+</phpunit>
