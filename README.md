@@ -8,6 +8,8 @@ Et simpelt WordPress-plugin til at håndtere medlemskaber, fornyelser og udsende
 *   **Automatiske E-mail Påmindelser:** Sender automatisk påmindelser ud til medlemmer, hvis medlemskab er ved at udløbe.
 *   **Skabelonbaserede E-mails:** E-mail skabeloner for 1, 7, 14 og 30 dage før udløb.
 *   **Manuelle Fornyelser:** Understøtter processer for manuelle fornyelser.
+*   **Automatiske Fornyelser:** Integration med WooCommerce til automatisk fornyelse af medlemskaber.
+*   **Test Tools:** Omfattende test-funktionalitet til at verificere automatiske fornyelser og påmindelsesmails.
 *   **Indstillingsside:** Konfigurer plugin-indstillinger.
 *   **Data Validering:** Kontroller at medlemstallene er korrekte i forhold til WooCommerce ordrer.
 *   **Klar til oversættelse:** Inkluderer en `.pot`-fil til nem oversættelse.
@@ -24,6 +26,19 @@ Alternativt kan du pakke mappen ud og uploade den direkte til `/wp-content/plugi
 ## Brug
 
 Efter aktivering vil du finde et nyt menupunkt i WordPress-administratoren, hvor du kan administrere medlemmer og konfigurere indstillingerne for plugin'et.
+
+### Test af Automatisk Fornyelse og Påmindelsesmails
+
+For at teste at automatisk fornyelse og påmindelsesmails fungerer korrekt:
+
+1. Gå til **Medlemskaber** → **Test Tools** i WordPress admin
+2. Brug test-værktøjerne til at:
+   - Sende test påmindelsesmails for alle intervaller (30, 14, 7, 1 dage)
+   - Teste automatisk oprettelse af fornyelsesordrer gennem WooCommerce
+   - Køre den fulde fornyelsesproces manuelt
+   - Se logs for at verificere resultater
+
+Se den detaljerede [Test Tools Guide](TEST-TOOLS-GUIDE.md) for mere information.
 
 ### Tilpasning af E-mail Skabeloner
 
