@@ -161,8 +161,11 @@ class Membership_Manager {
     }
 
     public static function filter_memberships() {
+        // Apply rate limiting (100 requests per hour)
+        Membership_Security::check_rate_limit( 'filter_memberships', 100, HOUR_IN_SECONDS );
+        
         // Verify nonce if provided (optional for read operations)
-        if ( isset( $_POST['nonce'] ) && ! wp_verify_nonce( $_POST['nonce'], 'filter_memberships_nonce' ) ) {
+        if ( isset( $_POST['nonce'] ) && ! Membership_Security::verify_nonce( $_POST['nonce'], 'filter_memberships_nonce' ) ) {
             wp_send_json_error( 'Security check failed.' );
         }
         

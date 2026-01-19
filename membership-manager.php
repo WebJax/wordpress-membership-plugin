@@ -26,6 +26,7 @@ define( 'MEMBERSHIP_MANAGER_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 // Include the main classes
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-constants.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-utils.php';
+require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-security.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-manager.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-emails.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-renewals.php';
