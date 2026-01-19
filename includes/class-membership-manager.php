@@ -1474,6 +1474,7 @@ class Membership_Manager {
         
         try {
             // Part 1: Check completed orders with membership products
+            // Also build a map of users with membership orders for Part 2
             $orders = wc_get_orders( array(
                 'limit' => -1,
                 'status' => array( 'completed', 'processing' ),
@@ -1481,6 +1482,9 @@ class Membership_Manager {
             ) );
             
             $results['total_orders_checked'] = count( $orders );
+            
+            // Map to track which users have orders with membership products
+            $users_with_orders = array();
             
             foreach ( $orders as $order_id ) {
                 $order = wc_get_order( $order_id );
@@ -1529,6 +1533,9 @@ class Membership_Manager {
                     );
                     continue;
                 }
+                
+                // Mark user as having an order with membership products (for Part 2)
+                $users_with_orders[ $user_id ] = true;
                 
                 // Check if membership was marked as created for this order
                 $membership_created = get_post_meta( $order_id, '_membership_created', true );
@@ -1589,46 +1596,8 @@ class Membership_Manager {
             }
             
             // Part 2: Check all memberships to see if they have valid orders
-            // Optimize: Fetch all orders first, then check memberships against them
-            self::log( __( 'Fetching all completed orders with membership products...', 'membership-manager' ) );
-            
-            // Build a map of user_id => has_membership_order for efficiency
-            $users_with_orders = array();
-            
-            foreach ( $orders as $order_id ) {
-                $order = wc_get_order( $order_id );
-                
-                if ( ! $order ) {
-                    continue;
-                }
-                
-                $user_id = $order->get_user_id();
-                if ( ! $user_id ) {
-                    continue;
-                }
-                
-                // Check if already marked as having order
-                if ( isset( $users_with_orders[ $user_id ] ) ) {
-                    continue;
-                }
-                
-                // Check if order has membership products
-                foreach ( $order->get_items() as $item ) {
-                    $product_id = $item->get_product_id();
-                    $product = $item->get_product();
-                    
-                    if ( in_array( $product_id, $all_membership_products ) ) {
-                        $users_with_orders[ $user_id ] = true;
-                        break;
-                    }
-                    
-                    // Also check for subscription products
-                    if ( $product && class_exists( 'WC_Subscriptions_Product' ) && \WC_Subscriptions_Product::is_subscription( $product ) ) {
-                        $users_with_orders[ $user_id ] = true;
-                        break;
-                    }
-                }
-            }
+            // Use the user map built in Part 1 to avoid re-querying orders
+            self::log( __( 'Checking memberships against order map...', 'membership-manager' ) );
             
             // Now fetch memberships and check against the order map
             $all_memberships = $wpdb->get_results( "SELECT id, user_id FROM $table_name" );
