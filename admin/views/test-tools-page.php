@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $wpdb;
 
+// Note: $wpdb->prefix is a trusted WordPress variable, and 'membership_subscriptions' is hardcoded
+// This is the standard WordPress way to construct table names and is not vulnerable to SQL injection
 // Get all active subscriptions for testing
 $active_subscriptions = $wpdb->get_results( 
     "SELECT * FROM `{$wpdb->prefix}membership_subscriptions` WHERE status = 'active' ORDER BY end_date ASC LIMIT 20" 
