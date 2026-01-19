@@ -62,11 +62,31 @@ class Membership_Manager {
             status_changed_date datetime DEFAULT NULL,
             PRIMARY KEY  (id),
             KEY user_id (user_id),
-            KEY renewal_token (renewal_token)
+            KEY renewal_token (renewal_token),
+            KEY status (status),
+            KEY end_date (end_date)
         ) $charset_collate;";
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-        dbDelta( $sql );
+        $result = dbDelta( $sql );
+
+        // Store database version for future upgrades
+        update_option( 'membership_manager_db_version', '1.0.0' );
+
+        // Log activation
+        self::log( sprintf( __( 'Plugin activated. Database result: %s', 'membership-manager' ), print_r( $result, true ) ) );
+
+        // Ensure log directory exists
+        $log_dir = plugin_dir_path( __FILE__ ) . '../logs';
+        if ( ! file_exists( $log_dir ) ) {
+            wp_mkdir_p( $log_dir );
+        }
+
+        // Create .htaccess to protect logs directory
+        $htaccess_file = $log_dir . '/.htaccess';
+        if ( ! file_exists( $htaccess_file ) ) {
+            file_put_contents( $htaccess_file, "Deny from all\n" );
+        }
 
         // Flush rewrite rules
         flush_rewrite_rules();
@@ -1267,11 +1287,50 @@ class Membership_Manager {
         exit;
     }
 
+    /**
+     * Log messages to file with proper error handling
+     * 
+     * @param string $message The message to log
+     * @param string $type The log type (INFO, WARNING, ERROR)
+     * @return bool True if logged successfully, false otherwise
+     */
     public static function log( $message, $type = 'INFO' ) {
         $log_file = plugin_dir_path( __FILE__ ) . '../logs/membership.log';
+        $log_dir = dirname( $log_file );
+        
+        // Ensure log directory exists
+        if ( ! file_exists( $log_dir ) ) {
+            if ( ! wp_mkdir_p( $log_dir ) ) {
+                error_log( 'Membership Manager: Failed to create log directory' );
+                return false;
+            }
+        }
+        
+        // Check if log file is writable
+        if ( file_exists( $log_file ) && ! is_writable( $log_file ) ) {
+            error_log( 'Membership Manager: Log file is not writable' );
+            return false;
+        }
+        
+        // Rotate log if it gets too large (5MB)
+        if ( file_exists( $log_file ) && filesize( $log_file ) > 5 * 1024 * 1024 ) {
+            $backup_file = $log_file . '.' . date( 'Y-m-d-His' ) . '.bak';
+            rename( $log_file, $backup_file );
+            
+            // Keep only last 5 backup files
+            $backups = glob( $log_dir . '/membership.log.*.bak' );
+            if ( count( $backups ) > 5 ) {
+                array_multisort( array_map( 'filemtime', $backups ), SORT_ASC, $backups );
+                foreach ( array_slice( $backups, 0, count( $backups ) - 5 ) as $old_backup ) {
+                    unlink( $old_backup );
+                }
+            }
+        }
+        
         $timestamp = date( 'Y-m-d H:i:s' );
         $log_message = "[$timestamp] [$type] - $message" . PHP_EOL;
-        file_put_contents( $log_file, $log_message, FILE_APPEND );
+        
+        return file_put_contents( $log_file, $log_message, FILE_APPEND ) !== false;
     }
     
     /**
