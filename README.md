@@ -38,7 +38,7 @@ For at teste at automatisk fornyelse og påmindelsesmails fungerer korrekt:
    - Køre den fulde fornyelsesproces manuelt
    - Se logs for at verificere resultater
 
-Se den detaljerede [Test Tools Guide](TEST-TOOLS-GUIDE.md) for mere information.
+Se den detaljerede [Test Tools Guide](docs/TEST-TOOLS-GUIDE.md) for mere information.
 
 ### Tilpasning af E-mail Skabeloner
 
