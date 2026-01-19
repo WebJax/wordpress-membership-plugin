@@ -166,6 +166,8 @@ class Membership_Test_Tools {
         }
 
         global $wpdb;
+        // Note: $wpdb->prefix is a trusted WordPress variable, and 'membership_subscriptions' is hardcoded
+        // This is the standard WordPress way to construct table names and is not vulnerable to SQL injection
         $table_name = $wpdb->prefix . 'membership_subscriptions';
 
         $subscription = $wpdb->get_row( $wpdb->prepare(
