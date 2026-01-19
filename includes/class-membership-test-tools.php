@@ -35,7 +35,14 @@ class Membership_Test_Tools {
      * Render test tools page
      */
     public function render_test_tools_page() {
-        include_once plugin_dir_path( __FILE__ ) . '../admin/views/test-tools-page.php';
+        $template_path = plugin_dir_path( __FILE__ ) . '../admin/views/test-tools-page.php';
+        // Validate the path is within plugin directory
+        $plugin_dir = plugin_dir_path( dirname( __FILE__ ) );
+        if ( strpos( realpath( $template_path ), realpath( $plugin_dir ) ) === 0 && file_exists( $template_path ) ) {
+            include_once $template_path;
+        } else {
+            wp_die( __( 'Template file not found or invalid path.', 'membership-manager' ) );
+        }
     }
 
     /**
@@ -162,7 +169,7 @@ class Membership_Test_Tools {
         $table_name = $wpdb->prefix . 'membership_subscriptions';
 
         $subscription = $wpdb->get_row( $wpdb->prepare(
-            "SELECT * FROM $table_name WHERE id = %d",
+            "SELECT * FROM `{$wpdb->prefix}membership_subscriptions` WHERE id = %d",
             $subscription_id
         ) );
 

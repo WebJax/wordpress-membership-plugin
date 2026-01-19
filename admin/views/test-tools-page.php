@@ -9,10 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 global $wpdb;
-$table_name = $wpdb->prefix . 'membership_subscriptions';
 
 // Get all active subscriptions for testing
-$active_subscriptions = $wpdb->get_results( "SELECT * FROM $table_name WHERE status = 'active' ORDER BY end_date ASC LIMIT 20" );
+$active_subscriptions = $wpdb->get_results( 
+    "SELECT * FROM `{$wpdb->prefix}membership_subscriptions` WHERE status = 'active' ORDER BY end_date ASC LIMIT 20" 
+);
 
 ?>
 <div class="wrap">
@@ -213,7 +214,10 @@ $active_subscriptions = $wpdb->get_results( "SELECT * FROM $table_name WHERE sta
         
         <?php if ( isset( $_GET['view_logs'] ) ) : 
             $log_file = plugin_dir_path( dirname( dirname( __FILE__ ) ) ) . 'logs/membership.log';
-            if ( file_exists( $log_file ) ) :
+            $plugin_dir = plugin_dir_path( dirname( dirname( __FILE__ ) ) );
+            
+            // Validate that log file is within plugin directory
+            if ( file_exists( $log_file ) && strpos( realpath( $log_file ), realpath( $plugin_dir ) ) === 0 ) :
                 $log_contents = file_get_contents( $log_file );
                 $log_lines = explode( "\n", $log_contents );
                 $recent_logs = array_slice( array_reverse( $log_lines ), 0, 50 );
