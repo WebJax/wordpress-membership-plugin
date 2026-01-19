@@ -9,6 +9,7 @@ Et simpelt WordPress-plugin til at håndtere medlemskaber, fornyelser og udsende
 *   **Skabelonbaserede E-mails:** E-mail skabeloner for 1, 7, 14 og 30 dage før udløb.
 *   **Manuelle Fornyelser:** Understøtter processer for manuelle fornyelser.
 *   **Indstillingsside:** Konfigurer plugin-indstillinger.
+*   **Data Validering:** Kontroller at medlemstallene er korrekte i forhold til WooCommerce ordrer.
 *   **Klar til oversættelse:** Inkluderer en `.pot`-fil til nem oversættelse.
 
 ## Installation
@@ -33,6 +34,21 @@ til din tema-mappe her:
 `wp-content/themes/DIT-TEMA/membership-manager/emails/`
 
 Ved at placere dem i din tema-mappe sikrer du, at dine ændringer ikke bliver overskrevet, når plugin'et opdateres.
+
+### Validering af Medlemsdata
+
+For at kontrollere at medlemstallene er korrekte i forhold til WooCommerce ordrer:
+
+1. Gå til **Medlemskaber** > **Migration** i WordPress-administratoren
+2. Scroll ned til sektionen "Validate Membership Data"
+3. Klik på knappen **"Run Validation Check"**
+
+Valideringen vil kontrollere:
+*   At alle gennemførte ordrer med medlemsprodukter har tilsvarende medlemskaber
+*   At medlemskaber har gyldige tilknyttede ordrer
+*   Data konsistens mellem ordrer og medlemskaber
+
+Resultatet viser en detaljeret rapport med statistikker og eventuelle uoverensstemmelser.
 
 ## Licens
 
