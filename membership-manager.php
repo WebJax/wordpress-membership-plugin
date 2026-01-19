@@ -28,6 +28,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-membership-roles.php'
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-membership-dashboard.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-membership-product-types.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-membership-checkout.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-membership-test-tools.php';
 
 
 // Initialize the plugin.
@@ -38,6 +39,7 @@ Membership_Roles::init();
 Membership_Dashboard::init();
 Membership_Product_Types::init();
 Membership_Checkout::init();
+new Membership_Test_Tools();
 
 // Activation hook.
 register_activation_hook( __FILE__, array( 'Membership_Manager', 'activate' ) );
