@@ -1558,7 +1558,7 @@ class Membership_Manager {
                             $results['data_mismatches']++;
                         } else {
                             // Verify user_id matches
-                            if ( $membership->user_id != $user_id ) {
+                            if ( $membership->user_id !== $user_id ) {
                                 $results['issues'][] = array(
                                     'type' => 'error',
                                     'order_id' => $order_id,

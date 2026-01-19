@@ -160,7 +160,8 @@
     
     <?php
     // Display validation results if available
-    if ( isset( $_GET['validation'] ) && $_GET['validation'] === 'completed' ) {
+    $validation_param = isset( $_GET['validation'] ) ? sanitize_text_field( $_GET['validation'] ) : '';
+    if ( $validation_param === 'completed' ) {
         $validation_results = get_transient( 'membership_validation_results' );
         
         if ( $validation_results ) {
