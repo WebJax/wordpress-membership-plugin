@@ -1589,52 +1589,56 @@ class Membership_Manager {
             }
             
             // Part 2: Check all memberships to see if they have valid orders
-            $all_memberships = $wpdb->get_results( "SELECT * FROM $table_name" );
+            // Optimize: Fetch all orders first, then check memberships against them
+            self::log( __( 'Fetching all completed orders with membership products...', 'membership-manager' ) );
+            
+            // Build a map of user_id => has_membership_order for efficiency
+            $users_with_orders = array();
+            
+            foreach ( $orders as $order_id ) {
+                $order = wc_get_order( $order_id );
+                
+                if ( ! $order ) {
+                    continue;
+                }
+                
+                $user_id = $order->get_user_id();
+                if ( ! $user_id ) {
+                    continue;
+                }
+                
+                // Check if already marked as having order
+                if ( isset( $users_with_orders[ $user_id ] ) ) {
+                    continue;
+                }
+                
+                // Check if order has membership products
+                foreach ( $order->get_items() as $item ) {
+                    $product_id = $item->get_product_id();
+                    $product = $item->get_product();
+                    
+                    if ( in_array( $product_id, $all_membership_products ) ) {
+                        $users_with_orders[ $user_id ] = true;
+                        break;
+                    }
+                    
+                    // Also check for subscription products
+                    if ( $product && class_exists( 'WC_Subscriptions_Product' ) && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+                        $users_with_orders[ $user_id ] = true;
+                        break;
+                    }
+                }
+            }
+            
+            // Now fetch memberships and check against the order map
+            $all_memberships = $wpdb->get_results( "SELECT id, user_id FROM $table_name" );
             $results['total_memberships_checked'] = count( $all_memberships );
             
             foreach ( $all_memberships as $membership ) {
                 $user_id = $membership->user_id;
                 
-                // Find orders for this user that contain membership products
-                $user_orders = wc_get_orders( array(
-                    'customer_id' => $user_id,
-                    'status' => array( 'completed', 'processing' ),
-                    'limit' => -1,
-                    'return' => 'ids',
-                ) );
-                
-                $found_order = false;
-                
-                foreach ( $user_orders as $order_id ) {
-                    if ( $found_order ) {
-                        break; // Exit early if already found
-                    }
-                    
-                    $order = wc_get_order( $order_id );
-                    
-                    if ( ! $order ) {
-                        continue;
-                    }
-                    
-                    // Check if this order has membership products
-                    foreach ( $order->get_items() as $item ) {
-                        $product_id = $item->get_product_id();
-                        $product = $item->get_product();
-                        
-                        if ( in_array( $product_id, $all_membership_products ) ) {
-                            $found_order = true;
-                            break; // Exit inner loop
-                        }
-                        
-                        // Also check for subscription products
-                        if ( $product && class_exists( 'WC_Subscriptions_Product' ) && \WC_Subscriptions_Product::is_subscription( $product ) ) {
-                            $found_order = true;
-                            break; // Exit inner loop
-                        }
-                    }
-                }
-                
-                if ( $found_order ) {
+                // Check if user has any order with membership products
+                if ( isset( $users_with_orders[ $user_id ] ) && $users_with_orders[ $user_id ] ) {
                     $results['memberships_with_order']++;
                 } else {
                     $results['orphaned_memberships']++;
