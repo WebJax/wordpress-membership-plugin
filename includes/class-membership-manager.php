@@ -1606,6 +1606,10 @@ class Membership_Manager {
                 $found_order = false;
                 
                 foreach ( $user_orders as $order_id ) {
+                    if ( $found_order ) {
+                        break; // Exit early if already found
+                    }
+                    
                     $order = wc_get_order( $order_id );
                     
                     if ( ! $order ) {
@@ -1619,13 +1623,13 @@ class Membership_Manager {
                         
                         if ( in_array( $product_id, $all_membership_products ) ) {
                             $found_order = true;
-                            break 2;
+                            break; // Exit inner loop
                         }
                         
                         // Also check for subscription products
                         if ( $product && class_exists( 'WC_Subscriptions_Product' ) && \WC_Subscriptions_Product::is_subscription( $product ) ) {
                             $found_order = true;
-                            break 2;
+                            break; // Exit inner loop
                         }
                     }
                 }
