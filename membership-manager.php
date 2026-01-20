@@ -36,6 +36,7 @@ require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-roles.ph
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-dashboard.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-product-types.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-checkout.php';
+require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-test-tools.php';
 
 // Initialize the plugin.
 Membership_Manager::init();
