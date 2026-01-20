@@ -24,8 +24,8 @@ class Membership_Product_Types {
      * Add custom product types to WooCommerce
      */
     public static function add_product_types( $types ) {
-        $types['membership_auto'] = __( 'Membership (Auto-Renewal)', 'membership-manager' );
-        $types['membership_manual'] = __( 'Membership (Manual)', 'membership-manager' );
+        $types['membership_auto'] = __( 'Medlemskab (Auto-fornyelse)', 'membership-manager' );
+        $types['membership_manual'] = __( 'Medlemskab (Manuel)', 'membership-manager' );
         
         return $types;
     }
@@ -35,7 +35,7 @@ class Membership_Product_Types {
      */
     public static function add_product_data_tab( $tabs ) {
         $tabs['membership'] = array(
-            'label' => __( 'Membership', 'membership-manager' ),
+            'label' => __( 'Medlemskab', 'membership-manager' ),
             'target' => 'membership_product_data',
             'class' => array( 'show_if_membership_auto', 'show_if_membership_manual' ),
             'priority' => 25,
@@ -53,9 +53,9 @@ class Membership_Product_Types {
         <div id="membership_product_data" class="panel woocommerce_options_panel">
             <div class="options_group">
                 <p class="form-field">
-                    <label><?php _e( 'Membership Duration', 'membership-manager' ); ?></label>
+                    <label><?php _e( 'Medlemskabsvarighed', 'membership-manager' ); ?></label>
                     <span class="description">
-                        <?php _e( 'This membership will be valid for 1 year from purchase date.', 'membership-manager' ); ?>
+                        <?php _e( 'Dette medlemskab er gyldigt i 1 år fra købsdatoen.', 'membership-manager' ); ?>
                     </span>
                 </p>
                 
@@ -66,7 +66,7 @@ class Membership_Product_Types {
                 <p class="form-field show_if_membership_auto">
                     <label>
                         <input type="checkbox" name="_membership_auto_charge" value="yes" <?php checked( get_post_meta( $post->ID, '_membership_auto_charge', true ), 'yes' ); ?>>
-                        <?php _e( 'Attempt automatic payment on renewal', 'membership-manager' ); ?>
+                        <?php _e( 'Forsøg automatisk betaling ved fornyelse', 'membership-manager' ); ?>
                     </label>
                     <span class="description">
                         <?php _e( 'If enabled, the system will attempt to charge the customer\'s saved payment method on renewal.', 'membership-manager' ); ?>
@@ -74,10 +74,10 @@ class Membership_Product_Types {
                 </p>
                 
                 <p class="form-field">
-                    <label for="_membership_description"><?php _e( 'Membership Description', 'membership-manager' ); ?></label>
+                    <label for="_membership_description"><?php _e( 'Medlemskabsbeskrivelse', 'membership-manager' ); ?></label>
                     <textarea id="_membership_description" name="_membership_description" class="large-text" rows="3"><?php echo esc_textarea( get_post_meta( $post->ID, '_membership_description', true ) ); ?></textarea>
                     <span class="description">
-                        <?php _e( 'Optional description shown on the product page about what this membership includes.', 'membership-manager' ); ?>
+                        <?php _e( 'Valgfri beskrivelse vist på produktsiden om hvad dette medlemskab inkluderer.', 'membership-manager' ); ?>
                     </span>
                 </p>
             </div>
@@ -176,7 +176,7 @@ class Membership_Product_Types {
         <div class="membership-product-info" style="background: #f7f7f7; padding: 20px; border-radius: 4px; margin: 20px 0;">
             <h3 style="margin-top: 0;">
                 <span class="dashicons dashicons-groups" style="vertical-align: middle;"></span>
-                <?php _e( 'Membership Details', 'membership-manager' ); ?>
+                <?php _e( 'Medlemskabsdetaljer', 'membership-manager' ); ?>
             </h3>
             
             <ul style="list-style: none; padding: 0; margin: 0;">
@@ -185,12 +185,12 @@ class Membership_Product_Types {
                     <?php _e( '1 Year from purchase', 'membership-manager' ); ?>
                 </li>
                 <li style="padding: 8px 0; border-bottom: 1px solid #ddd;">
-                    <strong><?php _e( 'Renewal Type:', 'membership-manager' ); ?></strong>
+                    <strong><?php _e( 'Fornyelsestype:', 'membership-manager' ); ?></strong>
                     <?php 
                     if ( $is_auto ) {
                         _e( 'Automatic - Renews automatically unless cancelled', 'membership-manager' );
                     } else {
-                        _e( 'Manual - You will receive renewal reminders', 'membership-manager' );
+                        _e( 'Manuel - Du vil modtage fornyelsespåmindelser', 'membership-manager' );
                     }
                     ?>
                 </li>

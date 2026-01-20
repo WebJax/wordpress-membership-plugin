@@ -32,10 +32,10 @@ class Membership_Emails {
             return false;
         }
         
-        $subject = get_option( 'membership_welcome_subject', __( 'Welcome to Your Membership!', 'membership-manager' ) );
+        $subject = get_option( 'membership_welcome_subject', __( 'Velkommen til dit medlemskab!', 'membership-manager' ) );
         
         $message = sprintf(
-            __( "Hi %s,\n\nWelcome! Your membership is now active.\n\nStart Date: %s\nExpiry Date: %s\nRenewal Type: %s\n\n", 'membership-manager' ),
+            __( 'Hej %s,\n\nVelkommen! Dit medlemskab er nu aktivt.\n\nStartdato: %s\nUdløbsdato: %s\nFornyelsestype: %s\n\n', 'membership-manager' ),
             $user->display_name,
             date_i18n( get_option( 'date_format' ), strtotime( $membership->start_date ) ),
             date_i18n( get_option( 'date_format' ), strtotime( $membership->end_date ) ),
@@ -45,12 +45,12 @@ class Membership_Emails {
         if ( $membership->renewal_type === 'manual' && ! empty( $membership->renewal_token ) ) {
             $renewal_link = Membership_Manager::get_renewal_link( $membership );
             $message .= sprintf(
-                __( "You can renew your membership at any time using this link:\n%s\n\n", 'membership-manager' ),
+                __( 'Du kan forny dit medlemskab når som helst ved at bruge dette link:\n%s\n\n', 'membership-manager' ),
                 $renewal_link
             );
         }
         
-        $message .= __( "Thank you for being a member!\n", 'membership-manager' );
+        $message .= __( 'Tak for at være medlem!\n', 'membership-manager' );
         
         $result = self::send_email( $to, $subject, $message );
         
@@ -86,15 +86,15 @@ class Membership_Emails {
             $message = str_replace('[user_name]', $user_info->display_name, $message);
             $message = str_replace('[end_date]', date_i18n( get_option( 'date_format' ), strtotime( $subscription->end_date ) ), $message);
         } else {
-            Membership_Manager::log( sprintf(__( 'Email template not found: %s', 'membership-manager' ), $template_path), 'ERROR' );
+            Membership_Manager::log( sprintf(__( 'E-mail skabelon ikke fundet: %s', 'membership-manager' ), $template_path), 'ERROR' );
             return;
         }
 
         if ( ! empty( $to ) && ! empty( $subject ) && ! empty( $message ) ) {
             $this->send_email( $to, $subject, $message );
-            Membership_Manager::log( sprintf( __( 'Sent automatic renewal reminder (%s) to: %s', 'membership-manager' ), $reminder_type, $to ) );
+            Membership_Manager::log( sprintf( __( 'Sendte automatisk fornyelsespåmindelse (%s) til: %s', 'membership-manager' ), $reminder_type, $to ) );
         } else {
-            Membership_Manager::log( sprintf( __( 'Failed to send automatic renewal reminder (%s) to: %s. Missing to, subject, or message.', 'membership-manager' ), $reminder_type, $to ), 'WARNING' );
+            Membership_Manager::log( sprintf( __( 'Kunne ikke sende automatisk fornyelsespåmindelse (%s) til: %s. Mangler modtager, emne eller besked.', 'membership-manager' ), $reminder_type, $to ), 'WARNING' );
         }
     }
 
@@ -124,15 +124,15 @@ class Membership_Emails {
             $message = str_replace('[end_date]', date_i18n( get_option( 'date_format' ), strtotime( $subscription->end_date ) ), $message);
             $message = str_replace('[renewal_link]', $renewal_link, $message);
         } else {
-            Membership_Manager::log( sprintf(__( 'Email template not found: %s', 'membership-manager' ), $template_path), 'ERROR' );
+            Membership_Manager::log( sprintf(__( 'E-mail skabelon ikke fundet: %s', 'membership-manager' ), $template_path), 'ERROR' );
             return;
         }
 
         if ( ! empty( $to ) && ! empty( $subject ) && ! empty( $message ) ) {
             $this->send_email( $to, $subject, $message );
-            Membership_Manager::log( sprintf( __( 'Sent manual renewal reminder (%s) to: %s', 'membership-manager' ), $reminder_type, $to ) );
+            Membership_Manager::log( sprintf( __( 'Sendte manuel fornyelsespåmindelse (%s) til: %s', 'membership-manager' ), $reminder_type, $to ) );
         } else {
-            Membership_Manager::log( sprintf( __( 'Failed to send manual renewal reminder (%s) to: %s. Missing to, subject, or message.', 'membership-manager' ), $reminder_type, $to ), 'WARNING' );
+            Membership_Manager::log( sprintf( __( 'Kunne ikke sende manuel fornyelsespåmindelse (%s) til: %s. Mangler modtager, emne eller besked.', 'membership-manager' ), $reminder_type, $to ), 'WARNING' );
         }
     }
     
@@ -141,13 +141,13 @@ class Membership_Emails {
      */
     private function get_reminder_subject( $reminder_type ) {
         $subjects = array(
-            '30_days' => get_option( 'membership_reminder_30_subject', __( 'Your membership will expire in 30 days', 'membership-manager' ) ),
-            '14_days' => get_option( 'membership_reminder_14_subject', __( 'Your membership will expire in 14 days', 'membership-manager' ) ),
-            '7_days' => get_option( 'membership_reminder_7_subject', __( 'Your membership will expire in 7 days', 'membership-manager' ) ),
-            '1_day' => get_option( 'membership_reminder_1_subject', __( 'Your membership will expire tomorrow', 'membership-manager' ) ),
+            '30_days' => get_option( 'membership_reminder_30_subject', __( 'Dit medlemskab udløber om 30 dage', 'membership-manager' ) ),
+            '14_days' => get_option( 'membership_reminder_14_subject', __( 'Dit medlemskab udløber om 14 dage', 'membership-manager' ) ),
+            '7_days' => get_option( 'membership_reminder_7_subject', __( 'Dit medlemskab udløber om 7 dage', 'membership-manager' ) ),
+            '1_day' => get_option( 'membership_reminder_1_subject', __( 'Dit medlemskab udløber i morgen', 'membership-manager' ) ),
         );
         
-        return isset( $subjects[ $reminder_type ] ) ? $subjects[ $reminder_type ] : __( 'Membership Renewal Reminder', 'membership-manager' );
+        return isset( $subjects[ $reminder_type ] ) ? $subjects[ $reminder_type ] : __( 'Medlemskabsfornyelsespåmindelse', 'membership-manager' );
     }
 
     /**
@@ -163,7 +163,7 @@ class Membership_Emails {
         if ( defined( 'MEMBERSHIP_STAGING_MODE' ) && MEMBERSHIP_STAGING_MODE ) {
             Membership_Manager::log( 
                 sprintf( 
-                    __( '[STAGING MODE] Email blocked - To: %s, Subject: %s', 'membership-manager' ), 
+                    __( '[STAGING MODE] E-mail blokeret - Til: %s, Emne: %s', 'membership-manager' ), 
                     $to, 
                     $subject 
                 ), 
@@ -174,13 +174,13 @@ class Membership_Emails {
         
         // Validate email address
         if ( ! is_email( $to ) ) {
-            Membership_Manager::log( sprintf( __( 'Invalid email address: %s', 'membership-manager' ), $to ), 'ERROR' );
+            Membership_Manager::log( sprintf( __( 'Ugyldig e-mailadresse: %s', 'membership-manager' ), $to ), 'ERROR' );
             return false;
         }
         
         // Validate subject and message
         if ( empty( $subject ) || empty( $message ) ) {
-            Membership_Manager::log( __( 'Empty subject or message in email', 'membership-manager' ), 'ERROR' );
+            Membership_Manager::log( __( 'Tomt emne eller besked i e-mail', 'membership-manager' ), 'ERROR' );
             return false;
         }
         
@@ -200,7 +200,7 @@ class Membership_Emails {
         $sent = wp_mail( $to, $subject, $message, $headers );
         
         if ( ! $sent ) {
-            Membership_Manager::log( sprintf( __( 'Failed to send email to: %s with subject: %s', 'membership-manager' ), $to, $subject ), 'ERROR' );
+            Membership_Manager::log( sprintf( __( 'Kunne ikke sende e-mail til: %s med emne: %s', 'membership-manager' ), $to, $subject ), 'ERROR' );
         }
         
         return $sent;

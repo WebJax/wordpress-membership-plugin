@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $membership_id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 
 if ( ! $membership_id ) {
-    wp_die( __( 'Invalid membership ID.', 'membership-manager' ) );
+    wp_die( __( 'Ugyldigt medlemskabs-ID.', 'membership-manager' ) );
 }
 
 global $wpdb;
@@ -15,13 +15,13 @@ $table_name = $wpdb->prefix . 'membership_subscriptions';
 $membership = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $membership_id ) );
 
 if ( ! $membership ) {
-    wp_die( __( 'Membership not found.', 'membership-manager' ) );
+    wp_die( __( 'Medlemskab ikke fundet.', 'membership-manager' ) );
 }
 
 $user = get_user_by( 'ID', $membership->user_id );
 
 if ( ! $user ) {
-    wp_die( __( 'User not found.', 'membership-manager' ) );
+    wp_die( __( 'Bruger ikke fundet.', 'membership-manager' ) );
 }
 
 // Get user's orders if WooCommerce is active
@@ -41,23 +41,23 @@ $user_meta = get_user_meta( $user->ID );
 
 <div class="wrap">
     <h1>
-        <?php _e( 'Membership Details', 'membership-manager' ); ?>
-        <a href="<?php echo admin_url( 'admin.php?page=membership-manager' ); ?>" class="page-title-action"><?php _e( 'Back to List', 'membership-manager' ); ?></a>
+        <?php _e( 'Medlemskabsdetaljer', 'membership-manager' ); ?>
+        <a href="<?php echo admin_url( 'admin.php?page=membership-manager' ); ?>" class="page-title-action"><?php _e( 'Tilbage til liste', 'membership-manager' ); ?></a>
     </h1>
     
     <?php
     // Show success messages
     if ( isset( $_GET['updated'] ) && $_GET['updated'] === 'true' ) {
-        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Membership updated successfully!', 'membership-manager' ) . '</p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Medlemskab opdateret!', 'membership-manager' ) . '</p></div>';
     }
     if ( isset( $_GET['paused'] ) && $_GET['paused'] === 'true' ) {
-        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Membership paused successfully!', 'membership-manager' ) . '</p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Medlemskab pauseret!', 'membership-manager' ) . '</p></div>';
     }
     if ( isset( $_GET['resumed'] ) && $_GET['resumed'] === 'true' ) {
-        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Membership resumed successfully!', 'membership-manager' ) . '</p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Medlemskab genoptaget!', 'membership-manager' ) . '</p></div>';
     }
     if ( isset( $_GET['created'] ) && $_GET['created'] === 'true' ) {
-        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Membership created successfully!', 'membership-manager' ) . '</p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Medlemskab oprettet!', 'membership-manager' ) . '</p></div>';
     }
     ?>
 
@@ -66,7 +66,7 @@ $user_meta = get_user_meta( $user->ID );
         <!-- Membership Information -->
         <div class="postbox">
             <div class="postbox-header">
-                <h2 class="hndle"><?php _e( 'Membership Information', 'membership-manager' ); ?></h2>
+                <h2 class="hndle"><?php _e( 'Medlemskabsinformation', 'membership-manager' ); ?></h2>
             </div>
             <div class="inside">
                 <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>">
@@ -76,20 +76,20 @@ $user_meta = get_user_meta( $user->ID );
 
                     <table class="form-table">
                         <tr>
-                            <th scope="row"><?php _e( 'Membership ID', 'membership-manager' ); ?></th>
+                            <th scope="row"><?php _e( 'Medlemskabs-ID', 'membership-manager' ); ?></th>
                             <td><?php echo esc_html( $membership->id ); ?></td>
                         </tr>
                         <tr>
-                            <th scope="row"><label for="start_date"><?php _e( 'Start Date', 'membership-manager' ); ?></label></th>
+                            <th scope="row"><label for="start_date"><?php _e( 'Startdato', 'membership-manager' ); ?></label></th>
                             <td>
                                 <input type="datetime-local" id="start_date" name="start_date" value="<?php echo esc_attr( date( 'Y-m-d\TH:i', strtotime( $membership->start_date ) ) ); ?>" class="regular-text">
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row"><label for="end_date"><?php _e( 'End Date', 'membership-manager' ); ?></label></th>
+                            <th scope="row"><label for="end_date"><?php _e( 'Slutdato', 'membership-manager' ); ?></label></th>
                             <td>
                                 <input type="datetime-local" id="end_date" name="end_date" value="<?php echo esc_attr( date( 'Y-m-d\TH:i', strtotime( $membership->end_date ) ) ); ?>" class="regular-text">
-                                <p class="description"><?php _e( 'Leave empty for no expiration.', 'membership-manager' ); ?></p>
+                                <p class="description"><?php _e( 'Lad stå tomt for ingen udløbsdato.', 'membership-manager' ); ?></p>
                             </td>
                         </tr>
                         <tr>
@@ -106,23 +106,23 @@ $user_meta = get_user_meta( $user->ID );
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row"><label for="renewal_type"><?php _e( 'Renewal Type', 'membership-manager' ); ?></label></th>
+                            <th scope="row"><label for="renewal_type"><?php _e( 'Fornyelsestype', 'membership-manager' ); ?></label></th>
                             <td>
                                 <select id="renewal_type" name="renewal_type">
-                                    <option value="manual" <?php selected( $membership->renewal_type, 'manual' ); ?>><?php _e( 'Manual', 'membership-manager' ); ?></option>
-                                    <option value="automatic" <?php selected( $membership->renewal_type, 'automatic' ); ?>><?php _e( 'Automatic', 'membership-manager' ); ?></option>
+                                    <option value="manual" <?php selected( $membership->renewal_type, 'manual' ); ?>><?php _e( 'Manuel', 'membership-manager' ); ?></option>
+                                    <option value="automatic" <?php selected( $membership->renewal_type, 'automatic' ); ?>><?php _e( 'Automatisk', 'membership-manager' ); ?></option>
                                 </select>
                             </td>
                         </tr>
                         <?php if ( ! empty( $membership->status_changed_date ) ): ?>
                         <tr>
-                            <th scope="row"><?php _e( 'Status Changed', 'membership-manager' ); ?></th>
+                            <th scope="row"><?php _e( 'Status ændret', 'membership-manager' ); ?></th>
                             <td><?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $membership->status_changed_date ) ); ?></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ( $membership->status === 'on-hold' && ! empty( $membership->paused_date ) ): ?>
                         <tr>
-                            <th scope="row"><?php _e( 'Paused Date', 'membership-manager' ); ?></th>
+                            <th scope="row"><?php _e( 'Pausedato', 'membership-manager' ); ?></th>
                             <td>
                                 <strong style="color: #826eb4;"><?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $membership->paused_date ) ); ?></strong>
                             </td>
@@ -132,21 +132,21 @@ $user_meta = get_user_meta( $user->ID );
                     
                     <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
                         <div style="display: flex; gap: 10px;">
-                            <button type="submit" class="button button-primary"><?php _e( 'Update Membership', 'membership-manager' ); ?></button>
+                            <button type="submit" class="button button-primary"><?php _e( 'Opdater medlemskab', 'membership-manager' ); ?></button>
                             
                             <?php if ( $membership->status === 'active' ): ?>
                                 <a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=pause_membership&membership_id=' . $membership->id ), 'pause_membership_nonce' ); ?>" 
                                    class="button button-secondary"
-                                   onclick="return confirm('<?php _e( 'Are you sure you want to pause this membership?', 'membership-manager' ); ?>');">
+                                   onclick="return confirm('<?php _e( 'Er du sikker på, at du vil pause dette medlemskab?', 'membership-manager' ); ?>');">
                                     <span class="dashicons dashicons-controls-pause" style="vertical-align: middle;"></span>
-                                    <?php _e( 'Pause Membership', 'membership-manager' ); ?>
+                                    <?php _e( 'Pause medlemskab', 'membership-manager' ); ?>
                                 </a>
                             <?php elseif ( $membership->status === 'on-hold' ): ?>
                                 <a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=resume_membership&membership_id=' . $membership->id ), 'resume_membership_nonce' ); ?>" 
                                    class="button button-secondary"
-                                   onclick="return confirm('<?php _e( 'Are you sure you want to resume this membership?', 'membership-manager' ); ?>');">
+                                   onclick="return confirm('<?php _e( 'Er du sikker på, at du vil genoptage dette medlemskab?', 'membership-manager' ); ?>');">
                                     <span class="dashicons dashicons-controls-play" style="vertical-align: middle;"></span>
-                                    <?php _e( 'Resume Membership', 'membership-manager' ); ?>
+                                    <?php _e( 'Genoptag medlemskab', 'membership-manager' ); ?>
                                 </a>
                             <?php endif; ?>
                             
@@ -154,22 +154,22 @@ $user_meta = get_user_meta( $user->ID );
                                 <?php $renewal_link = Membership_Manager::get_renewal_link( $membership ); ?>
                                 <button type="button" class="button button-secondary" onclick="copyToClipboard('<?php echo esc_js( $renewal_link ); ?>')">
                                     <span class="dashicons dashicons-admin-links" style="vertical-align: middle;"></span>
-                                    <?php _e( 'Copy Renewal Link', 'membership-manager' ); ?>
+                                    <?php _e( 'Kopier fornyelseslink', 'membership-manager' ); ?>
                                 </button>
                             <?php endif; ?>
                         </div>
                         
                         <a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=delete_membership&membership_id=' . $membership->id ), 'delete_membership_nonce' ); ?>" 
                            class="button button-link-delete" 
-                           onclick="return confirm('<?php _e( 'Are you sure you want to delete this membership? This cannot be undone.', 'membership-manager' ); ?>');">
-                            <?php _e( 'Delete Membership', 'membership-manager' ); ?>
+                           onclick="return confirm('<?php _e( 'Er du sikker på, at du vil slette dette medlemskab? Dette kan ikke fortrydes.', 'membership-manager' ); ?>');">
+                            <?php _e( 'Slet medlemskab', 'membership-manager' ); ?>
                         </a>
                     </div>
                     
                     <script>
                     function copyToClipboard(text) {
                         navigator.clipboard.writeText(text).then(function() {
-                            alert('<?php _e( 'Renewal link copied to clipboard!', 'membership-manager' ); ?>');
+                            alert('<?php _e( 'Fornyelseslink kopieret til udklipsholder!', 'membership-manager' ); ?>');
                         });
                     }
                     </script>
@@ -180,12 +180,12 @@ $user_meta = get_user_meta( $user->ID );
         <!-- User Information -->
         <div class="postbox">
             <div class="postbox-header">
-                <h2 class="hndle"><?php _e( 'User Information', 'membership-manager' ); ?></h2>
+                <h2 class="hndle"><?php _e( 'Brugerinformation', 'membership-manager' ); ?></h2>
             </div>
             <div class="inside">
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><?php _e( 'User ID', 'membership-manager' ); ?></th>
+                        <th scope="row"><?php _e( 'Bruger-ID', 'membership-manager' ); ?></th>
                         <td>
                             <a href="<?php echo admin_url( 'user-edit.php?user_id=' . $user->ID ); ?>" target="_blank">
                                 <?php echo esc_html( $user->ID ); ?>
@@ -193,24 +193,24 @@ $user_meta = get_user_meta( $user->ID );
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e( 'Name', 'membership-manager' ); ?></th>
+                        <th scope="row"><?php _e( 'Navn', 'membership-manager' ); ?></th>
                         <td><?php echo esc_html( $user->display_name ); ?></td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e( 'Email', 'membership-manager' ); ?></th>
+                        <th scope="row"><?php _e( 'E-mail', 'membership-manager' ); ?></th>
                         <td><a href="mailto:<?php echo esc_attr( $user->user_email ); ?>"><?php echo esc_html( $user->user_email ); ?></a></td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e( 'Username', 'membership-manager' ); ?></th>
+                        <th scope="row"><?php _e( 'Brugernavn', 'membership-manager' ); ?></th>
                         <td><?php echo esc_html( $user->user_login ); ?></td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e( 'Registration Date', 'membership-manager' ); ?></th>
+                        <th scope="row"><?php _e( 'Registreringsdato', 'membership-manager' ); ?></th>
                         <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $user->user_registered ) ) ); ?></td>
                     </tr>
                     <?php if ( isset( $user_meta['first_name'][0] ) || isset( $user_meta['last_name'][0] ) ): ?>
                     <tr>
-                        <th scope="row"><?php _e( 'Full Name', 'membership-manager' ); ?></th>
+                        <th scope="row"><?php _e( 'Fulde navn', 'membership-manager' ); ?></th>
                         <td>
                             <?php 
                             $first_name = isset( $user_meta['first_name'][0] ) ? $user_meta['first_name'][0] : '';
@@ -229,18 +229,18 @@ $user_meta = get_user_meta( $user->ID );
     <!-- Orders History -->
     <div class="postbox" style="margin-top: 20px;">
         <div class="postbox-header">
-            <h2 class="hndle"><?php _e( 'Order History', 'membership-manager' ); ?></h2>
+            <h2 class="hndle"><?php _e( 'Ordrehistorik', 'membership-manager' ); ?></h2>
         </div>
         <div class="inside">
             <table class="wp-list-table widefat fixed striped">
                 <thead>
                     <tr>
-                        <th><?php _e( 'Order #', 'membership-manager' ); ?></th>
-                        <th><?php _e( 'Date', 'membership-manager' ); ?></th>
+                        <th><?php _e( 'Ordre #', 'membership-manager' ); ?></th>
+                        <th><?php _e( 'Dato', 'membership-manager' ); ?></th>
                         <th><?php _e( 'Status', 'membership-manager' ); ?></th>
-                        <th><?php _e( 'Total', 'membership-manager' ); ?></th>
-                        <th><?php _e( 'Payment Method', 'membership-manager' ); ?></th>
-                        <th><?php _e( 'Actions', 'membership-manager' ); ?></th>
+                        <th><?php _e( 'I alt', 'membership-manager' ); ?></th>
+                        <th><?php _e( 'Betalingsmetode', 'membership-manager' ); ?></th>
+                        <th><?php _e( 'Handlinger', 'membership-manager' ); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -261,7 +261,7 @@ $user_meta = get_user_meta( $user->ID );
                         <td><?php echo esc_html( $order->get_payment_method_title() ); ?></td>
                         <td>
                             <a href="<?php echo admin_url( 'post.php?post=' . $order->get_id() . '&action=edit' ); ?>" target="_blank" class="button button-small">
-                                <?php _e( 'View', 'membership-manager' ); ?>
+                                <?php _e( 'Vis', 'membership-manager' ); ?>
                             </a>
                         </td>
                     </tr>
@@ -269,7 +269,7 @@ $user_meta = get_user_meta( $user->ID );
                     <?php if ( count( $orders ) > 10 ): ?>
                     <tr>
                         <td colspan="6" style="text-align: center; color: #646970; font-style: italic;">
-                            <?php printf( __( 'Showing 10 of %d orders', 'membership-manager' ), count( $orders ) ); ?>
+                            <?php printf( __( 'Viser 10 af %d ordrer', 'membership-manager' ), count( $orders ) ); ?>
                         </td>
                     </tr>
                     <?php endif; ?>
@@ -283,12 +283,12 @@ $user_meta = get_user_meta( $user->ID );
     <!-- Billing Information -->
     <div class="postbox" style="margin-top: 20px;">
         <div class="postbox-header">
-            <h2 class="hndle"><?php _e( 'Billing Information', 'membership-manager' ); ?></h2>
+            <h2 class="hndle"><?php _e( 'Faktureringsinformation', 'membership-manager' ); ?></h2>
         </div>
         <div class="inside">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div>
-                    <h4><?php _e( 'Billing Address', 'membership-manager' ); ?></h4>
+                    <h4><?php _e( 'Faktureringsadresse', 'membership-manager' ); ?></h4>
                     <?php
                     $billing_address = array(
                         $user_meta['billing_first_name'][0] ?? '',

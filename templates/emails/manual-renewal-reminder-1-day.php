@@ -3,12 +3,12 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 ?>
-<p><?php printf( __( 'Hi %s,', 'membership-manager' ), '[user_name]' ); ?></p>
-<p><?php _e( 'This is a reminder that your subscription will expire tomorrow.', 'membership-manager' ); ?></p>
-<p><?php _e( 'Please renew your subscription manually to continue receiving benefits.', 'membership-manager' ); ?></p>
-<p><a href="[renewal_link]"><?php _e( 'Renew now', 'membership-manager' ); ?></a></p>
-<p><?php _e( 'Subscription details:', 'membership-manager' ); ?></p>
+<p><?php printf( __( 'Hej %s,', 'membership-manager' ), '[user_name]' ); ?></p>
+<p><?php _e( 'Dette er en påmindelse om, at dit abonnement udløber i morgen.', 'membership-manager' ); ?></p>
+<p><?php _e( 'Fornå venligst dit abonnement manuelt for at fortsætte med at modtage fordele.', 'membership-manager' ); ?></p>
+<p><a href="[renewal_link]"><?php _e( 'Fornå nu', 'membership-manager' ); ?></a></p>
+<p><?php _e( 'Abonnementsdetaljer:', 'membership-manager' ); ?></p>
 <ul>
-    <li><?php _e( 'End date:', 'membership-manager' ); ?> [end_date]</li>
+    <li><?php _e( 'Slutdato:', 'membership-manager' ); ?> [end_date]</li>
 </ul>
-<p><?php _e( 'Thank you!', 'membership-manager' ); ?></p>
+<p><?php _e( 'Tak!', 'membership-manager' ); ?></p>

@@ -23,7 +23,7 @@ class Membership_Renewals {
         if ( defined( 'MEMBERSHIP_STAGING_MODE' ) && MEMBERSHIP_STAGING_MODE ) {
             Membership_Manager::log( 
                 sprintf( 
-                    __( '[STAGING MODE] Renewal blocked for subscription ID: %d (User: %d)', 'membership-manager' ), 
+                    __( '[STAGING MODE] Fornyelse blokeret for abonnements-ID: %d (Bruger: %d)', 'membership-manager' ), 
                     $subscription->id, 
                     $subscription->user_id 
                 ), 
@@ -32,13 +32,13 @@ class Membership_Renewals {
             return false;
         }
         
-        Membership_Manager::log( sprintf( __( 'Attempting to create renewal order for subscription ID: %d (User: %d)', 'membership-manager' ), $subscription->id, $subscription->user_id ) );
+        Membership_Manager::log( sprintf( __( 'Forsøger at oprette fornyelsesordre for abonnements-ID: %d (Bruger: %d)', 'membership-manager' ), $subscription->id, $subscription->user_id ) );
         
         // Get automatic renewal products from settings
         $automatic_products = get_option( 'membership_automatic_renewal_products', array() );
         
         if ( empty( $automatic_products ) ) {
-            Membership_Manager::log( sprintf( __( 'No automatic renewal products configured. Cannot create renewal order for subscription ID: %d', 'membership-manager' ), $subscription->id ), 'ERROR' );
+            Membership_Manager::log( sprintf( __( 'Ingen automatiske fornyelsesprodukter konfigureret. Kan ikke oprette fornyelsesordre for abonnements-ID: %d', 'membership-manager' ), $subscription->id ), 'ERROR' );
             return false;
         }
         
@@ -47,7 +47,7 @@ class Membership_Renewals {
         $product = wc_get_product( $product_id );
         
         if ( ! $product ) {
-            Membership_Manager::log( sprintf( __( 'Product ID %d not found. Cannot create renewal order for subscription ID: %d', 'membership-manager' ), $product_id, $subscription->id ), 'ERROR' );
+            Membership_Manager::log( sprintf( __( 'Produkt-ID %d ikke fundet. Kan ikke oprette fornyelsesordre for abonnements-ID: %d', 'membership-manager' ), $product_id, $subscription->id ), 'ERROR' );
             return false;
         }
         
@@ -59,7 +59,7 @@ class Membership_Renewals {
             ) );
             
             if ( is_wp_error( $order ) ) {
-                Membership_Manager::log( sprintf( __( 'Failed to create order: %s', 'membership-manager' ), $order->get_error_message() ), 'ERROR' );
+                Membership_Manager::log( sprintf( __( 'Kunne ikke oprette ordre: %s', 'membership-manager' ), $order->get_error_message() ), 'ERROR' );
                 return false;
             }
             
@@ -67,7 +67,7 @@ class Membership_Renewals {
             $order->add_product( $product, 1 );
             
             // Add order note
-            $order->add_order_note( sprintf( __( 'Automatic renewal order for membership subscription ID: %d', 'membership-manager' ), $subscription->id ) );
+            $order->add_order_note( sprintf( __( 'Automatisk fornyelsesordre for medlemskabsabonnement ID: %d', 'membership-manager' ), $subscription->id ) );
             
             // Add custom meta to link order to subscription
             $order->update_meta_data( '_membership_subscription_id', $subscription->id );
@@ -79,7 +79,7 @@ class Membership_Renewals {
             // Save order
             $order->save();
             
-            Membership_Manager::log( sprintf( __( 'Created renewal order #%d for subscription ID: %d', 'membership-manager' ), $order->get_id(), $subscription->id ) );
+            Membership_Manager::log( sprintf( __( 'Oprettede fornyelsesordre #%d for abonnements-ID: %d', 'membership-manager' ), $order->get_id(), $subscription->id ) );
             
             // Try to process payment automatically if payment method is available
             $this->process_automatic_payment( $order, $subscription );
@@ -87,7 +87,7 @@ class Membership_Renewals {
             return $order->get_id();
             
         } catch ( Exception $e ) {
-            Membership_Manager::log( sprintf( __( 'Exception creating renewal order: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
+            Membership_Manager::log( sprintf( __( 'Undtagelse ved oprettelse af fornyelsesordre: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
             return false;
         }
     }
@@ -132,17 +132,17 @@ class Membership_Renewals {
                 // Some gateways auto-process, try to complete if it was successful
                 if ( $order->needs_payment() ) {
                     // Mark as pending payment
-                    $order->update_status( 'pending', __( 'Awaiting automatic payment processing.', 'membership-manager' ) );
+                    $order->update_status( 'pending', __( 'Afventer automatisk betalingsbehandling.', 'membership-manager' ) );
                     
                     // Send email to customer about pending payment
                     $this->send_payment_required_email( $order, $subscription );
                 }
             } else {
-                Membership_Manager::log( sprintf( __( 'No payment token found for user %d. Manual payment required for order #%d', 'membership-manager' ), $subscription->user_id, $order->get_id() ), 'WARNING' );
+                Membership_Manager::log( sprintf( __( 'Intet betalingstoken fundet for bruger %d. Manuel betaling påkrævet for ordre #%d', 'membership-manager' ), $subscription->user_id, $order->get_id() ), 'WARNING' );
                 $this->handle_failed_automatic_renewal( $order, $subscription, 'no_payment_method' );
             }
         } else {
-            Membership_Manager::log( sprintf( __( 'No saved payment methods for user %d. Manual payment required for order #%d', 'membership-manager' ), $subscription->user_id, $order->get_id() ), 'WARNING' );
+            Membership_Manager::log( sprintf( __( 'Ingen gemte betalingsmetoder for bruger %d. Manuel betaling påkrævet for ordre #%d', 'membership-manager' ), $subscription->user_id, $order->get_id() ), 'WARNING' );
             $this->handle_failed_automatic_renewal( $order, $subscription, 'no_payment_method' );
         }
     }
@@ -165,7 +165,7 @@ class Membership_Renewals {
             array( 'id' => $subscription->id )
         );
         
-        Membership_Manager::log( sprintf( __( 'Failed automatic renewal for subscription ID: %d. Reason: %s. Status set to pending-cancel.', 'membership-manager' ), $subscription->id, $reason ), 'ERROR' );
+        Membership_Manager::log( sprintf( __( 'Automatisk fornyelse mislykkedes for abonnements-ID: %d. Årsag: %s. Status sat til afventer-annullering.', 'membership-manager' ), $subscription->id, $reason ), 'ERROR' );
         
         // Send email to user about failed renewal
         $this->send_failed_renewal_email( $subscription, $order, $reason );
@@ -186,7 +186,7 @@ class Membership_Renewals {
         $subject = __( 'Payment Required for Membership Renewal', 'membership-manager' );
         
         $message = sprintf(
-            __( 'Hi %s,<br><br>Your membership renewal order has been created but requires payment.<br><br>Please complete the payment here: %s<br><br>Order Details:<br>Order #%d<br>Amount: %s<br><br>Thank you!', 'membership-manager' ),
+            __( 'Hej %s,<br><br>Din medlemskabsfornyelsesordre er oprettet, men kræver betaling.<br><br>Venligst gennemfør betalingen her: %s<br><br>Ordredetaljer:<br>Ordre #%d<br>Beløb: %s<br><br>Tak!', 'membership-manager' ),
             $user_info->display_name,
             $order->get_checkout_payment_url(),
             $order->get_id(),
@@ -196,7 +196,7 @@ class Membership_Renewals {
         $headers = array( 'Content-Type: text/html; charset=UTF-8' );
         wp_mail( $to, $subject, $message, $headers );
         
-        Membership_Manager::log( sprintf( __( 'Sent payment required email to: %s for order #%d', 'membership-manager' ), $to, $order->get_id() ) );
+        Membership_Manager::log( sprintf( __( 'Sendte betaling påkrævet e-mail til: %s for ordre #%d', 'membership-manager' ), $to, $order->get_id() ) );
     }
     
     /**
@@ -205,10 +205,10 @@ class Membership_Renewals {
     private function send_failed_renewal_email( $subscription, $order, $reason ) {
         $user_info = get_userdata( $subscription->user_id );
         $to = $user_info->user_email;
-        $subject = __( 'Action Required: Membership Renewal Failed', 'membership-manager' );
+        $subject = __( 'Handling påkrævet: Medlemskabsfornyelse mislykkedes', 'membership-manager' );
         
         $message = sprintf(
-            __( 'Hi %s,<br><br>We were unable to automatically renew your membership.<br><br>Please update your payment method and complete the renewal here: %s<br><br>If you have any questions, please contact us.<br><br>Thank you!', 'membership-manager' ),
+            __( 'Hej %s,<br><br>Vi kunne ikke automatisk forny dit medlemskab.<br><br>Venligst opdater din betalingsmetode og gennemfør fornyelsen her: %s<br><br>Hvis du har spørgsmål, kontakt os venligst.<br><br>Tak!', 'membership-manager' ),
             $user_info->display_name,
             $order ? $order->get_checkout_payment_url() : wc_get_account_endpoint_url( 'membership' )
         );
@@ -216,7 +216,7 @@ class Membership_Renewals {
         $headers = array( 'Content-Type: text/html; charset=UTF-8' );
         wp_mail( $to, $subject, $message, $headers );
         
-        Membership_Manager::log( sprintf( __( 'Sent failed renewal email to: %s', 'membership-manager' ), $to ) );
+        Membership_Manager::log( sprintf( __( 'Sendte mislykket fornyelsese-mail til: %s', 'membership-manager' ), $to ) );
     }
     
     /**
@@ -224,11 +224,11 @@ class Membership_Renewals {
      */
     private function notify_admin_failed_renewal( $subscription, $order, $reason ) {
         $admin_email = get_option( 'admin_email' );
-        $subject = __( 'Failed Membership Renewal - Admin Notification', 'membership-manager' );
+        $subject = __( 'Mislykket medlemskabsfornyelse - Admin notifikation', 'membership-manager' );
         
         $user_info = get_userdata( $subscription->user_id );
         $message = sprintf(
-            __( 'A membership renewal has failed.<br><br>Subscription ID: %d<br>User: %s (ID: %d)<br>Email: %s<br>Order ID: %s<br>Reason: %s<br><br>Please take appropriate action.', 'membership-manager' ),
+            __( 'En medlemskabsfornyelse er mislykkedes.<br><br>Abonnements-ID: %d<br>Bruger: %s (ID: %d)<br>E-mail: %s<br>Ordre-ID: %s<br>Årsag: %s<br><br>Tag venligst passende handling.', 'membership-manager' ),
             $subscription->id,
             $user_info->display_name,
             $subscription->user_id,
@@ -289,12 +289,12 @@ class Membership_Renewals {
                     $order_id = $this->create_renewal_order( $subscription );
                     
                     if ( $order_id ) {
-                        Membership_Manager::log( sprintf( __( 'Successfully created automatic renewal order #%d for subscription ID: %d', 'membership-manager' ), $order_id, $subscription->id ) );
+                        Membership_Manager::log( sprintf( __( 'Oprettede succesfuldt automatisk fornyelsesordre #%d for abonnements-ID: %d', 'membership-manager' ), $order_id, $subscription->id ) );
                     } else {
-                        Membership_Manager::log( sprintf( __( 'Failed to create automatic renewal order for subscription ID: %d', 'membership-manager' ), $subscription->id ), 'ERROR' );
+                        Membership_Manager::log( sprintf( __( 'Kunne ikke oprette automatisk fornyelsesordre for abonnements-ID: %d', 'membership-manager' ), $subscription->id ), 'ERROR' );
                     }
                 } else {
-                    Membership_Manager::log( sprintf( __( 'Renewal order already exists for subscription ID: %d today (Order #%d)', 'membership-manager' ), $subscription->id, $existing_order ) );
+                    Membership_Manager::log( sprintf( __( 'Fornyelsesordre eksisterer allerede for abonnements-ID: %d i dag (Ordre #%d)', 'membership-manager' ), $subscription->id, $existing_order ) );
                 }
             }
 

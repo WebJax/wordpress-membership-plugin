@@ -9,28 +9,28 @@
             $products_converted = isset( $_GET['products_converted'] ) ? absint( $_GET['products_converted'] ) : 0;
             $products_skipped = isset( $_GET['products_skipped'] ) ? absint( $_GET['products_skipped'] ) : 0;
             
-            $message = sprintf( __( 'Migration completed successfully! %d subscriptions migrated.', 'membership-manager' ), $count );
+            $message = sprintf( __( 'Migration fuldført succesfuldt! %d abonnementer migreret.', 'membership-manager' ), $count );
             if ( $products_converted > 0 || $products_skipped > 0 ) {
                 $message .= '<br>' . sprintf( __( 'Products: %d converted to membership types, %d skipped/already migrated.', 'membership-manager' ), $products_converted, $products_skipped );
             }
             echo '<div class="notice notice-success is-dismissible"><p>' . $message . '</p></div>';
         } elseif ( $_GET['migration'] === 'error' ) {
-            echo '<div class="notice notice-error is-dismissible"><p>' . __( 'Migration failed. Please check the logs for more details.', 'membership-manager' ) . '</p></div>';
+            echo '<div class="notice notice-error is-dismissible"><p>' . __( 'Migration mislykkedes. Tjek venligst logs for flere detaljer.', 'membership-manager' ) . '</p></div>';
         }
     }
     
     // Show token generation result
     if ( isset( $_GET['tokens_generated'] ) ) {
         $count = absint( $_GET['tokens_generated'] );
-        echo '<div class="notice notice-success is-dismissible"><p>' . sprintf( __( 'Generated renewal tokens for %d memberships.', 'membership-manager' ), $count ) . '</p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p>' . sprintf( __( 'Genererede fornyelsestokens for %d medlemskaber.', 'membership-manager' ), $count ) . '</p></div>';
     }
     
     // Show cleanup result messages
     if ( isset( $_GET['cleanup'] ) ) {
         if ( $_GET['cleanup'] === 'success' ) {
-            echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Invalid dates cleanup completed successfully!', 'membership-manager' ) . '</p></div>';
+            echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Oprydning af ugyldige datoer fuldført succesfuldt!', 'membership-manager' ) . '</p></div>';
         } elseif ( $_GET['cleanup'] === 'error' ) {
-            echo '<div class="notice notice-error is-dismissible"><p>' . __( 'Cleanup failed. Please check the logs for more details.', 'membership-manager' ) . '</p></div>';
+            echo '<div class="notice notice-error is-dismissible"><p>' . __( 'Oprydning mislykkedes. Tjek venligst logs for flere detaljer.', 'membership-manager' ) . '</p></div>';
         }
     }
     ?>
@@ -136,7 +136,7 @@
     <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" style="display: inline-block; margin-right: 10px;">
         <?php wp_nonce_field( 'generate_renewal_tokens_nonce' ); ?>
         <input type="hidden" name="action" value="generate_renewal_tokens">
-        <?php submit_button( __( 'Generate Missing Tokens', 'membership-manager' ), 'secondary', 'submit', false ); ?>
+        <?php submit_button( __( 'Generer manglende tokens', 'membership-manager' ), 'secondary', 'submit', false ); ?>
     </form>
     
     <h2><?php _e( 'Data Cleanup', 'membership-manager' ); ?></h2>
@@ -144,7 +144,7 @@
     <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" style="display: inline-block;">
         <?php wp_nonce_field( 'cleanup_invalid_dates_nonce' ); ?>
         <input type="hidden" name="action" value="cleanup_invalid_dates">
-        <?php submit_button( __( 'Fix Invalid Dates', 'membership-manager' ), 'secondary', 'submit', false ); ?>
+        <?php submit_button( __( 'Ret ugyldige datoer', 'membership-manager' ), 'secondary', 'submit', false ); ?>
     </form>
     
     <hr style="margin: 30px 0;">
@@ -165,13 +165,13 @@
         $validation_results = get_transient( 'membership_validation_results' );
         
         if ( $validation_results ) {
-            echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Validation completed successfully!', 'membership-manager' ) . '</p></div>';
+            echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Validering fuldført succesfuldt!', 'membership-manager' ) . '</p></div>';
             
             // Display statistics
             echo '<div style="background: #fff; border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; border-radius: 4px;">';
             echo '<h3>' . __( 'Validation Summary', 'membership-manager' ) . '</h3>';
             echo '<table class="widefat" style="margin-top: 15px;">';
-            echo '<thead><tr><th>' . __( 'Metric', 'membership-manager' ) . '</th><th>' . __( 'Count', 'membership-manager' ) . '</th></tr></thead>';
+            echo '<thead><tr><th>' . __( 'Metric', 'membership-manager' ) . '</th><th>' . __( 'Antal', 'membership-manager' ) . '</th></tr></thead>';
             echo '<tbody>';
             echo '<tr><td>' . __( 'Total Orders Checked', 'membership-manager' ) . '</td><td><strong>' . esc_html( $validation_results['total_orders_checked'] ) . '</strong></td></tr>';
             echo '<tr><td>' . __( 'Total Memberships Checked', 'membership-manager' ) . '</td><td><strong>' . esc_html( $validation_results['total_memberships_checked'] ) . '</strong></td></tr>';
@@ -179,7 +179,7 @@
             echo '<tr><td style="color: #d63638;">' . __( 'Orders Missing Membership', 'membership-manager' ) . '</td><td><strong style="color: #d63638;">' . esc_html( $validation_results['orders_without_membership'] ) . '</strong></td></tr>';
             echo '<tr><td style="color: #00a32a;">' . __( 'Memberships with Order', 'membership-manager' ) . '</td><td><strong style="color: #00a32a;">' . esc_html( $validation_results['memberships_with_order'] ) . '</strong></td></tr>';
             echo '<tr><td style="color: #826eb4;">' . __( 'Orphaned Memberships', 'membership-manager' ) . '</td><td><strong style="color: #826eb4;">' . esc_html( $validation_results['orphaned_memberships'] ) . '</strong></td></tr>';
-            echo '<tr><td style="color: #d63638;">' . __( 'Data Mismatches', 'membership-manager' ) . '</td><td><strong style="color: #d63638;">' . esc_html( $validation_results['data_mismatches'] ) . '</strong></td></tr>';
+            echo '<tr><td style="color: #d63638;">' . __( 'Data uoverensstemmelser', 'membership-manager' ) . '</td><td><strong style="color: #d63638;">' . esc_html( $validation_results['data_mismatches'] ) . '</strong></td></tr>';
             echo '</tbody>';
             echo '</table>';
             
@@ -227,7 +227,7 @@
                 
                 echo '</div>';
             } else {
-                echo '<div class="notice notice-success inline" style="margin-top: 20px;"><p>✅ <strong>' . __( 'No issues found! All membership data is consistent with WooCommerce orders.', 'membership-manager' ) . '</strong></p></div>';
+                echo '<div class="notice notice-success inline" style="margin-top: 20px;"><p>✅ <strong>' . __( 'Ingen problemer fundet! Alle medlemskabsdata er konsistente med WooCommerce-ordrer.', 'membership-manager' ) . '</strong></p></div>';
             }
             
             echo '</div>';
@@ -241,7 +241,7 @@
     <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" style="display: inline-block;">
         <?php wp_nonce_field( 'validate_membership_data_nonce' ); ?>
         <input type="hidden" name="action" value="validate_membership_data">
-        <?php submit_button( __( 'Run Validation Check', 'membership-manager' ), 'secondary', 'submit', false ); ?>
+        <?php submit_button( __( 'Kør valideringstjek', 'membership-manager' ), 'secondary', 'submit', false ); ?>
     </form>
     
     <div class="notice notice-info inline" style="margin-top: 15px; max-width: 800px;">

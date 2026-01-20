@@ -54,7 +54,7 @@ class WC_Product_Membership_Auto extends WC_Product {
      * Get product add to cart text
      */
     public function add_to_cart_text() {
-        return __( 'Add membership', 'membership-manager' );
+        return __( 'Tilføj medlemskab', 'membership-manager' );
     }
 
     /**

@@ -77,7 +77,7 @@ class Membership_Manager {
         update_option( 'membership_manager_db_version', '1.0.0' );
 
         // Log activation
-        self::log( sprintf( __( 'Plugin activated. Database result: %s', 'membership-manager' ), print_r( $result, true ) ) );
+        self::log( sprintf( __( 'Plugin aktiveret. Database resultat: %s', 'membership-manager' ), print_r( $result, true ) ) );
 
         // Ensure log directory exists
         $log_dir = plugin_dir_path( __FILE__ ) . '../logs';
@@ -92,7 +92,7 @@ class Membership_Manager {
             if ( false === $bytes_written ) {
                 self::log(
                     sprintf(
-                        __( 'Warning: Failed to create .htaccess file in logs directory (%s). Please check directory permissions.', 'membership-manager' ),
+                        __( 'Advarsel: Kunne ikke oprette .htaccess fil i logs mappen (%s). Tjek venligst mappe rettigheder.', 'membership-manager' ),
                         $log_dir
                     ),
                     'WARNING'
@@ -111,20 +111,20 @@ class Membership_Manager {
     public static function run_renewal_process() {
         // Check for staging mode
         if ( defined( 'MEMBERSHIP_STAGING_MODE' ) && MEMBERSHIP_STAGING_MODE ) {
-            self::log( __( '[STAGING MODE] Renewal process skipped - staging mode is active', 'membership-manager' ), 'INFO' );
+            self::log( __( '[STAGING MODE] Fornyelsesproces sprunget over - staging mode er aktiv', 'membership-manager' ), 'INFO' );
             return;
         }
         
-        self::log( __( 'Starting renewal process.', 'membership-manager' ) );
+        self::log( __( 'Starter fornyelsesproces.', 'membership-manager' ) );
         $renewals = new Membership_Renewals();
         $renewals->process_membership_renewals();
-        self::log( __( 'Finished renewal process.', 'membership-manager' ) );
+        self::log( __( 'Fornyelsesproces afsluttet.', 'membership-manager' ) );
     }
 
     public static function add_admin_menu() {
         add_menu_page(
-            __( 'Memberships', 'membership-manager' ),
-            __( 'Memberships', 'membership-manager' ),
+            __( 'Medlemskaber', 'membership-manager' ),
+            __( 'Medlemskaber', 'membership-manager' ),
             'manage_options',
             'membership-manager',
             array( __CLASS__, 'render_admin_page' ),
@@ -306,19 +306,19 @@ class Membership_Manager {
                 $html .= '<td><span class="status-' . esc_attr( $membership->status ) . '">' . esc_html( self::get_status_display_name( $membership->status ) ) . '</span></td>';
                 $html .= '<td>' . esc_html( ucfirst( $membership->renewal_type ) ) . '</td>';
                 $html .= '<td>';
-                $html .= '<a href="' . admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership->id ) . '" class="button button-small">' . __( 'View', 'membership-manager' ) . '</a> ';
+                $html .= '<a href="' . admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership->id ) . '" class="button button-small">' . __( 'Vis', 'membership-manager' ) . '</a> ';
                 
                 // Add "View My Account" button if WooCommerce is active and user exists
                 if ( ! empty( $my_account_url ) && $user ) {
-                    $html .= '<a href="' . esc_url( $my_account_url ) . '" class="button button-small" target="_blank" title="' . esc_attr__( 'View customer membership page', 'membership-manager' ) . '"><span class="dashicons dashicons-admin-users" style="font-size: 14px; line-height: 1.4;"></span></a> ';
+                    $html .= '<a href="' . esc_url( $my_account_url ) . '" class="button button-small" target="_blank" title="' . esc_attr__( 'Vis kundens medlemskabsside', 'membership-manager' ) . '"><span class="dashicons dashicons-admin-users" style="font-size: 14px; line-height: 1.4;"></span></a> ';
                 }
                 
-                $html .= '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=delete_membership&membership_id=' . $membership->id ), 'delete_membership_nonce' ) . '" class="button button-small button-link-delete" onclick="return confirm(\'' . __( 'Are you sure?', 'membership-manager' ) . '\');" style="color: #a00;"><span class="dashicons dashicons-trash"></span></a>';
+                $html .= '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=delete_membership&membership_id=' . $membership->id ), 'delete_membership_nonce' ) . '" class="button button-small button-link-delete" onclick="return confirm(\'' . __( 'Er du sikker?', 'membership-manager' ) . '\');" style="color: #a00;"><span class="dashicons dashicons-trash"></span></a>';
                 $html .= '</td>';
                 $html .= '</tr>';
             }
         } else {
-            $html = '<tr><td colspan="6">' . __( 'No memberships found.', 'membership-manager' ) . '</td></tr>';
+            $html = '<tr><td colspan="6">' . __( 'Ingen medlemskaber fundet.', 'membership-manager' ) . '</td></tr>';
         }
         
         wp_send_json_success( array( 
@@ -430,13 +430,13 @@ class Membership_Manager {
     public static function handle_migrate_subscriptions() {
         // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         // Verify nonce
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'migrate_subscriptions_nonce' ) ) {
-            self::log( __( 'Nonce verification failed for migration.', 'membership-manager' ), 'ERROR' );
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            self::log( __( 'Nonce verificering mislykkedes for migration.', 'membership-manager' ), 'ERROR' );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         // Get selected products
@@ -445,7 +445,7 @@ class Membership_Manager {
             : array();
         
         if ( empty( $selected_products ) ) {
-            wp_die( __( 'Please select at least one product to migrate.', 'membership-manager' ) );
+            wp_die( __( 'Vælg venligst mindst ét produkt at migrere.', 'membership-manager' ) );
         }
 
         // Perform migration
@@ -471,17 +471,17 @@ class Membership_Manager {
     }
 
     public static function migrate_woocommerce_subscription( $selected_products = array() ) {
-        self::log( sprintf( __( 'Starting WooCommerce subscription migration with products: %s', 'membership-manager' ), implode( ', ', $selected_products ) ) );
+        self::log( sprintf( __( 'Starter WooCommerce abonnements migration med produkter: %s', 'membership-manager' ), implode( ', ', $selected_products ) ) );
         
         if ( ! class_exists( 'WC_Subscriptions' ) ) {
-            self::log( __( 'WooCommerce Subscriptions not active for migration.', 'membership-manager' ), 'ERROR' );
+            self::log( __( 'WooCommerce Subscriptions er ikke aktiv for migration.', 'membership-manager' ), 'ERROR' );
             return false;
         }
 
         try {
             // First, migrate products to new product types
             $product_migration_results = self::migrate_subscription_products( $selected_products );
-            self::log( sprintf( __( 'Product migration completed: %d products converted', 'membership-manager' ), $product_migration_results['converted'] ) );
+            self::log( sprintf( __( 'Produkt migration fuldført: %d produkter konverteret', 'membership-manager' ), $product_migration_results['converted'] ) );
             
             $subscriptions = wcs_get_subscriptions( array( 'subscriptions_per_page' => -1 ) );
 
@@ -508,7 +508,7 @@ class Membership_Manager {
                         $product = $item->get_product();
                         if ( $product && \WC_Subscriptions_Product::is_subscription( $product ) ) {
                             $renewal_type = 'automatic';
-                            self::log( sprintf( __( 'Product ID %d is a subscription product - setting as automatic renewal.', 'membership-manager' ), $product_id ) );
+                            self::log( sprintf( __( 'Produkt-ID %d er et abonnementsprodukt - indstiller som automatisk fornyelse.', 'membership-manager' ), $product_id ) );
                         } else {
                             $renewal_type = 'manual';
                         }
@@ -518,7 +518,7 @@ class Membership_Manager {
                 
                 if ( ! $has_selected_product ) {
                     $skipped_count++;
-                    self::log( sprintf( __( 'Skipped subscription for user ID %d - does not contain selected products.', 'membership-manager' ), $user_id ) );
+                    self::log( sprintf( __( 'Sprang abonnement over for bruger-ID: %d - indeholder ikke valgte produkter.', 'membership-manager' ), $user_id ) );
                     continue;
                 }
                 
@@ -534,7 +534,7 @@ class Membership_Manager {
                     $end_datetime->modify( '+1 year' );
                     $end_date = $end_datetime->format( 'Y-m-d H:i:s' );
                     
-                    self::log( sprintf( __( 'Generated end_date for subscription user ID %d: %s', 'membership-manager' ), $user_id, $end_date ) );
+                    self::log( sprintf( __( 'Genererede slutdato for abonnement bruger-ID %d: %s', 'membership-manager' ), $user_id, $end_date ) );
                 }
                 
                 // Parse order notes to extract status change dates
@@ -566,20 +566,20 @@ class Membership_Manager {
                     
                     if ( $result !== false ) {
                         $migrated_count++;
-                        $log_msg = sprintf( __( 'Migrated subscription for user ID: %d with renewal type: %s', 'membership-manager' ), $user_id, $renewal_type );
+                        $log_msg = sprintf( __( 'Migrerede abonnement for bruger-ID: %d med fornyelsestype: %s', 'membership-manager' ), $user_id, $renewal_type );
                         if ( $paused_date || $status_changed_date ) {
                             $log_msg .= ' (with status dates from order notes)';
                         }
                         self::log( $log_msg );
                     } else {
-                        self::log( sprintf( __( 'Failed to migrate subscription for user ID: %d', 'membership-manager' ), $user_id ), 'ERROR' );
+                        self::log( sprintf( __( 'Kunne ikke migrere abonnement for bruger-ID: %d', 'membership-manager' ), $user_id ), 'ERROR' );
                     }
                 } else {
-                    self::log( sprintf( __( 'Subscription already exists for user ID: %d. Skipping.', 'membership-manager' ), $user_id ) );
+                    self::log( sprintf( __( 'Abonnement findes allerede for bruger-ID: %d. Springer over.', 'membership-manager' ), $user_id ) );
                 }
             }
 
-            self::log( sprintf( __( 'Finished WooCommerce subscription migration. Migrated %d subscriptions, skipped %d.', 'membership-manager' ), $migrated_count, $skipped_count ) );
+            self::log( sprintf( __( 'Afsluttede WooCommerce abonnements migration. Migrerede %d abonnementer, sprang %d over.', 'membership-manager' ), $migrated_count, $skipped_count ) );
             
             return array(
                 'subscriptions' => $migrated_count,
@@ -587,7 +587,7 @@ class Membership_Manager {
             );
             
         } catch ( Exception $e ) {
-            self::log( sprintf( __( 'Migration failed with error: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
+            self::log( sprintf( __( 'Migration mislykkedes med fejl: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
             return false;
         }
     }
@@ -606,7 +606,7 @@ class Membership_Manager {
         );
         
         if ( empty( $selected_products ) ) {
-            self::log( __( 'No products selected for migration.', 'membership-manager' ) );
+            self::log( __( 'Ingen produkter valgt til migration.', 'membership-manager' ) );
             return $results;
         }
         
@@ -614,7 +614,7 @@ class Membership_Manager {
             $product = wc_get_product( $product_id );
             
             if ( ! $product ) {
-                self::log( sprintf( __( 'Product ID %d not found. Skipping.', 'membership-manager' ), $product_id ), 'WARNING' );
+                self::log( sprintf( __( 'Produkt-ID %d ikke fundet. Springer over.', 'membership-manager' ), $product_id ), 'WARNING' );
                 $results['skipped']++;
                 continue;
             }
@@ -623,7 +623,7 @@ class Membership_Manager {
             
             // Skip if already our custom type
             if ( $current_type === 'membership_auto' || $current_type === 'membership_manual' ) {
-                self::log( sprintf( __( 'Product ID %d is already a membership product type. Skipping.', 'membership-manager' ), $product_id ) );
+                self::log( sprintf( __( 'Produkt-ID %d er allerede en medlemskabsprodukttype. Springer over.', 'membership-manager' ), $product_id ) );
                 $results['already_migrated']++;
                 continue;
             }
@@ -635,9 +635,9 @@ class Membership_Manager {
             if ( class_exists( 'WC_Subscriptions_Product' ) && \WC_Subscriptions_Product::is_subscription( $product ) ) {
                 $is_subscription = true;
                 $new_type = 'membership_auto';
-                self::log( sprintf( __( 'Product ID %d is a WooCommerce subscription - converting to membership_auto', 'membership-manager' ), $product_id ) );
+                self::log( sprintf( __( 'Produkt-ID %d er et WooCommerce abonnement - konverterer til membership_auto', 'membership-manager' ), $product_id ) );
             } else {
-                self::log( sprintf( __( 'Product ID %d is not a subscription - converting to membership_manual', 'membership-manager' ), $product_id ) );
+                self::log( sprintf( __( 'Produkt-ID %d er ikke et abonnement - konverterer til membership_manual', 'membership-manager' ), $product_id ) );
             }
             
             // Get subscription metadata to preserve
@@ -682,7 +682,7 @@ class Membership_Manager {
                 if ( empty( $renewal_period ) ) {
                     update_post_meta( $product_id, '_membership_renewal_period', '1' );
                     update_post_meta( $product_id, '_membership_renewal_unit', 'year' );
-                    self::log( sprintf( __( 'Set default renewal period (1 year) for product ID %d', 'membership-manager' ), $product_id ) );
+                    self::log( sprintf( __( 'Indstil standard fornyelsesperiode (1 år) for produkt-ID %d', 'membership-manager' ), $product_id ) );
                 }
             }
             
@@ -695,23 +695,23 @@ class Membership_Manager {
                 if ( ! in_array( $product_id, $automatic_products ) ) {
                     $automatic_products[] = $product_id;
                     update_option( 'membership_automatic_renewal_products', $automatic_products );
-                    self::log( sprintf( __( 'Added product ID %d to automatic renewal products list', 'membership-manager' ), $product_id ) );
+                    self::log( sprintf( __( 'Tilføjede produkt-ID %d til automatisk fornyelsesproduktliste', 'membership-manager' ), $product_id ) );
                 }
             } else {
                 $manual_products = get_option( 'membership_manual_renewal_products', array() );
                 if ( ! in_array( $product_id, $manual_products ) ) {
                     $manual_products[] = $product_id;
                     update_option( 'membership_manual_renewal_products', $manual_products );
-                    self::log( sprintf( __( 'Added product ID %d to manual renewal products list', 'membership-manager' ), $product_id ) );
+                    self::log( sprintf( __( 'Tilføjede produkt-ID %d til manuel fornyelsesproduktliste', 'membership-manager' ), $product_id ) );
                 }
             }
             
             $results['converted']++;
-            self::log( sprintf( __( 'Successfully converted product ID %d from %s to %s', 'membership-manager' ), $product_id, $current_type, $new_type ) );
+            self::log( sprintf( __( 'Konverterede succesfuldt produkt-ID %d fra %s til %s', 'membership-manager' ), $product_id, $current_type, $new_type ) );
         }
         
         self::log( sprintf( 
-            __( 'Product migration summary: %d converted, %d already migrated, %d skipped', 'membership-manager' ),
+            __( 'Produkt migrations oversigt: %d konverteret, %d allerede migreret, %d sprunget over', 'membership-manager' ),
             $results['converted'],
             $results['already_migrated'],
             $results['skipped']
@@ -722,7 +722,7 @@ class Membership_Manager {
 
 
     public static function create_membership_subscription( $order_id ) {
-        self::log( sprintf( __( 'Creating or extending membership for order ID: %d', 'membership-manager' ), $order_id ) );
+        self::log( sprintf( __( 'Opretter eller forlænger medlemskab for ordre-ID: %d', 'membership-manager' ), $order_id ) );
         $order = wc_get_order( $order_id );
         
         if ( ! $order ) {
@@ -732,7 +732,7 @@ class Membership_Manager {
         $user_id = $order->get_user_id();
 
         if ( ! $user_id ) {
-            self::log( sprintf( __( 'No user ID found for order ID: %d. Aborting.', 'membership-manager' ), $order_id ), 'WARNING' );
+            self::log( sprintf( __( 'Intet bruger-ID fundet for ordre-ID: %d. Afbryder.', 'membership-manager' ), $order_id ), 'WARNING' );
             return;
         }
 
@@ -762,13 +762,13 @@ class Membership_Manager {
             if ( $product && class_exists( 'WC_Subscriptions_Product' ) && \WC_Subscriptions_Product::is_subscription( $product ) ) {
                 $found_membership_product = true;
                 $renewal_type = 'automatic'; // Subscription products are always automatic
-                self::log( sprintf( __( 'Detected subscription product (ID: %d) in order %d - setting as automatic renewal.', 'membership-manager' ), $product_id, $order_id ) );
+                self::log( sprintf( __( 'Fandt abonnementsprodukt (ID: %d) i ordre %d - indstiller som automatisk fornyelse.', 'membership-manager' ), $product_id, $order_id ) );
                 break;
             }
         }
 
         if ( ! $found_membership_product ) {
-            self::log( sprintf( __( 'Order ID: %d does not contain any membership products. Skipping.', 'membership-manager' ), $order_id ) );
+            self::log( sprintf( __( 'Ordre-ID: %d indeholder ikke nogen medlemskabsprodukter. Springer over.', 'membership-manager' ), $order_id ) );
             return;
         }
 
@@ -803,7 +803,7 @@ class Membership_Manager {
                 ),
                 array( 'id' => $existing_subscription->id )
             );
-            self::log( sprintf( __( 'Extended membership for user ID: %d', 'membership-manager' ), $user_id ) );
+            self::log( sprintf( __( 'Forlængede medlemskab for bruger-ID: %d', 'membership-manager' ), $user_id ) );
         } else {
             // Create a new subscription
             $start_date = new DateTime();
@@ -828,7 +828,7 @@ class Membership_Manager {
             
             $subscription_id = $wpdb->insert_id;
             
-            self::log( sprintf( __( 'Created new membership for user ID: %d', 'membership-manager' ), $user_id ) );
+            self::log( sprintf( __( 'Oprettede nyt medlemskab for bruger-ID: %d', 'membership-manager' ), $user_id ) );
             
             // Trigger activation hook
             do_action( 'membership_manager_subscription_activated', $user_id, $subscription_id );
@@ -868,11 +868,11 @@ class Membership_Manager {
 
     public static function get_status_display_name( $status ) {
         $status_names = array(
-            'active' => __( 'Active', 'membership-manager' ),
-            'expired' => __( 'Expired', 'membership-manager' ),
-            'pending-cancel' => __( 'Pending Cancel', 'membership-manager' ),
-            'cancelled' => __( 'Cancelled', 'membership-manager' ),
-            'on-hold' => __( 'On Hold', 'membership-manager' )
+            'active' => __( 'Aktiv', 'membership-manager' ),
+            'expired' => __( 'Udløbet', 'membership-manager' ),
+            'pending-cancel' => __( 'Afventer annullering', 'membership-manager' ),
+            'cancelled' => __( 'Annulleret', 'membership-manager' ),
+            'on-hold' => __( 'På hold', 'membership-manager' )
         );
         
         return isset( $status_names[ $status ] ) ? $status_names[ $status ] : ucfirst( $status );
@@ -900,14 +900,14 @@ class Membership_Manager {
     public static function format_date_safely( $date_string ) {
         // Check for invalid or empty dates
         if ( empty( $date_string ) || $date_string === '0000-00-00 00:00:00' || $date_string === '0000-00-00' ) {
-            return __( 'No date set', 'membership-manager' );
+            return __( 'Ingen dato angivet', 'membership-manager' );
         }
         
         $timestamp = strtotime( $date_string );
         
         // Check if strtotime failed
         if ( $timestamp === false || $timestamp < 0 ) {
-            return __( 'Invalid date', 'membership-manager' );
+            return __( 'Ugyldig dato', 'membership-manager' );
         }
         
         return date_i18n( get_option( 'date_format' ), $timestamp );
@@ -921,7 +921,7 @@ class Membership_Manager {
         if ( ! current_user_can( 'manage_options' ) ) {
             error_log( 'Membership Manager: Cleanup failed - insufficient permissions' );
             self::log( 'Cleanup failed: insufficient permissions', 'ERROR' );
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
         
         error_log( 'Membership Manager: User permissions verified.' );
@@ -931,7 +931,7 @@ class Membership_Manager {
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'cleanup_invalid_dates_nonce' ) ) {
             error_log( 'Membership Manager: Cleanup failed - nonce verification failed' );
             self::log( 'Cleanup failed: nonce verification failed', 'ERROR' );
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
         
         error_log( 'Membership Manager: Nonce verified, starting cleanup.' );
@@ -1074,17 +1074,17 @@ class Membership_Manager {
     public static function handle_update_membership_details() {
         // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         // Verify nonce
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'update_membership_details_nonce' ) ) {
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         $membership_id = isset( $_POST['membership_id'] ) ? absint( $_POST['membership_id'] ) : 0;
         if ( ! $membership_id ) {
-            wp_die( __( 'Invalid membership ID.', 'membership-manager' ) );
+            wp_die( __( 'Ugyldigt medlemskabs-ID.', 'membership-manager' ) );
         }
 
         // Sanitize input
@@ -1098,16 +1098,16 @@ class Membership_Manager {
         $end_date_validated = Membership_Utils::sanitize_date( $end_date );
 
         if ( $start_date_validated === false || $end_date_validated === false ) {
-            wp_die( __( 'Invalid date format. Please use a valid date.', 'membership-manager' ) );
+            wp_die( __( 'Ugyldigt datoformat. Brug venligst en gyldig dato.', 'membership-manager' ) );
         }
 
         // Validate status and renewal type
         if ( ! Membership_Constants::is_valid_status( $status ) ) {
-            wp_die( __( 'Invalid status value.', 'membership-manager' ) );
+            wp_die( __( 'Ugyldig statusværdi.', 'membership-manager' ) );
         }
 
         if ( ! Membership_Constants::is_valid_renewal_type( $renewal_type ) ) {
-            wp_die( __( 'Invalid renewal type value.', 'membership-manager' ) );
+            wp_die( __( 'Ugyldig fornyelsestypeværdi.', 'membership-manager' ) );
         }
 
         global $wpdb;
@@ -1117,7 +1117,7 @@ class Membership_Manager {
         $current = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $membership_id ) );
         
         if ( ! $current ) {
-            wp_die( __( 'Membership not found.', 'membership-manager' ) );
+            wp_die( __( 'Medlemskab ikke fundet.', 'membership-manager' ) );
         }
         
         $old_status = $current->status;
@@ -1152,14 +1152,14 @@ class Membership_Manager {
         );
 
         if ( $result === false ) {
-            self::log( sprintf( __( 'Database error updating membership ID %d: %s', 'membership-manager' ), $membership_id, $wpdb->last_error ), 'ERROR' );
-            wp_die( __( 'Database error occurred. Please check the logs.', 'membership-manager' ) );
+            self::log( sprintf( __( 'Database fejl ved opdatering af medlemskabs-ID %d: %s', 'membership-manager' ), $membership_id, $wpdb->last_error ), 'ERROR' );
+            wp_die( __( 'Database fejl opstod. Tjek venligst logs.', 'membership-manager' ) );
         }
 
         // Clear cache
         Membership_Utils::clear_membership_cache( $membership_id );
 
-        self::log( sprintf( __( 'Updated membership ID: %d by user ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
+        self::log( sprintf( __( 'Opdaterede medlemskabs-ID: %d af bruger-ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
         
         // Trigger status change hook if status changed
         if ( $old_status !== $status ) {
@@ -1172,16 +1172,16 @@ class Membership_Manager {
 
     public static function handle_delete_membership() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'delete_membership_nonce' ) ) {
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         $membership_id = isset( $_GET['membership_id'] ) ? absint( $_GET['membership_id'] ) : 0;
         if ( ! $membership_id ) {
-            wp_die( __( 'Invalid membership ID.', 'membership-manager' ) );
+            wp_die( __( 'Ugyldigt medlemskabs-ID.', 'membership-manager' ) );
         }
 
         global $wpdb;
@@ -1192,7 +1192,7 @@ class Membership_Manager {
             array( 'id' => $membership_id )
         );
 
-        self::log( sprintf( __( 'Deleted membership ID: %d by user ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
+        self::log( sprintf( __( 'Slettede medlemskabs-ID: %d af bruger-ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
 
         wp_redirect( admin_url( 'admin.php?page=membership-manager&deleted=true' ) );
         exit;
@@ -1204,12 +1204,12 @@ class Membership_Manager {
     public static function handle_add_new_membership() {
         // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         // Verify nonce
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'add_new_membership_nonce' ) ) {
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         // Sanitize and validate input
@@ -1225,7 +1225,7 @@ class Membership_Manager {
         
         // If date sanitization fails, reject the request
         if ( false === $start_date_validated || false === $end_date_validated ) {
-            wp_die( __( 'Invalid date format provided. Please use a valid date format.', 'membership-manager' ) );
+            wp_die( __( 'Ugyldigt datoformat angivet. Brug venligst et gyldigt datoformat.', 'membership-manager' ) );
         }
 
         // Validate data using utility class with validated dates
@@ -1239,7 +1239,7 @@ class Membership_Manager {
 
         if ( ! $validation['valid'] ) {
             $errors = implode( '<br>', $validation['errors'] );
-            wp_die( sprintf( __( 'Validation errors:<br>%s', 'membership-manager' ), $errors ) );
+            wp_die( sprintf( __( 'Valideringsfejl:<br>%s', 'membership-manager' ), $errors ) );
         }
 
         global $wpdb;
@@ -1248,7 +1248,7 @@ class Membership_Manager {
         // Check if user already has a membership
         $existing = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %d", $user_id ) );
         if ( $existing ) {
-            wp_die( sprintf( __( 'User ID %d already has a membership (ID: %d). Please edit the existing membership instead.', 'membership-manager' ), $user_id, $existing->id ) );
+            wp_die( sprintf( __( 'Bruger-ID %d har allerede et medlemskab (ID: %d). Rediger venligst det eksisterende medlemskab i stedet.', 'membership-manager' ), $user_id, $existing->id ) );
         }
 
         $renewal_token = Membership_Utils::generate_token();
@@ -1268,13 +1268,13 @@ class Membership_Manager {
         );
 
         if ( $result === false ) {
-            self::log( sprintf( __( 'Database error creating membership: %s', 'membership-manager' ), $wpdb->last_error ), 'ERROR' );
-            wp_die( __( 'Database error occurred. Please check the logs.', 'membership-manager' ) );
+            self::log( sprintf( __( 'Database fejl ved oprettelse af medlemskab: %s', 'membership-manager' ), $wpdb->last_error ), 'ERROR' );
+            wp_die( __( 'Database fejl opstod. Tjek venligst logs.', 'membership-manager' ) );
         }
 
         $membership_id = $wpdb->insert_id;
 
-        self::log( sprintf( __( 'Created new membership ID: %d for user ID: %d by admin.', 'membership-manager' ), $membership_id, $user_id ) );
+        self::log( sprintf( __( 'Oprettede nyt medlemskabs-ID: %d for bruger-ID: %d af admin.', 'membership-manager' ), $membership_id, $user_id ) );
 
         // Trigger activation if status is active
         if ( $status === Membership_Constants::STATUS_ACTIVE ) {
@@ -1287,11 +1287,11 @@ class Membership_Manager {
 
     public static function handle_generate_renewal_tokens() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'generate_renewal_tokens_nonce' ) ) {
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         global $wpdb;
@@ -1318,7 +1318,7 @@ class Membership_Manager {
             }
         }
 
-        self::log( sprintf( __( 'Generated renewal tokens for %d memberships.', 'membership-manager' ), $updated_count ) );
+        self::log( sprintf( __( 'Genererede fornyelsestokens for %d medlemskaber.', 'membership-manager' ), $updated_count ) );
 
         $redirect_url = add_query_arg(
             array(
@@ -1334,16 +1334,16 @@ class Membership_Manager {
     
     public static function handle_pause_membership() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'pause_membership_nonce' ) ) {
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         $membership_id = isset( $_GET['membership_id'] ) ? absint( $_GET['membership_id'] ) : 0;
         if ( ! $membership_id ) {
-            wp_die( __( 'Invalid membership ID.', 'membership-manager' ) );
+            wp_die( __( 'Ugyldigt medlemskabs-ID.', 'membership-manager' ) );
         }
 
         global $wpdb;
@@ -1353,7 +1353,7 @@ class Membership_Manager {
         $current = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $membership_id ) );
         
         if ( ! $current ) {
-            wp_die( __( 'Membership not found.', 'membership-manager' ) );
+            wp_die( __( 'Medlemskab ikke fundet.', 'membership-manager' ) );
         }
         
         $old_status = $current->status;
@@ -1368,7 +1368,7 @@ class Membership_Manager {
             array( 'id' => $membership_id )
         );
 
-        self::log( sprintf( __( 'Paused membership ID: %d by user ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
+        self::log( sprintf( __( 'Pausede medlemskabs-ID: %d af bruger-ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
         
         // Trigger status change hook
         do_action( 'membership_manager_status_changed', $membership_id, $old_status, 'on-hold' );
@@ -1379,16 +1379,16 @@ class Membership_Manager {
     
     public static function handle_resume_membership() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'resume_membership_nonce' ) ) {
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         $membership_id = isset( $_GET['membership_id'] ) ? absint( $_GET['membership_id'] ) : 0;
         if ( ! $membership_id ) {
-            wp_die( __( 'Invalid membership ID.', 'membership-manager' ) );
+            wp_die( __( 'Ugyldigt medlemskabs-ID.', 'membership-manager' ) );
         }
 
         global $wpdb;
@@ -1398,7 +1398,7 @@ class Membership_Manager {
         $current = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $membership_id ) );
         
         if ( ! $current ) {
-            wp_die( __( 'Membership not found.', 'membership-manager' ) );
+            wp_die( __( 'Medlemskab ikke fundet.', 'membership-manager' ) );
         }
         
         $old_status = $current->status;
@@ -1413,7 +1413,7 @@ class Membership_Manager {
             array( 'id' => $membership_id )
         );
 
-        self::log( sprintf( __( 'Resumed membership ID: %d by user ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
+        self::log( sprintf( __( 'Genoptog medlemskabs-ID: %d af bruger-ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
         
         // Trigger status change hook (will also trigger activation if coming from on-hold)
         do_action( 'membership_manager_status_changed', $membership_id, $old_status, 'active' );
@@ -1530,14 +1530,14 @@ class Membership_Manager {
         ) );
         
         if ( ! $subscription ) {
-            wp_die( __( 'Invalid renewal link. Please contact support.', 'membership-manager' ) );
+            wp_die( __( 'Ugyldigt fornyelseslink. Kontakt venligst support.', 'membership-manager' ) );
         }
         
         // Get manual renewal product
         $manual_products = get_option( 'membership_manual_renewal_products', array() );
         
         if ( empty( $manual_products ) ) {
-            wp_die( __( 'No renewal product configured. Please contact support.', 'membership-manager' ) );
+            wp_die( __( 'Intet fornyelsesprodukt konfigureret. Kontakt venligst support.', 'membership-manager' ) );
         }
         
         $product_id = $manual_products[0];
@@ -1551,7 +1551,7 @@ class Membership_Manager {
         // Add subscription ID to cart for reference
         WC()->session->set( 'renewing_membership_id', $subscription->id );
         
-        self::log( sprintf( __( 'User accessed renewal link for subscription ID: %d, redirecting to checkout', 'membership-manager' ), $subscription->id ) );
+        self::log( sprintf( __( 'Bruger tilgik fornyelseslink for abonnements-ID: %d, omdirigerer til checkout', 'membership-manager' ), $subscription->id ) );
         
         // Redirect to checkout
         wp_redirect( wc_get_checkout_url() );
@@ -1577,7 +1577,7 @@ class Membership_Manager {
         );
         
         if ( $result !== false ) {
-            self::log( sprintf( __( 'Regenerated renewal token for subscription ID: %d', 'membership-manager' ), $subscription_id ) );
+            self::log( sprintf( __( 'Regenererede fornyelsestoken for abonnements-ID: %d', 'membership-manager' ), $subscription_id ) );
             return $token;
         }
         
@@ -1590,13 +1590,13 @@ class Membership_Manager {
     public static function handle_validate_membership_data() {
         // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         // Verify nonce
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'validate_membership_data_nonce' ) ) {
-            self::log( __( 'Nonce verification failed for validation.', 'membership-manager' ), 'ERROR' );
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            self::log( __( 'Nonce verificering mislykkedes for validering.', 'membership-manager' ), 'ERROR' );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         // Perform validation
@@ -1630,7 +1630,7 @@ class Membership_Manager {
      * @return array Validation results with statistics and discrepancies
      */
     public static function validate_membership_data() {
-        self::log( __( 'Starting membership data validation.', 'membership-manager' ) );
+        self::log( __( 'Starter medlemskabsdata validering.', 'membership-manager' ) );
         
         global $wpdb;
         $table_name = $wpdb->prefix . 'membership_subscriptions';
@@ -1657,9 +1657,9 @@ class Membership_Manager {
             $results['success'] = false;
             $results['issues'][] = array(
                 'type' => 'error',
-                'message' => __( 'No membership products configured. Please configure membership products in settings first.', 'membership-manager' )
+                'message' => __( 'Ingen medlemskabsprodukter konfigureret. Konfigurer venligst medlemskabsprodukter i indstillinger først.', 'membership-manager' )
             );
-            self::log( __( 'Validation failed: No membership products configured.', 'membership-manager' ), 'WARNING' );
+            self::log( __( 'Validering mislykkedes: Ingen medlemskabsprodukter konfigureret.', 'membership-manager' ), 'WARNING' );
             return $results;
         }
         
@@ -1720,7 +1720,7 @@ class Membership_Manager {
                     $results['issues'][] = array(
                         'type' => 'warning',
                         'order_id' => $order_id,
-                        'message' => sprintf( __( 'Order #%d has membership product but no user ID (guest order).', 'membership-manager' ), $order_id )
+                        'message' => sprintf( __( 'Ordre #%d har medlemskabsprodukt men intet bruger-ID (gæsteordre).', 'membership-manager' ), $order_id )
                     );
                     continue;
                 }
@@ -1744,7 +1744,7 @@ class Membership_Manager {
                                 'type' => 'error',
                                 'order_id' => $order_id,
                                 'membership_id' => $membership_id,
-                                'message' => sprintf( __( 'Order #%d references membership #%d which no longer exists in database.', 'membership-manager' ), $order_id, $membership_id )
+                                'message' => sprintf( __( 'Ordre #%d refererer til medlemskab #%d som ikke længere findes i databasen.', 'membership-manager' ), $order_id, $membership_id )
                             );
                             $results['data_mismatches']++;
                         } else {
@@ -1754,7 +1754,7 @@ class Membership_Manager {
                                     'type' => 'error',
                                     'order_id' => $order_id,
                                     'membership_id' => $membership_id,
-                                    'message' => sprintf( __( 'Order #%d (user %d) has membership #%d but membership belongs to user %d.', 'membership-manager' ), $order_id, $user_id, $membership_id, $membership->user_id )
+                                    'message' => sprintf( __( 'Ordre #%d (bruger %d) har medlemskab #%d men medlemskabet tilhører bruger %d.', 'membership-manager' ), $order_id, $user_id, $membership_id, $membership->user_id )
                                 );
                                 $results['data_mismatches']++;
                             }
@@ -1773,14 +1773,14 @@ class Membership_Manager {
                             'order_id' => $order_id,
                             'user_id' => $user_id,
                             'membership_id' => $user_membership->id,
-                            'message' => sprintf( __( 'Order #%d (user %d) should have membership but meta is not set. User has membership #%d.', 'membership-manager' ), $order_id, $user_id, $user_membership->id )
+                            'message' => sprintf( __( 'Ordre #%d (bruger %d) burde have medlemskab men meta er ikke sat. Bruger har medlemskab #%d.', 'membership-manager' ), $order_id, $user_id, $user_membership->id )
                         );
                     } else {
                         $results['issues'][] = array(
                             'type' => 'error',
                             'order_id' => $order_id,
                             'user_id' => $user_id,
-                            'message' => sprintf( __( 'Order #%d (user %d) should have membership but none exists for this user.', 'membership-manager' ), $order_id, $user_id )
+                            'message' => sprintf( __( 'Ordre #%d (bruger %d) burde have medlemskab men der eksisterer ikke noget for denne bruger.', 'membership-manager' ), $order_id, $user_id )
                         );
                     }
                 }
@@ -1788,7 +1788,7 @@ class Membership_Manager {
             
             // Part 2: Check all memberships to see if they have valid orders
             // Use the user map built in Part 1 to avoid re-querying orders
-            self::log( __( 'Checking memberships against order map...', 'membership-manager' ) );
+            self::log( __( 'Tjekker medlemskaber mod ordre kort...', 'membership-manager' ) );
             
             // Now fetch memberships and check against the order map
             $all_memberships = $wpdb->get_results( "SELECT id, user_id FROM $table_name" );
@@ -1806,13 +1806,13 @@ class Membership_Manager {
                         'type' => 'info',
                         'membership_id' => $membership->id,
                         'user_id' => $user_id,
-                        'message' => sprintf( __( 'Membership #%d (user %d) has no associated completed order with membership products. May be manually created or migrated.', 'membership-manager' ), $membership->id, $user_id )
+                        'message' => sprintf( __( 'Medlemskab #%d (bruger %d) har ingen tilknyttet fuldført ordre med medlemskabsprodukter. Kan være manuelt oprettet eller migreret.', 'membership-manager' ), $membership->id, $user_id )
                     );
                 }
             }
             
             self::log( sprintf( 
-                __( 'Validation completed: %d orders checked, %d memberships checked, %d issues found.', 'membership-manager' ),
+                __( 'Validering fuldført: %d ordrer tjekket, %d medlemskaber tjekket, %d problemer fundet.', 'membership-manager' ),
                 $results['total_orders_checked'],
                 $results['total_memberships_checked'],
                 count( $results['issues'] )
@@ -1822,9 +1822,9 @@ class Membership_Manager {
             $results['success'] = false;
             $results['issues'][] = array(
                 'type' => 'error',
-                'message' => sprintf( __( 'Validation failed with error: %s', 'membership-manager' ), $e->getMessage() )
+                'message' => sprintf( __( 'Validering mislykkedes med fejl: %s', 'membership-manager' ), $e->getMessage() )
             );
-            self::log( sprintf( __( 'Validation failed with error: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
+            self::log( sprintf( __( 'Validering mislykkedes med fejl: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
         }
         
         return $results;

@@ -16,13 +16,13 @@ class Membership_Dashboard {
     public static function add_dashboard_widgets() {
         wp_add_dashboard_widget(
             'membership_manager_status',
-            __( 'Membership Status', 'membership-manager' ),
+            __( 'Medlemskabsstatus', 'membership-manager' ),
             array( __CLASS__, 'render_status_widget' )
         );
         
         wp_add_dashboard_widget(
             'membership_manager_issues',
-            __( 'Membership Issues & Alerts', 'membership-manager' ),
+            __( 'Medlemskabsproblemer og advarsler', 'membership-manager' ),
             array( __CLASS__, 'render_issues_widget' )
         );
     }
@@ -51,33 +51,33 @@ class Membership_Dashboard {
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 20px;">
                 <div style="background: #00a32a; color: white; padding: 15px; border-radius: 4px; text-align: center;">
                     <div style="font-size: 32px; font-weight: bold;"><?php echo esc_html( $counts['active'] ); ?></div>
-                    <div style="opacity: 0.9;"><?php _e( 'Active', 'membership-manager' ); ?></div>
+                    <div style="opacity: 0.9;"><?php _e( 'Aktiv', 'membership-manager' ); ?></div>
                 </div>
                 <div style="background: #d63638; color: white; padding: 15px; border-radius: 4px; text-align: center;">
                     <div style="font-size: 32px; font-weight: bold;"><?php echo esc_html( $counts['expired'] ); ?></div>
-                    <div style="opacity: 0.9;"><?php _e( 'Expired', 'membership-manager' ); ?></div>
+                    <div style="opacity: 0.9;"><?php _e( 'Udløbet', 'membership-manager' ); ?></div>
                 </div>
                 <div style="background: #dba617; color: white; padding: 15px; border-radius: 4px; text-align: center;">
                     <div style="font-size: 32px; font-weight: bold;"><?php echo esc_html( $counts['pending-cancel'] ); ?></div>
-                    <div style="opacity: 0.9;"><?php _e( 'Pending Cancel', 'membership-manager' ); ?></div>
+                    <div style="opacity: 0.9;"><?php _e( 'Afventer annullering', 'membership-manager' ); ?></div>
                 </div>
                 <div style="background: #826eb4; color: white; padding: 15px; border-radius: 4px; text-align: center;">
                     <div style="font-size: 32px; font-weight: bold;"><?php echo esc_html( $counts['on-hold'] ); ?></div>
-                    <div style="opacity: 0.9;"><?php _e( 'On Hold', 'membership-manager' ); ?></div>
+                    <div style="opacity: 0.9;"><?php _e( 'På hold', 'membership-manager' ); ?></div>
                 </div>
                 <div style="background: #646970; color: white; padding: 15px; border-radius: 4px; text-align: center;">
                     <div style="font-size: 32px; font-weight: bold;"><?php echo esc_html( $counts['cancelled'] ); ?></div>
-                    <div style="opacity: 0.9;"><?php _e( 'Cancelled', 'membership-manager' ); ?></div>
+                    <div style="opacity: 0.9;"><?php _e( 'Annulleret', 'membership-manager' ); ?></div>
                 </div>
             </div>
             
             <?php if ( ! empty( $expiring_soon ) ): ?>
-                <h4 style="margin: 15px 0 10px 0;"><?php _e( 'Expiring This Week', 'membership-manager' ); ?></h4>
+                <h4 style="margin: 15px 0 10px 0;"><?php _e( 'Udløber denne uge', 'membership-manager' ); ?></h4>
                 <table class="widefat" style="font-size: 12px;">
                     <thead>
                         <tr>
-                            <th><?php _e( 'User', 'membership-manager' ); ?></th>
-                            <th><?php _e( 'Expires', 'membership-manager' ); ?></th>
+                            <th><?php _e( 'Bruger', 'membership-manager' ); ?></th>
+                            <th><?php _e( 'Udløber', 'membership-manager' ); ?></th>
                             <th><?php _e( 'Type', 'membership-manager' ); ?></th>
                         </tr>
                     </thead>
@@ -222,7 +222,7 @@ class Membership_Dashboard {
             
             <p style="margin-top: 15px;">
                 <a href="<?php echo admin_url( 'admin.php?page=membership-settings' ); ?>" class="button">
-                    <?php _e( 'Settings', 'membership-manager' ); ?>
+                    <?php _e( 'Indstillinger', 'membership-manager' ); ?>
                 </a>
                 <a href="<?php echo esc_url( plugin_dir_url( __FILE__ ) . '../logs/membership.log' ); ?>" class="button" target="_blank">
                     <?php _e( 'View Full Log', 'membership-manager' ); ?>

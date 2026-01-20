@@ -25,7 +25,7 @@ class Membership_Admin {
     }
 
     public function add_membership_menu_item( $items ) {
-        $items['membership'] = __( 'Membership', 'membership-manager' );
+        $items['membership'] = __( 'Medlemskab', 'membership-manager' );
         return $items;
     }
 
@@ -40,11 +40,11 @@ class Membership_Admin {
             
             if ( $preview_user ) {
                 echo '<div class="woocommerce-info" style="margin-bottom: 20px; padding: 15px; background: #f0f6fc; border-left: 4px solid #2271b1;">';
-                echo '<strong>' . __( 'Admin Preview Mode:', 'membership-manager' ) . '</strong> ';
-                echo sprintf( __( 'Viewing membership for %s (User ID: %d)', 'membership-manager' ), esc_html( $preview_user->display_name ), $preview_user_id );
+                echo '<strong>' . __( 'Admin Forhåndsvisningstilstand:', 'membership-manager' ) . '</strong> ';
+                echo sprintf( __( 'Viser medlemskab for %s (Bruger-ID: %d)', 'membership-manager' ), esc_html( $preview_user->display_name ), $preview_user_id );
                 echo '</div>';
             } else {
-                echo '<div class="woocommerce-error">' . __( 'User not found.', 'membership-manager' ) . '</div>';
+                echo '<div class="woocommerce-error">' . __( 'Bruger ikke fundet.', 'membership-manager' ) . '</div>';
                 return;
             }
         } else {
@@ -57,23 +57,23 @@ class Membership_Admin {
         $subscription = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %d", $user_id ) );
 
         if ( $subscription ) {
-            echo '<h2>' . __( 'Membership Details', 'membership-manager' ) . '</h2>';
+            echo '<h2>' . __( 'Medlemskabsdetaljer', 'membership-manager' ) . '</h2>';
             echo '<p><strong>' . __( 'Status:', 'membership-manager' ) . '</strong> ' . esc_html( $subscription->status ) . '</p>';
-            echo '<p><strong>' . __( 'Expires:', 'membership-manager' ) . '</strong> ' . esc_html( date_i18n( get_option( 'date_format' ), strtotime( $subscription->end_date ) ) ) . '</p>';
+            echo '<p><strong>' . __( 'Udløber:', 'membership-manager' ) . '</strong> ' . esc_html( date_i18n( get_option( 'date_format' ), strtotime( $subscription->end_date ) ) ) . '</p>';
 
             if ( $subscription->renewal_type === 'manual' ) {
                 $renewal_link = Membership_Manager::get_renewal_link( $subscription );
-                echo '<a href="' . esc_url( $renewal_link ) . '" class="button">' . __( 'Renew Membership', 'membership-manager' ) . '</a>';
+                echo '<a href="' . esc_url( $renewal_link ) . '" class="button">' . __( 'Fornå medlemskab', 'membership-manager' ) . '</a>';
             }
         } else {
-            echo '<p>' . __( 'You do not have an active membership.', 'membership-manager' ) . '</p>';
+            echo '<p>' . __( 'Du har ikke et aktivt medlemskab.', 'membership-manager' ) . '</p>';
         }
     }
 
     public function add_settings_page() {
         add_submenu_page(
             'membership-manager',
-            __( 'Membership Settings', 'membership-manager' ),
+            __( 'Medlemskabsindstillinger', 'membership-manager' ),
             __( 'Indstillinger', 'membership-manager' ),
             'manage_options',
             'membership-settings',
@@ -152,7 +152,7 @@ class Membership_Admin {
             wp_localize_script( 'membership-settings', 'membership_settings', array(
                 'automatic_products' => $automatic_products,
                 'manual_products' => $manual_products,
-                'remove' => __('Remove', 'membership-manager')
+                'remove' => __('Fjern', 'membership-manager')
             ) );
         }
     }
@@ -160,31 +160,31 @@ class Membership_Admin {
     public function send_test_email() {
         // Verify nonce
         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'send_test_email' ) ) {
-            wp_send_json_error( array( 'message' => __( 'Security check failed.', 'membership-manager' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Sikkerhedstjek mislykkedes.', 'membership-manager' ) ) );
         }
         
         // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( array( 'message' => __( 'Insufficient permissions.', 'membership-manager' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Utilstrækkelige rettigheder.', 'membership-manager' ) ) );
         }
         
         $email = isset( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
         
         if ( ! is_email( $email ) ) {
-            wp_send_json_error( array( 'message' => __( 'Invalid email address.', 'membership-manager' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Ugyldig e-mailadresse.', 'membership-manager' ) ) );
         }
         
         // Get email settings
         $from_name = get_option( 'membership_email_from_name', get_bloginfo( 'name' ) );
         $from_address = get_option( 'membership_email_from_address', get_option( 'admin_email' ) );
-        $subject = __( 'Test Email - Membership Manager', 'membership-manager' );
+        $subject = __( 'Test E-mail - Medlemskabsstyring', 'membership-manager' );
         
         $message = sprintf(
-            __( 'This is a test email from Membership Manager.<br><br>From: %s <%s><br>To: %s<br><br>If you received this email, your email settings are configured correctly!<br><br>Current settings:<br>- Email reminders: %s<br>- From name: %s<br>- From address: %s', 'membership-manager' ),
+            __( 'Dette er en test-e-mail fra Medlemskabsstyring.<br><br>Fra: %s <%s><br>Til: %s<br><br>Hvis du modtog denne e-mail, er dine e-mailindstillinger konfigureret korrekt!<br><br>Aktuelle indstillinger:<br>- E-mailpåmindelser: %s<br>- Afsendernavn: %s<br>- Afsenderadresse: %s', 'membership-manager' ),
             $from_name,
             $from_address,
             $email,
-            get_option( 'membership_enable_reminders', 'yes' ) === 'yes' ? __( 'Enabled', 'membership-manager' ) : __( 'Disabled', 'membership-manager' ),
+            get_option( 'membership_enable_reminders', 'yes' ) === 'yes' ? __( 'Aktiveret', 'membership-manager' ) : __( 'Deaktiveret', 'membership-manager' ),
             $from_name,
             $from_address
         );
@@ -197,11 +197,11 @@ class Membership_Admin {
         $sent = wp_mail( $email, $subject, $message, $headers );
         
         if ( $sent ) {
-            Membership_Manager::log( sprintf( __( 'Test email sent to: %s', 'membership-manager' ), $email ) );
-            wp_send_json_success( array( 'message' => __( 'Test email sent successfully! Check your inbox.', 'membership-manager' ) ) );
+            Membership_Manager::log( sprintf( __( 'Test-e-mail sendt til: %s', 'membership-manager' ), $email ) );
+            wp_send_json_success( array( 'message' => __( 'Test-e-mail sendt! Tjek din indbakke.', 'membership-manager' ) ) );
         } else {
-            Membership_Manager::log( sprintf( __( 'Failed to send test email to: %s', 'membership-manager' ), $email ), 'ERROR' );
-            wp_send_json_error( array( 'message' => __( 'Failed to send test email. Check your server email configuration.', 'membership-manager' ) ) );
+            Membership_Manager::log( sprintf( __( 'Kunne ikke sende test-e-mail til: %s', 'membership-manager' ), $email ), 'ERROR' );
+            wp_send_json_error( array( 'message' => __( 'Kunne ikke sende test-e-mail. Tjek din server e-mailkonfiguration.', 'membership-manager' ) ) );
         }
     }
 }

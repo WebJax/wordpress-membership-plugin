@@ -28,7 +28,7 @@ $active_subscriptions = $wpdb->get_results(
         $count = absint( $_GET['test_emails_sent'] );
         $email = isset( $_GET['target_email'] ) ? urldecode( $_GET['target_email'] ) : '';
         echo '<div class="notice notice-success is-dismissible"><p>';
-        echo sprintf( __( 'Successfully sent %d test reminder email(s) to %s. Check your inbox and spam folder.', 'membership-manager' ), $count, esc_html( $email ) );
+        echo sprintf( __( 'Sendte succesfuldt %d test påmindelses-e-mail(s) til %s. Tjek din indbakke og spam-mappe.', 'membership-manager' ), $count, esc_html( $email ) );
         echo '</p></div>';
     }
 
@@ -37,7 +37,7 @@ $active_subscriptions = $wpdb->get_results(
         $subscription_id = isset( $_GET['subscription_id'] ) ? absint( $_GET['subscription_id'] ) : 0;
         echo '<div class="notice notice-success is-dismissible"><p>';
         echo sprintf( 
-            __( 'Successfully created test renewal order #%d for subscription ID %d. <a href="%s" target="_blank">View Order</a>', 'membership-manager' ),
+            __( 'Oprettede succesfuldt test fornyelsesordre #%d for abonnements-ID %d. <a href="%s" target="_blank">Se ordre</a>', 'membership-manager' ),
             $order_id,
             $subscription_id,
             admin_url( 'post.php?post=' . $order_id . '&action=edit' )
@@ -49,7 +49,7 @@ $active_subscriptions = $wpdb->get_results(
         $subscription_id = isset( $_GET['subscription_id'] ) ? absint( $_GET['subscription_id'] ) : 0;
         echo '<div class="notice notice-error is-dismissible"><p>';
         echo sprintf( 
-            __( 'Failed to create renewal order for subscription ID %d. Check the logs below for details.', 'membership-manager' ),
+            __( 'Kunne ikke oprette fornyelsesordre for abonnements-ID %d. Tjek logs nedenfor for detaljer.', 'membership-manager' ),
             $subscription_id
         );
         echo '</p></div>';
@@ -57,7 +57,7 @@ $active_subscriptions = $wpdb->get_results(
 
     if ( isset( $_GET['renewal_process_run'] ) ) {
         echo '<div class="notice notice-success is-dismissible"><p>';
-        echo __( 'Successfully ran the full renewal process. Check the logs below for details.', 'membership-manager' );
+        echo __( 'Kørte succesfuldt den fulde fornyelsesproces. Tjek logs nedenfor for detaljer.', 'membership-manager' );
         echo '</p></div>';
     }
     ?>
@@ -88,23 +88,23 @@ $active_subscriptions = $wpdb->get_results(
                     <td>
                         <select id="reminder_type" name="reminder_type" class="regular-text">
                             <option value="all"><?php _e( 'All Reminders (30, 14, 7, 1 days)', 'membership-manager' ); ?></option>
-                            <option value="30_days"><?php _e( '30 Days Before Expiration', 'membership-manager' ); ?></option>
-                            <option value="14_days"><?php _e( '14 Days Before Expiration', 'membership-manager' ); ?></option>
-                            <option value="7_days"><?php _e( '7 Days Before Expiration', 'membership-manager' ); ?></option>
-                            <option value="1_day"><?php _e( '1 Day Before Expiration', 'membership-manager' ); ?></option>
+                            <option value="30_days"><?php _e( '30 dage før udløb', 'membership-manager' ); ?></option>
+                            <option value="14_days"><?php _e( '14 dage før udløb', 'membership-manager' ); ?></option>
+                            <option value="7_days"><?php _e( '7 dage før udløb', 'membership-manager' ); ?></option>
+                            <option value="1_day"><?php _e( '1 dag før udløb', 'membership-manager' ); ?></option>
                         </select>
                         <p class="description"><?php _e( 'Select which reminder email to test.', 'membership-manager' ); ?></p>
                     </td>
                 </tr>
                 <tr>
                     <th scope="row">
-                        <label for="renewal_type_test"><?php _e( 'Renewal Type', 'membership-manager' ); ?></label>
+                        <label for="renewal_type_test"><?php _e( 'Fornyelsestype', 'membership-manager' ); ?></label>
                     </th>
                     <td>
                         <select id="renewal_type_test" name="renewal_type_test" class="regular-text">
                             <option value="both"><?php _e( 'Both (Manual & Automatic)', 'membership-manager' ); ?></option>
-                            <option value="automatic"><?php _e( 'Automatic Renewal', 'membership-manager' ); ?></option>
-                            <option value="manual"><?php _e( 'Manual Renewal', 'membership-manager' ); ?></option>
+                            <option value="automatic"><?php _e( 'Automatisk fornyelse', 'membership-manager' ); ?></option>
+                            <option value="manual"><?php _e( 'Manuel fornyelse', 'membership-manager' ); ?></option>
                         </select>
                         <p class="description"><?php _e( 'Test emails for specific renewal type.', 'membership-manager' ); ?></p>
                     </td>
@@ -143,7 +143,7 @@ $active_subscriptions = $wpdb->get_results(
                                         $end_date = new DateTime( $subscription->end_date );
                                         $now = new DateTime();
                                         $diff = $now->diff( $end_date );
-                                        $days_until_expiry = ' - ' . sprintf( __( '%d days until expiry', 'membership-manager' ), $diff->days );
+                                        $days_until_expiry = ' - ' . sprintf( __( '%d dage til udløb', 'membership-manager' ), $diff->days );
                                     }
                                 ?>
                                     <option value="<?php echo esc_attr( $subscription->id ); ?>">
@@ -183,7 +183,7 @@ $active_subscriptions = $wpdb->get_results(
         <h2><?php _e( 'Run Full Renewal Process', 'membership-manager' ); ?></h2>
         <p><?php _e( 'Manually trigger the complete renewal cron job to process all memberships and send due reminder emails.', 'membership-manager' ); ?></p>
         
-        <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" style="margin-top: 20px;" onsubmit="return confirm('<?php echo esc_js( __( 'This will process all active memberships and send reminder emails where applicable. Continue?', 'membership-manager' ) ); ?>');">
+        <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" style="margin-top: 20px;" onsubmit="return confirm('<?php echo esc_js( __( 'Dette vil behandle alle aktive medlemskaber og sende påmindelses-e-mails hvor relevant. Fortsæt?', 'membership-manager' ) ); ?>');">
             <input type="hidden" name="action" value="run_renewal_process">
             <?php wp_nonce_field( 'run_renewal_process_nonce' ); ?>
             

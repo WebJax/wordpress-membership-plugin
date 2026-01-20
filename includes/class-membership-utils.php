@@ -44,38 +44,38 @@ class Membership_Utils {
         
         // Validate user ID
         if ( empty( $data['user_id'] ) || ! is_numeric( $data['user_id'] ) ) {
-            $errors[] = __( 'Invalid user ID', 'membership-manager' );
+            $errors[] = __( 'Ugyldigt bruger-ID', 'membership-manager' );
         } else {
             $user = get_user_by( 'ID', absint( $data['user_id'] ) );
             if ( ! $user ) {
-                $errors[] = __( 'User does not exist', 'membership-manager' );
+                $errors[] = __( 'Brugeren findes ikke', 'membership-manager' );
             }
         }
         
         // Validate dates
         if ( ! empty( $data['start_date'] ) ) {
             if ( ! self::sanitize_date( $data['start_date'] ) ) {
-                $errors[] = __( 'Invalid start date', 'membership-manager' );
+                $errors[] = __( 'Ugyldig startdato', 'membership-manager' );
             }
         }
         
         if ( ! empty( $data['end_date'] ) ) {
             if ( ! self::sanitize_date( $data['end_date'] ) ) {
-                $errors[] = __( 'Invalid end date', 'membership-manager' );
+                $errors[] = __( 'Ugyldig slutdato', 'membership-manager' );
             }
         }
         
         // Validate status
         if ( ! empty( $data['status'] ) ) {
             if ( ! Membership_Constants::is_valid_status( $data['status'] ) ) {
-                $errors[] = __( 'Invalid status', 'membership-manager' );
+                $errors[] = __( 'Ugyldig status', 'membership-manager' );
             }
         }
         
         // Validate renewal type
         if ( ! empty( $data['renewal_type'] ) ) {
             if ( ! Membership_Constants::is_valid_renewal_type( $data['renewal_type'] ) ) {
-                $errors[] = __( 'Invalid renewal type', 'membership-manager' );
+                $errors[] = __( 'Ugyldig fornyelsestype', 'membership-manager' );
             }
         }
         
@@ -85,7 +85,7 @@ class Membership_Utils {
             $end = strtotime( $data['end_date'] );
             
             if ( $end <= $start ) {
-                $errors[] = __( 'End date must be after start date', 'membership-manager' );
+                $errors[] = __( 'Slutdato skal være efter startdato', 'membership-manager' );
             }
         }
         

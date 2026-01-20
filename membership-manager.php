@@ -67,8 +67,8 @@ new Membership_Test_Tools();
 if ( MEMBERSHIP_STAGING_MODE ) {
     add_action( 'admin_notices', function() {
         echo '<div class="notice notice-warning" style="border-left-color: #f0b849;">';
-        echo '<p><strong>' . __( '⚠️ STAGING MODE ACTIVE', 'membership-manager' ) . '</strong> - ';
-        echo __( 'Automatic renewals and emails are disabled. To disable staging mode, remove MEMBERSHIP_STAGING_MODE from wp-config.php', 'membership-manager' );
+        echo '<p><strong>' . __( '⚠️ STAGING MODE AKTIV', 'membership-manager' ) . '</strong> - ';
+        echo __( 'Automatisk fornyelse og e-mails er deaktiveret. For at deaktivere staging mode, fjern MEMBERSHIP_STAGING_MODE fra wp-config.php', 'membership-manager' );
         echo '</p></div>';
     });
 }

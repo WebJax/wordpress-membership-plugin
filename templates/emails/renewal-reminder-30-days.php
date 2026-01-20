@@ -3,10 +3,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 ?>
-<p><?php printf( __( 'Hi %s,', 'membership-manager' ), '[user_name]' ); ?></p>
-<p><?php _e( 'This is a reminder that your subscription will renew in 30 days.', 'membership-manager' ); ?></p>
-<p><?php _e( 'Subscription details:', 'membership-manager' ); ?></p>
+<p><?php printf( __( 'Hej %s,', 'membership-manager' ), '[user_name]' ); ?></p>
+<p><?php _e( 'Dette er en påmindelse om, at dit abonnement bliver fornyet om 30 dage.', 'membership-manager' ); ?></p>
+<p><?php _e( 'Abonnementsdetaljer:', 'membership-manager' ); ?></p>
 <ul>
-    <li><?php _e( 'End date:', 'membership-manager' ); ?> [end_date]</li>
+    <li><?php _e( 'Slutdato:', 'membership-manager' ); ?> [end_date]</li>
 </ul>
-<p><?php _e( 'Thank you!', 'membership-manager' ); ?></p>
+<p><?php _e( 'Tak!', 'membership-manager' ); ?></p>

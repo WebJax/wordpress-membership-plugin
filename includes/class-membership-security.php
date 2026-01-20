@@ -74,7 +74,7 @@ class Membership_Security {
                 ), 'WARNING' );
                 
                 wp_send_json_error( array(
-                    'message' => __( 'Rate limit exceeded. Please try again later.', 'membership-manager' ),
+                    'message' => __( 'Grænse overskredet. Prøv venligst igen senere.', 'membership-manager' ),
                     'retry_after' => self::get_rate_limit_reset_time( $key ),
                 ), 429 );
             }

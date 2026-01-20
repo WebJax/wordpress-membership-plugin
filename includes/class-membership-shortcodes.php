@@ -13,7 +13,7 @@ class Membership_Shortcodes {
 
     public static function member_only_shortcode( $atts, $content = null ) {
         if ( ! is_user_logged_in() ) {
-            return '<p class="membership-alert">' . __( 'You must be logged in to view this content.', 'membership-manager' ) . '</p>';
+            return '<p class="membership-alert">' . __( 'Du skal være logget ind for at se dette indhold.', 'membership-manager' ) . '</p>';
         }
 
         $user_id = get_current_user_id();
@@ -21,7 +21,7 @@ class Membership_Shortcodes {
             return do_shortcode( $content );
         } else {
             $atts = shortcode_atts( array(
-                'message' => __( 'This content is restricted to active members.', 'membership-manager' ),
+                'message' => __( 'Dette indhold er forbeholdt aktive medlemmer.', 'membership-manager' ),
             ), $atts );
             return '<p class="membership-alert">' . esc_html( $atts['message'] ) . '</p>';
         }
@@ -39,16 +39,16 @@ class Membership_Shortcodes {
         $subscription = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %d", $user_id ) );
 
         if ( ! $subscription ) {
-            return '<p>' . __( 'No active membership found.', 'membership-manager' ) . '</p>';
+            return '<p>' . __( 'Intet aktivt medlemskab fundet.', 'membership-manager' ) . '</p>';
         }
 
         ob_start();
         ?>
         <div class="membership-details-box">
-            <h3><?php _e( 'My Membership', 'membership-manager' ); ?></h3>
+            <h3><?php _e( 'Mit medlemskab', 'membership-manager' ); ?></h3>
             <ul>
                 <li><strong><?php _e( 'Status:', 'membership-manager' ); ?></strong> <?php echo Membership_Manager::get_status_display_name( $subscription->status ); ?></li>
-                <li><strong><?php _e( 'Start Date:', 'membership-manager' ); ?></strong> <?php echo Membership_Manager::format_date_safely( $subscription->start_date ); ?></li>
+                <li><strong><?php _e( 'Startdato:', 'membership-manager' ); ?></strong> <?php echo Membership_Manager::format_date_safely( $subscription->start_date ); ?></li>
                 <li><strong><?php _e( 'Expiration Date:', 'membership-manager' ); ?></strong> <?php echo Membership_Manager::format_end_date_with_status( $subscription ); ?></li>
             </ul>
             <?php if ( $subscription->status !== 'active' && $subscription->renewal_type === 'manual' ): 
@@ -57,7 +57,7 @@ class Membership_Shortcodes {
                      $product_id = $manual_products[0];
                      $renewal_link = add_query_arg( 'add-to-cart', $product_id, wc_get_checkout_url() );
             ?>
-                <a href="<?php echo esc_url( $renewal_link ); ?>" class="button renewal-button"><?php _e( 'Renew Now', 'membership-manager' ); ?></a>
+                <a href="<?php echo esc_url( $renewal_link ); ?>" class="button renewal-button"><?php _e( 'Forny nu', 'membership-manager' ); ?></a>
             <?php } endif; ?>
         </div>
         <?php

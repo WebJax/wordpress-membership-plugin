@@ -54,13 +54,13 @@ class WC_Product_Membership_Manual extends WC_Product {
      * Get product add to cart text
      */
     public function add_to_cart_text() {
-        return __( 'Add membership', 'membership-manager' );
+        return __( 'Tilføj medlemskab', 'membership-manager' );
     }
 
     /**
      * Get product single add to cart text
      */
     public function single_add_to_cart_text() {
-        return __( 'Purchase membership', 'membership-manager' );
+        return __( 'Køb medlemskab', 'membership-manager' );
     }
 }

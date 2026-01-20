@@ -27,12 +27,12 @@ class Membership_Roles {
      * @param int $subscription_id Subscription ID
      */
     public static function handle_activation( $user_id, $subscription_id ) {
-        Membership_Manager::log( sprintf( __( 'Handling activation for user ID: %d, subscription ID: %d', 'membership-manager' ), $user_id, $subscription_id ) );
+        Membership_Manager::log( sprintf( __( 'Håndterer aktivering for bruger-ID: %d, abonnements-ID: %d', 'membership-manager' ), $user_id, $subscription_id ) );
         
         $user = get_user_by( 'ID', $user_id );
         
         if ( ! $user ) {
-            Membership_Manager::log( sprintf( __( 'User ID %d not found', 'membership-manager' ), $user_id ), 'ERROR' );
+            Membership_Manager::log( sprintf( __( 'Bruger-ID %d ikke fundet', 'membership-manager' ), $user_id ), 'ERROR' );
             return;
         }
         
@@ -45,7 +45,7 @@ class Membership_Roles {
         // Set user meta to track membership status
         update_user_meta( $user_id, 'has_active_membership', 'yes' );
         
-        Membership_Manager::log( sprintf( __( 'Added role "%s" to user ID: %d', 'membership-manager' ), $member_role, $user_id ) );
+        Membership_Manager::log( sprintf( __( 'Tilføjede rolle "%s" til bruger-ID: %d', 'membership-manager' ), $member_role, $user_id ) );
         
         // Hook for additional custom actions
         do_action( 'membership_manager_after_activation', $user_id, $subscription_id );
@@ -58,12 +58,12 @@ class Membership_Roles {
      * @param int $subscription_id Subscription ID
      */
     public static function handle_expiration( $user_id, $subscription_id ) {
-        Membership_Manager::log( sprintf( __( 'Handling expiration for user ID: %d, subscription ID: %d', 'membership-manager' ), $user_id, $subscription_id ) );
+        Membership_Manager::log( sprintf( __( 'Håndterer udløb for bruger-ID: %d, abonnements-ID: %d', 'membership-manager' ), $user_id, $subscription_id ) );
         
         $user = get_user_by( 'ID', $user_id );
         
         if ( ! $user ) {
-            Membership_Manager::log( sprintf( __( 'User ID %d not found', 'membership-manager' ), $user_id ), 'ERROR' );
+            Membership_Manager::log( sprintf( __( 'Bruger-ID %d ikke fundet', 'membership-manager' ), $user_id ), 'ERROR' );
             return;
         }
         
@@ -83,9 +83,9 @@ class Membership_Roles {
                 $user->add_role( $default_role );
             }
             
-            Membership_Manager::log( sprintf( __( 'Removed role "%s" from user ID: %d', 'membership-manager' ), $member_role, $user_id ) );
+            Membership_Manager::log( sprintf( __( 'Fjernede rolle "%s" fra bruger-ID: %d', 'membership-manager' ), $member_role, $user_id ) );
         } else {
-            Membership_Manager::log( sprintf( __( 'Role removal disabled. Role "%s" retained for user ID: %d', 'membership-manager' ), $member_role, $user_id ) );
+            Membership_Manager::log( sprintf( __( 'Rolle fjernelse deaktiveret. Rolle "%s" beholdt for bruger-ID: %d', 'membership-manager' ), $member_role, $user_id ) );
         }
         
         // Update user meta
@@ -116,7 +116,7 @@ class Membership_Roles {
         }
         
         Membership_Manager::log( sprintf( 
-            __( 'Status changed for subscription ID: %d (User: %d) from "%s" to "%s"', 'membership-manager' ),
+            __( 'Status ændret for abonnements-ID: %d (Bruger: %d) fra "%s" til "%s"', 'membership-manager' ),
             $subscription_id,
             $subscription->user_id,
             $old_status,

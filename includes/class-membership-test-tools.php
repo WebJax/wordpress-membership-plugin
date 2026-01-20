@@ -51,12 +51,12 @@ class Membership_Test_Tools {
     public function handle_test_reminder_emails() {
         // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         // Verify nonce
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'test_reminder_emails_nonce' ) ) {
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         $test_email = isset( $_POST['test_email_address'] ) ? sanitize_email( $_POST['test_email_address'] ) : '';
@@ -64,10 +64,10 @@ class Membership_Test_Tools {
         $renewal_type_test = isset( $_POST['renewal_type_test'] ) ? sanitize_text_field( $_POST['renewal_type_test'] ) : 'both';
 
         if ( ! is_email( $test_email ) ) {
-            wp_die( __( 'Invalid email address.', 'membership-manager' ) );
+            wp_die( __( 'Ugyldig e-mailadresse.', 'membership-manager' ) );
         }
 
-        Membership_Manager::log( sprintf( __( 'Starting test reminder email process. Target: %s, Type: %s, Renewal: %s', 'membership-manager' ), $test_email, $reminder_type, $renewal_type_test ) );
+        Membership_Manager::log( sprintf( __( 'Starter test påmindelses-e-mail proces. Mål: %s, Type: %s, Fornyelse: %s', 'membership-manager' ), $test_email, $reminder_type, $renewal_type_test ) );
 
         $results = array();
         $reminder_types = array();
@@ -114,21 +114,21 @@ class Membership_Test_Tools {
                 // Send the test email
                 if ( $renewal_type === 'automatic' ) {
                     $emails->send_automatic_renewal_reminders( $test_subscription, $type );
-                    $label = sprintf( __( 'Automatic Renewal - %s', 'membership-manager' ), $this->get_reminder_label( $type ) );
+                    $label = sprintf( __( 'Automatisk fornyelse - %s', 'membership-manager' ), $this->get_reminder_label( $type ) );
                 } else {
                     $emails->send_manual_renewal_reminders( $test_subscription, $type );
                     $label = sprintf( __( 'Manual Renewal - %s', 'membership-manager' ), $this->get_reminder_label( $type ) );
                 }
 
                 $results[] = $label;
-                Membership_Manager::log( sprintf( __( 'Sent test email: %s to %s', 'membership-manager' ), $label, $test_email ) );
+                Membership_Manager::log( sprintf( __( 'Sendte test e-mail: %s til %s', 'membership-manager' ), $label, $test_email ) );
             }
         }
 
         // Remove the filter
         remove_filter( 'wp_mail', $email_redirect_filter );
 
-        Membership_Manager::log( sprintf( __( 'Test reminder email process completed. Sent %d emails.', 'membership-manager' ), count( $results ) ) );
+        Membership_Manager::log( sprintf( __( 'Test påmindelses-e-mail proces fuldført. Sendte %d e-mails.', 'membership-manager' ), count( $results ) ) );
 
         // Redirect with success message
         $redirect_url = add_query_arg(
@@ -150,12 +150,12 @@ class Membership_Test_Tools {
     public function handle_test_automatic_renewal() {
         // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         // Verify nonce
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'test_automatic_renewal_nonce' ) ) {
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         $subscription_id = isset( $_POST['subscription_id'] ) ? absint( $_POST['subscription_id'] ) : 0;
@@ -183,7 +183,7 @@ class Membership_Test_Tools {
 
         // Check if subscription is automatic renewal type
         if ( $subscription->renewal_type !== 'automatic' && ! $force_renewal ) {
-            wp_die( __( 'This membership is not set for automatic renewal. Check "Force Renewal" to test anyway.', 'membership-manager' ) );
+            wp_die( __( 'Dette medlemskab er ikke sat til automatisk fornyelse. Marker "Gennemtving fornyelse" for at teste alligevel.', 'membership-manager' ) );
         }
 
         // Create renewal order
@@ -191,7 +191,7 @@ class Membership_Test_Tools {
         $order_id = $renewals->create_renewal_order( $subscription );
 
         if ( $order_id ) {
-            Membership_Manager::log( sprintf( __( 'Test automatic renewal successful. Created order #%d', 'membership-manager' ), $order_id ) );
+            Membership_Manager::log( sprintf( __( 'Test automatisk fornyelse vellykket. Oprettede ordre #%d', 'membership-manager' ), $order_id ) );
 
             // Redirect with success message
             $redirect_url = add_query_arg(
@@ -203,7 +203,7 @@ class Membership_Test_Tools {
                 admin_url( 'admin.php' )
             );
         } else {
-            Membership_Manager::log( sprintf( __( 'Test automatic renewal failed for subscription ID: %d', 'membership-manager' ), $subscription_id ), 'ERROR' );
+            Membership_Manager::log( sprintf( __( 'Test automatisk fornyelse mislykkedes for abonnements-ID: %d', 'membership-manager' ), $subscription_id ), 'ERROR' );
 
             // Redirect with error message
             $redirect_url = add_query_arg(
@@ -226,12 +226,12 @@ class Membership_Test_Tools {
     public function handle_run_renewal_process() {
         // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
         }
 
         // Verify nonce
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'run_renewal_process_nonce' ) ) {
-            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
         }
 
         Membership_Manager::log( __( 'Manually triggered full renewal process from test tools.', 'membership-manager' ) );
@@ -282,10 +282,10 @@ class Membership_Test_Tools {
      */
     private function get_reminder_label( $reminder_type ) {
         $labels = array(
-            '30_days' => __( '30 Days Before Expiration', 'membership-manager' ),
-            '14_days' => __( '14 Days Before Expiration', 'membership-manager' ),
-            '7_days' => __( '7 Days Before Expiration', 'membership-manager' ),
-            '1_day' => __( '1 Day Before Expiration', 'membership-manager' )
+            '30_days' => __( '30 dage før udløb', 'membership-manager' ),
+            '14_days' => __( '14 dage før udløb', 'membership-manager' ),
+            '7_days' => __( '7 dage før udløb', 'membership-manager' ),
+            '1_day' => __( '1 dag før udløb', 'membership-manager' )
         );
 
         return isset( $labels[ $reminder_type ] ) ? $labels[ $reminder_type ] : $reminder_type;

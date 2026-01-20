@@ -128,7 +128,7 @@ class Membership_Checkout {
         
         ?>
         <section class="woocommerce-membership-confirmation">
-            <h2><?php _e( 'Your Membership', 'membership-manager' ); ?></h2>
+            <h2><?php _e( 'Dit medlemskab', 'membership-manager' ); ?></h2>
             
             <?php foreach ( (array) $membership_ids as $membership_id ): 
                 $membership = Membership_Manager::get_membership( $membership_id );
@@ -144,22 +144,22 @@ class Membership_Checkout {
                 </p>
                 
                 <p>
-                    <strong><?php _e( 'Start Date:', 'membership-manager' ); ?></strong>
+                    <strong><?php _e( 'Startdato:', 'membership-manager' ); ?></strong>
                     <?php echo date_i18n( get_option( 'date_format' ), strtotime( $membership->start_date ) ); ?>
                 </p>
                 
                 <p>
-                    <strong><?php _e( 'Expiry Date:', 'membership-manager' ); ?></strong>
+                    <strong><?php _e( 'Udløbsdato:', 'membership-manager' ); ?></strong>
                     <?php echo date_i18n( get_option( 'date_format' ), strtotime( $membership->end_date ) ); ?>
                 </p>
                 
                 <p>
-                    <strong><?php _e( 'Renewal Type:', 'membership-manager' ); ?></strong>
+                    <strong><?php _e( 'Fornyelsestype:', 'membership-manager' ); ?></strong>
                     <?php 
                     if ( $membership->renewal_type === 'automatic' ) {
-                        _e( 'Automatic - Will renew automatically', 'membership-manager' );
+                        _e( 'Automatisk - Fornyes automatisk', 'membership-manager' );
                     } else {
-                        _e( 'Manual - You will receive renewal reminders', 'membership-manager' );
+                        _e( 'Manuel - Du vil modtage fornyelsespåmindelser', 'membership-manager' );
                     }
                     ?>
                 </p>
@@ -167,7 +167,7 @@ class Membership_Checkout {
                 <?php if ( $membership->renewal_type === 'manual' && $membership->renewal_token ): ?>
                 <p>
                     <a href="<?php echo esc_url( Membership_Manager::get_renewal_link( $membership->renewal_token ) ); ?>" class="button">
-                        <?php _e( 'Renew Membership', 'membership-manager' ); ?>
+                        <?php _e( 'Forny medlemskab', 'membership-manager' ); ?>
                     </a>
                 </p>
                 <?php endif; ?>
@@ -195,26 +195,26 @@ class Membership_Checkout {
         }
         
         if ( $plain_text ) {
-            echo "\n" . __( 'YOUR MEMBERSHIP', 'membership-manager' ) . "\n\n";
+            echo "\n" . __( 'DIT MEDLEMSKAB', 'membership-manager' ) . "\n\n";
             
             foreach ( (array) $membership_ids as $membership_id ) {
                 $membership = Membership_Manager::get_membership( $membership_id );
                 if ( ! $membership ) continue;
                 
                 echo __( 'Status:', 'membership-manager' ) . ' ' . ucfirst( $membership->status ) . "\n";
-                echo __( 'Start Date:', 'membership-manager' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $membership->start_date ) ) . "\n";
-                echo __( 'Expiry Date:', 'membership-manager' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $membership->end_date ) ) . "\n";
-                echo __( 'Renewal Type:', 'membership-manager' ) . ' ' . ucfirst( $membership->renewal_type ) . "\n";
+                echo __( 'Startdato:', 'membership-manager' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $membership->start_date ) ) . "\n";
+                echo __( 'Udløbsdato:', 'membership-manager' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $membership->end_date ) ) . "\n";
+                echo __( 'Fornyelsestype:', 'membership-manager' ) . ' ' . ucfirst( $membership->renewal_type ) . "\n";
                 
                 if ( $membership->renewal_type === 'manual' && $membership->renewal_token ) {
-                    echo __( 'Renewal Link:', 'membership-manager' ) . ' ' . Membership_Manager::get_renewal_link( $membership->renewal_token ) . "\n";
+                    echo __( 'Fornyelseslink:', 'membership-manager' ) . ' ' . Membership_Manager::get_renewal_link( $membership->renewal_token ) . "\n";
                 }
                 
                 echo "\n";
             }
         } else {
             ?>
-            <h2><?php _e( 'Your Membership', 'membership-manager' ); ?></h2>
+            <h2><?php _e( 'Dit medlemskab', 'membership-manager' ); ?></h2>
             
             <?php foreach ( (array) $membership_ids as $membership_id ): 
                 $membership = Membership_Manager::get_membership( $membership_id );
@@ -227,23 +227,23 @@ class Membership_Checkout {
                     <td style="text-align:left; border: 1px solid #eee;"><?php echo esc_html( ucfirst( $membership->status ) ); ?></td>
                 </tr>
                 <tr>
-                    <th style="text-align:left; border: 1px solid #eee;"><?php _e( 'Start Date', 'membership-manager' ); ?></th>
+                    <th style="text-align:left; border: 1px solid #eee;"><?php _e( 'Startdato', 'membership-manager' ); ?></th>
                     <td style="text-align:left; border: 1px solid #eee;"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $membership->start_date ) ); ?></td>
                 </tr>
                 <tr>
-                    <th style="text-align:left; border: 1px solid #eee;"><?php _e( 'Expiry Date', 'membership-manager' ); ?></th>
+                    <th style="text-align:left; border: 1px solid #eee;"><?php _e( 'Udløbsdato', 'membership-manager' ); ?></th>
                     <td style="text-align:left; border: 1px solid #eee;"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $membership->end_date ) ); ?></td>
                 </tr>
                 <tr>
-                    <th style="text-align:left; border: 1px solid #eee;"><?php _e( 'Renewal Type', 'membership-manager' ); ?></th>
+                    <th style="text-align:left; border: 1px solid #eee;"><?php _e( 'Fornyelsestype', 'membership-manager' ); ?></th>
                     <td style="text-align:left; border: 1px solid #eee;"><?php echo esc_html( ucfirst( $membership->renewal_type ) ); ?></td>
                 </tr>
                 <?php if ( $membership->renewal_type === 'manual' && $membership->renewal_token ): ?>
                 <tr>
-                    <th style="text-align:left; border: 1px solid #eee;"><?php _e( 'Renewal Link', 'membership-manager' ); ?></th>
+                    <th style="text-align:left; border: 1px solid #eee;"><?php _e( 'Fornyelseslink', 'membership-manager' ); ?></th>
                     <td style="text-align:left; border: 1px solid #eee;">
                         <a href="<?php echo esc_url( Membership_Manager::get_renewal_link( $membership->renewal_token ) ); ?>">
-                            <?php _e( 'Click here to renew', 'membership-manager' ); ?>
+                            <?php _e( 'Klik her for at forny', 'membership-manager' ); ?>
                         </a>
                     </td>
                 </tr>
