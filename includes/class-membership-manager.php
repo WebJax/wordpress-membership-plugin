@@ -1173,12 +1173,17 @@ class Membership_Manager {
         // Sanitize and validate dates first
         $start_date_validated = Membership_Utils::sanitize_date( $start_date );
         $end_date_validated = Membership_Utils::sanitize_date( $end_date );
+        
+        // If date sanitization fails, reject the request
+        if ( false === $start_date_validated || false === $end_date_validated ) {
+            wp_die( __( 'Invalid date format provided. Please use a valid date format.', 'membership-manager' ) );
+        }
 
         // Validate data using utility class with validated dates
         $validation = Membership_Utils::validate_subscription_data( array(
             'user_id' => $user_id,
-            'start_date' => $start_date_validated ?: $start_date,
-            'end_date' => $end_date_validated ?: $end_date,
+            'start_date' => $start_date_validated,
+            'end_date' => $end_date_validated,
             'status' => $status,
             'renewal_type' => $renewal_type,
         ) );

@@ -145,9 +145,12 @@ class Test_Membership_Security extends WP_UnitTestCase {
         $result = Membership_Security::check_rate_limit( 'test_action', 10, 3600 );
         $this->assertTrue( $result );
         
-        // Clean up transients
-        global $wpdb;
-        $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_membership_rate_limit_%'" );
-        $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_timeout_membership_rate_limit_%'" );
+        // Clean up transients using WordPress functions
+        $prefix = 'membership_rate_limit_';
+        
+        // Get all transients with our prefix (note: this is simplified for testing)
+        // In production, transients are automatically cleaned up by WordPress
+        delete_transient( $prefix . 'test_action_user_' . $user_id );
+        delete_transient( $prefix . 'test_action_ip_' . Membership_Security::get_client_ip() );
     }
 }
