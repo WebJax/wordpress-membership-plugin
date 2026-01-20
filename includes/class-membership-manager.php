@@ -109,6 +109,12 @@ class Membership_Manager {
     }
 
     public static function run_renewal_process() {
+        // Check for staging mode
+        if ( defined( 'MEMBERSHIP_STAGING_MODE' ) && MEMBERSHIP_STAGING_MODE ) {
+            self::log( __( '[STAGING MODE] Renewal process skipped - staging mode is active', 'membership-manager' ), 'INFO' );
+            return;
+        }
+        
         self::log( __( 'Starting renewal process.', 'membership-manager' ) );
         $renewals = new Membership_Renewals();
         $renewals->process_membership_renewals();

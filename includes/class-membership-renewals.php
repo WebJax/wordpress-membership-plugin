@@ -19,6 +19,19 @@ class Membership_Renewals {
      * @return int|false Order ID if successful, false on failure
      */
     public function create_renewal_order( $subscription ) {
+        // Check for staging mode
+        if ( defined( 'MEMBERSHIP_STAGING_MODE' ) && MEMBERSHIP_STAGING_MODE ) {
+            Membership_Manager::log( 
+                sprintf( 
+                    __( '[STAGING MODE] Renewal blocked for subscription ID: %d (User: %d)', 'membership-manager' ), 
+                    $subscription->id, 
+                    $subscription->user_id 
+                ), 
+                'INFO' 
+            );
+            return false;
+        }
+        
         Membership_Manager::log( sprintf( __( 'Attempting to create renewal order for subscription ID: %d (User: %d)', 'membership-manager' ), $subscription->id, $subscription->user_id ) );
         
         // Get automatic renewal products from settings

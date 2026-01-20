@@ -23,6 +23,21 @@ define( 'MEMBERSHIP_MANAGER_VERSION', '1.0.0' );
 define( 'MEMBERSHIP_MANAGER_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MEMBERSHIP_MANAGER_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
+/**
+ * Staging Mode
+ * 
+ * Enable staging mode to prevent:
+ * - Automatic renewals from running
+ * - Emails from being sent
+ * - Real payment processing
+ * 
+ * To enable, add to wp-config.php:
+ * define( 'MEMBERSHIP_STAGING_MODE', true );
+ */
+if ( ! defined( 'MEMBERSHIP_STAGING_MODE' ) ) {
+    define( 'MEMBERSHIP_STAGING_MODE', false );
+}
+
 // Include the main classes
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-constants.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-utils.php';
@@ -47,6 +62,16 @@ Membership_Dashboard::init();
 Membership_Product_Types::init();
 Membership_Checkout::init();
 new Membership_Test_Tools();
+
+// Show staging mode notice
+if ( MEMBERSHIP_STAGING_MODE ) {
+    add_action( 'admin_notices', function() {
+        echo '<div class="notice notice-warning" style="border-left-color: #f0b849;">';
+        echo '<p><strong>' . __( '⚠️ STAGING MODE ACTIVE', 'membership-manager' ) . '</strong> - ';
+        echo __( 'Automatic renewals and emails are disabled. To disable staging mode, remove MEMBERSHIP_STAGING_MODE from wp-config.php', 'membership-manager' );
+        echo '</p></div>';
+    });
+}
 
 // Activation hook.
 register_activation_hook( __FILE__, array( 'Membership_Manager', 'activate' ) );

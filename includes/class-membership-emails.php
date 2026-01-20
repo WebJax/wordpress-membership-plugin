@@ -159,6 +159,19 @@ class Membership_Emails {
      * @return bool True if email sent successfully, false otherwise
      */
     private function send_email( $to, $subject, $message ) {
+        // Check for staging mode
+        if ( defined( 'MEMBERSHIP_STAGING_MODE' ) && MEMBERSHIP_STAGING_MODE ) {
+            Membership_Manager::log( 
+                sprintf( 
+                    __( '[STAGING MODE] Email blocked - To: %s, Subject: %s', 'membership-manager' ), 
+                    $to, 
+                    $subject 
+                ), 
+                'INFO' 
+            );
+            return true; // Return true to prevent error logging
+        }
+        
         // Validate email address
         if ( ! is_email( $to ) ) {
             Membership_Manager::log( sprintf( __( 'Invalid email address: %s', 'membership-manager' ), $to ), 'ERROR' );
