@@ -65,11 +65,40 @@ class Membership_Manager {
             status_changed_date datetime DEFAULT NULL,
             PRIMARY KEY  (id),
             KEY user_id (user_id),
-            KEY renewal_token (renewal_token)
+            KEY renewal_token (renewal_token),
+            KEY status (status),
+            KEY end_date (end_date)
         ) $charset_collate;";
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-        dbDelta( $sql );
+        $result = dbDelta( $sql );
+
+        // Store database version for future upgrades
+        update_option( 'membership_manager_db_version', '1.0.0' );
+
+        // Log activation
+        self::log( sprintf( __( 'Plugin activated. Database result: %s', 'membership-manager' ), print_r( $result, true ) ) );
+
+        // Ensure log directory exists
+        $log_dir = plugin_dir_path( __FILE__ ) . '../logs';
+        if ( ! file_exists( $log_dir ) ) {
+            wp_mkdir_p( $log_dir );
+        }
+
+        // Create .htaccess to protect logs directory
+        $htaccess_file = $log_dir . '/.htaccess';
+        if ( ! file_exists( $htaccess_file ) ) {
+            $bytes_written = file_put_contents( $htaccess_file, "Deny from all\n" );
+            if ( false === $bytes_written ) {
+                self::log(
+                    sprintf(
+                        __( 'Warning: Failed to create .htaccess file in logs directory (%s). Please check directory permissions.', 'membership-manager' ),
+                        $log_dir
+                    ),
+                    'WARNING'
+                );
+            }
+        }
 
         // Flush rewrite rules
         flush_rewrite_rules();
@@ -144,8 +173,12 @@ class Membership_Manager {
     }
 
     public static function filter_memberships() {
+        // Apply rate limiting with higher limits for admin users
+        $max_requests = current_user_can( 'manage_options' ) ? 500 : 100;
+        Membership_Security::check_rate_limit( 'filter_memberships', $max_requests, HOUR_IN_SECONDS );
+        
         // Verify nonce if provided (optional for read operations)
-        if ( isset( $_POST['nonce'] ) && ! wp_verify_nonce( $_POST['nonce'], 'filter_memberships_nonce' ) ) {
+        if ( isset( $_POST['nonce'] ) && ! Membership_Security::verify_nonce( $_POST['nonce'], 'filter_memberships_nonce' ) ) {
             wp_send_json_error( 'Security check failed.' );
         }
         
@@ -986,11 +1019,16 @@ class Membership_Manager {
         }
     }
 
+    /**
+     * Handle update membership details with improved validation
+     */
     public static function handle_update_membership_details() {
+        // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
         }
 
+        // Verify nonce
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'update_membership_details_nonce' ) ) {
             wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
         }
@@ -1000,21 +1038,44 @@ class Membership_Manager {
             wp_die( __( 'Invalid membership ID.', 'membership-manager' ) );
         }
 
+        // Sanitize input
         $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( $_POST['start_date'] ) : '';
         $end_date = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ) : '';
         $status = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : '';
         $renewal_type = isset( $_POST['renewal_type'] ) ? sanitize_text_field( $_POST['renewal_type'] ) : '';
 
+        // Validate dates
+        $start_date_validated = Membership_Utils::sanitize_date( $start_date );
+        $end_date_validated = Membership_Utils::sanitize_date( $end_date );
+
+        if ( $start_date_validated === false || $end_date_validated === false ) {
+            wp_die( __( 'Invalid date format. Please use a valid date.', 'membership-manager' ) );
+        }
+
+        // Validate status and renewal type
+        if ( ! Membership_Constants::is_valid_status( $status ) ) {
+            wp_die( __( 'Invalid status value.', 'membership-manager' ) );
+        }
+
+        if ( ! Membership_Constants::is_valid_renewal_type( $renewal_type ) ) {
+            wp_die( __( 'Invalid renewal type value.', 'membership-manager' ) );
+        }
+
         global $wpdb;
-        $table_name = $wpdb->prefix . 'membership_subscriptions';
+        $table_name = Membership_Utils::get_table_name();
         
         // Get current membership to check if status changed
         $current = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $membership_id ) );
-        $old_status = $current ? $current->status : '';
+        
+        if ( ! $current ) {
+            wp_die( __( 'Membership not found.', 'membership-manager' ) );
+        }
+        
+        $old_status = $current->status;
         
         $update_data = array(
-            'start_date' => $start_date,
-            'end_date' => $end_date,
+            'start_date' => $start_date_validated,
+            'end_date' => $end_date_validated,
             'status' => $status,
             'renewal_type' => $renewal_type
         );
@@ -1024,26 +1085,36 @@ class Membership_Manager {
             $update_data['status_changed_date'] = current_time( 'mysql' );
             
             // If changing to on-hold, set paused_date
-            if ( $status === 'on-hold' && $old_status !== 'on-hold' ) {
+            if ( $status === Membership_Constants::STATUS_ON_HOLD && $old_status !== Membership_Constants::STATUS_ON_HOLD ) {
                 $update_data['paused_date'] = current_time( 'mysql' );
             }
             // If changing from on-hold to another status, clear paused_date
-            elseif ( $old_status === 'on-hold' && $status !== 'on-hold' ) {
+            elseif ( $old_status === Membership_Constants::STATUS_ON_HOLD && $status !== Membership_Constants::STATUS_ON_HOLD ) {
                 $update_data['paused_date'] = NULL;
             }
         }
 
-        $wpdb->update(
+        $result = $wpdb->update(
             $table_name,
             $update_data,
-            array( 'id' => $membership_id )
+            array( 'id' => $membership_id ),
+            array( '%s', '%s', '%s', '%s', '%s', '%s' ),
+            array( '%d' )
         );
+
+        if ( $result === false ) {
+            self::log( sprintf( __( 'Database error updating membership ID %d: %s', 'membership-manager' ), $membership_id, $wpdb->last_error ), 'ERROR' );
+            wp_die( __( 'Database error occurred. Please check the logs.', 'membership-manager' ) );
+        }
+
+        // Clear cache
+        Membership_Utils::clear_membership_cache( $membership_id );
 
         self::log( sprintf( __( 'Updated membership ID: %d by user ID: %d', 'membership-manager' ), $membership_id, get_current_user_id() ) );
         
         // Trigger status change hook if status changed
         if ( $old_status !== $status ) {
-            do_action( 'membership_manager_status_changed', $membership_id, $old_status, $status );
+            do_action( Membership_Constants::HOOK_STATUS_CHANGED, $membership_id, $old_status, $status );
         }
 
         wp_redirect( admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership_id . '&updated=true' ) );
@@ -1078,27 +1149,52 @@ class Membership_Manager {
         exit;
     }
 
+    /**
+     * Handle add new membership with improved validation
+     */
     public static function handle_add_new_membership() {
+        // Check capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
         }
 
+        // Verify nonce
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'add_new_membership_nonce' ) ) {
             wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
         }
 
+        // Sanitize and validate input
         $user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
-        if ( ! $user_id || ! get_user_by( 'ID', $user_id ) ) {
-            wp_die( __( 'Invalid User ID.', 'membership-manager' ) );
-        }
-
         $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( $_POST['start_date'] ) : '';
         $end_date = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ) : '';
         $status = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : 'active';
         $renewal_type = isset( $_POST['renewal_type'] ) ? sanitize_text_field( $_POST['renewal_type'] ) : 'manual';
 
+        // Sanitize and validate dates first
+        $start_date_validated = Membership_Utils::sanitize_date( $start_date );
+        $end_date_validated = Membership_Utils::sanitize_date( $end_date );
+        
+        // If date sanitization fails, reject the request
+        if ( false === $start_date_validated || false === $end_date_validated ) {
+            wp_die( __( 'Invalid date format provided. Please use a valid date format.', 'membership-manager' ) );
+        }
+
+        // Validate data using utility class with validated dates
+        $validation = Membership_Utils::validate_subscription_data( array(
+            'user_id' => $user_id,
+            'start_date' => $start_date_validated,
+            'end_date' => $end_date_validated,
+            'status' => $status,
+            'renewal_type' => $renewal_type,
+        ) );
+
+        if ( ! $validation['valid'] ) {
+            $errors = implode( '<br>', $validation['errors'] );
+            wp_die( sprintf( __( 'Validation errors:<br>%s', 'membership-manager' ), $errors ) );
+        }
+
         global $wpdb;
-        $table_name = $wpdb->prefix . 'membership_subscriptions';
+        $table_name = Membership_Utils::get_table_name();
 
         // Check if user already has a membership
         $existing = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE user_id = %d", $user_id ) );
@@ -1106,9 +1202,9 @@ class Membership_Manager {
             wp_die( sprintf( __( 'User ID %d already has a membership (ID: %d). Please edit the existing membership instead.', 'membership-manager' ), $user_id, $existing->id ) );
         }
 
-        $renewal_token = self::generate_renewal_token();
+        $renewal_token = Membership_Utils::generate_token();
 
-        $wpdb->insert(
+        $result = $wpdb->insert(
             $table_name,
             array(
                 'user_id' => $user_id,
@@ -1116,17 +1212,24 @@ class Membership_Manager {
                 'end_date' => $end_date,
                 'status' => $status,
                 'renewal_type' => $renewal_type,
-                'renewal_token' => $renewal_token
-            )
+                'renewal_token' => $renewal_token,
+                'status_changed_date' => current_time( 'mysql' ),
+            ),
+            array( '%d', '%s', '%s', '%s', '%s', '%s', '%s' )
         );
+
+        if ( $result === false ) {
+            self::log( sprintf( __( 'Database error creating membership: %s', 'membership-manager' ), $wpdb->last_error ), 'ERROR' );
+            wp_die( __( 'Database error occurred. Please check the logs.', 'membership-manager' ) );
+        }
 
         $membership_id = $wpdb->insert_id;
 
         self::log( sprintf( __( 'Created new membership ID: %d for user ID: %d by admin.', 'membership-manager' ), $membership_id, $user_id ) );
 
         // Trigger activation if status is active
-        if ( $status === 'active' ) {
-            do_action( 'membership_manager_subscription_activated', $user_id, $membership_id );
+        if ( $status === Membership_Constants::STATUS_ACTIVE ) {
+            do_action( Membership_Constants::HOOK_SUBSCRIPTION_ACTIVATED, $user_id, $membership_id );
         }
 
         wp_redirect( admin_url( 'admin.php?page=membership-manager&action=view&id=' . $membership_id . '&created=true' ) );
@@ -1270,11 +1373,50 @@ class Membership_Manager {
         exit;
     }
 
+    /**
+     * Log messages to file with proper error handling
+     * 
+     * @param string $message The message to log
+     * @param string $type The log type (INFO, WARNING, ERROR)
+     * @return bool True if logged successfully, false otherwise
+     */
     public static function log( $message, $type = 'INFO' ) {
-        $log_file = plugin_dir_path( __FILE__ ) . '../logs/membership.log';
+        $log_file = trailingslashit( MEMBERSHIP_MANAGER_PLUGIN_DIR ) . 'logs/membership.log';
+        $log_dir = dirname( $log_file );
+        
+        // Ensure log directory exists
+        if ( ! file_exists( $log_dir ) ) {
+            if ( ! wp_mkdir_p( $log_dir ) ) {
+                error_log( 'Membership Manager: Failed to create log directory' );
+                return false;
+            }
+        }
+        
+        // Check if log file is writable
+        if ( file_exists( $log_file ) && ! is_writable( $log_file ) ) {
+            error_log( 'Membership Manager: Log file is not writable' );
+            return false;
+        }
+        
+        // Rotate log if it gets too large (5MB)
+        if ( file_exists( $log_file ) && filesize( $log_file ) > 5 * 1024 * 1024 ) {
+            $backup_file = $log_file . '.' . date( 'Y-m-d-His' ) . '.bak';
+            rename( $log_file, $backup_file );
+            
+            // Keep only last 5 backup files
+            $backups = glob( $log_dir . '/membership.log.*.bak' );
+            if ( count( $backups ) > 5 ) {
+                array_multisort( array_map( 'filemtime', $backups ), SORT_ASC, $backups );
+                foreach ( array_slice( $backups, 0, count( $backups ) - 5 ) as $old_backup ) {
+                    unlink( $old_backup );
+                }
+            }
+        }
+        
         $timestamp = date( 'Y-m-d H:i:s' );
         $log_message = "[$timestamp] [$type] - $message" . PHP_EOL;
-        file_put_contents( $log_file, $log_message, FILE_APPEND );
+        
+        return file_put_contents( $log_file, $log_message, FILE_APPEND ) !== false;
     }
     
     /**

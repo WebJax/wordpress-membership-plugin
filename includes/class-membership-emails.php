@@ -8,14 +8,30 @@ class Membership_Emails {
 
     /**
      * Send welcome email when membership is created
+     * 
+     * @param WP_User $user The user object
+     * @param object $membership The membership object
+     * @return bool True if email sent successfully, false otherwise
      */
     public static function send_welcome_email( $user, $membership ) {
+        // Validate inputs
+        if ( ! $user || ! $membership ) {
+            Membership_Manager::log( 'Invalid user or membership object for welcome email', 'ERROR' );
+            return false;
+        }
+        
         // Check if welcome emails are enabled
         if ( get_option( 'membership_enable_welcome_email', 'yes' ) !== 'yes' ) {
-            return;
+            return false;
         }
         
         $to = $user->user_email;
+        
+        if ( ! is_email( $to ) ) {
+            Membership_Manager::log( sprintf( 'Invalid email address for user ID %d: %s', $user->ID, $to ), 'ERROR' );
+            return false;
+        }
+        
         $subject = get_option( 'membership_welcome_subject', __( 'Welcome to Your Membership!', 'membership-manager' ) );
         
         $message = sprintf(
@@ -26,8 +42,8 @@ class Membership_Emails {
             ucfirst( $membership->renewal_type )
         );
         
-        if ( $membership->renewal_type === 'manual' && $membership->renewal_token ) {
-            $renewal_link = Membership_Manager::get_renewal_link( $membership->renewal_token );
+        if ( $membership->renewal_type === 'manual' && ! empty( $membership->renewal_token ) ) {
+            $renewal_link = Membership_Manager::get_renewal_link( $membership );
             $message .= sprintf(
                 __( "You can renew your membership at any time using this link:\n%s\n\n", 'membership-manager' ),
                 $renewal_link
@@ -36,8 +52,15 @@ class Membership_Emails {
         
         $message .= __( "Thank you for being a member!\n", 'membership-manager' );
         
-        self::send_email( $to, $subject, $message );
-        Membership_Manager::log( 'Sent welcome email to: ' . $to );
+        $result = self::send_email( $to, $subject, $message );
+        
+        if ( $result ) {
+            Membership_Manager::log( 'Sent welcome email to: ' . $to );
+        } else {
+            Membership_Manager::log( 'Failed to send welcome email to: ' . $to, 'ERROR' );
+        }
+        
+        return $result;
     }
 
     public function send_automatic_renewal_reminders( $subscription, $reminder_type ) {
@@ -127,18 +150,46 @@ class Membership_Emails {
         return isset( $subjects[ $reminder_type ] ) ? $subjects[ $reminder_type ] : __( 'Membership Renewal Reminder', 'membership-manager' );
     }
 
+    /**
+     * Send email with proper error handling
+     * 
+     * @param string $to Email recipient
+     * @param string $subject Email subject
+     * @param string $message Email message
+     * @return bool True if email sent successfully, false otherwise
+     */
     private function send_email( $to, $subject, $message ) {
+        // Validate email address
+        if ( ! is_email( $to ) ) {
+            Membership_Manager::log( sprintf( __( 'Invalid email address: %s', 'membership-manager' ), $to ), 'ERROR' );
+            return false;
+        }
+        
+        // Validate subject and message
+        if ( empty( $subject ) || empty( $message ) ) {
+            Membership_Manager::log( __( 'Empty subject or message in email', 'membership-manager' ), 'ERROR' );
+            return false;
+        }
+        
         $from_name = get_option( 'membership_email_from_name', get_bloginfo( 'name' ) );
         $from_address = get_option( 'membership_email_from_address', get_option( 'admin_email' ) );
         
+        // Validate from address
+        if ( ! is_email( $from_address ) ) {
+            $from_address = get_option( 'admin_email' );
+        }
+        
         $headers = array(
             'Content-Type: text/html; charset=UTF-8',
-            'From: ' . $from_name . ' <' . $from_address . '>'
+            'From: ' . sanitize_text_field( $from_name ) . ' <' . sanitize_email( $from_address ) . '>'
         );
         
         $sent = wp_mail( $to, $subject, $message, $headers );
+        
         if ( ! $sent ) {
             Membership_Manager::log( sprintf( __( 'Failed to send email to: %s with subject: %s', 'membership-manager' ), $to, $subject ), 'ERROR' );
         }
+        
+        return $sent;
     }
 }
