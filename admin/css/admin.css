@@ -94,3 +94,49 @@
 .status-card:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+
+/* Pagination styling */
+#pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 0;
+}
+
+#pagination-container .tablenav-pages {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#pagination-container .displaying-num {
+    margin-right: 15px;
+    color: #646970;
+}
+
+#pagination-container .pagination-links {
+    display: flex;
+    gap: 3px;
+}
+
+#pagination-container .pagination-links .button {
+    min-width: 32px;
+    height: 32px;
+    line-height: 30px;
+    padding: 0 8px;
+    text-align: center;
+}
+
+#pagination-container .pagination-links .button.disabled {
+    color: #a7aaad;
+    cursor: default;
+    pointer-events: none;
+}
+
+#pagination-container .paging-input {
+    margin: 0 5px;
+}
+
+#pagination-container .tablenav-paging-text {
+    color: #646970;
+}

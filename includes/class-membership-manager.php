@@ -189,6 +189,11 @@ class Membership_Manager {
         $status = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : '';
         $renewal_date = isset( $_POST['renewal_date'] ) ? sanitize_text_field( $_POST['renewal_date'] ) : '';
         
+        // Get pagination parameters
+        $page = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+        $per_page = 25; // Items per page
+        $offset = ( $page - 1 ) * $per_page;
+        
         // Get sort parameters
         $sort_column = isset( $_POST['sort_column'] ) ? sanitize_text_field( $_POST['sort_column'] ) : 'end_date';
         $sort_order = isset( $_POST['sort_order'] ) ? sanitize_text_field( $_POST['sort_order'] ) : 'ASC';
@@ -227,19 +232,51 @@ class Membership_Manager {
             $where_sql = 'WHERE ' . implode( ' AND ', $where_clauses );
         }
         
-        $query = "SELECT * FROM $table_name $where_sql ORDER BY $sort_column $sort_order";
+        // Get total count for pagination
+        $count_query = "SELECT COUNT(*) FROM $table_name $where_sql";
+        if ( ! empty( $where_values ) ) {
+            $total_items = $wpdb->get_var( $wpdb->prepare( $count_query, $where_values ) );
+        } else {
+            $total_items = $wpdb->get_var( $count_query );
+        }
+        
+        $total_pages = ceil( $total_items / $per_page );
+        
+        // Main query with pagination
+        $query = "SELECT * FROM $table_name $where_sql ORDER BY $sort_column $sort_order LIMIT %d OFFSET %d";
         
         if ( ! empty( $where_values ) ) {
+            $where_values[] = $per_page;
+            $where_values[] = $offset;
             $memberships = $wpdb->get_results( $wpdb->prepare( $query, $where_values ) );
         } else {
-            $memberships = $wpdb->get_results( $query );
+            $memberships = $wpdb->get_results( $wpdb->prepare( $query, $per_page, $offset ) );
+        }
+        
+        // FIX N+1 QUERY: Get all users at once
+        $user_ids = array();
+        if ( ! empty( $memberships ) ) {
+            foreach ( $memberships as $membership ) {
+                $user_ids[] = $membership->user_id;
+            }
+            $user_ids = array_unique( $user_ids );
+        }
+        
+        // Load all users in one query
+        $users_by_id = array();
+        if ( ! empty( $user_ids ) ) {
+            $users = get_users( array( 'include' => $user_ids ) );
+            foreach ( $users as $user ) {
+                $users_by_id[ $user->ID ] = $user;
+            }
         }
         
         // Generate HTML
         $html = '';
         if ( ! empty( $memberships ) ) {
             foreach ( $memberships as $membership ) {
-                $user = get_user_by( 'ID', $membership->user_id );
+                // Use pre-loaded users instead of querying each time
+                $user = isset( $users_by_id[ $membership->user_id ] ) ? $users_by_id[ $membership->user_id ] : null;
                 $user_display = $user ? $user->display_name . ' (' . $membership->user_id . ')' : $membership->user_id;
                 
                 // Get My Account URL for the user - use a special preview parameter
@@ -280,7 +317,13 @@ class Membership_Manager {
         
         wp_send_json_success( array( 
             'html' => $html, 
-            'counts' => $status_counts 
+            'counts' => $status_counts,
+            'pagination' => array(
+                'current_page' => $page,
+                'total_pages' => $total_pages,
+                'total_items' => $total_items,
+                'per_page' => $per_page
+            )
         ) );
     }
 

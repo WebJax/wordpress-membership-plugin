@@ -83,4 +83,9 @@
             <!-- Initial list will be loaded here -->
         </tbody>
     </table>
+    
+    <!-- Pagination Container -->
+    <div id="pagination-container" class="tablenav bottom" style="margin-top: 15px;">
+        <!-- Pagination will be loaded here by JavaScript -->
+    </div>
 </div>
