@@ -28,32 +28,61 @@ class Membership_Security {
         $user_id = get_current_user_id();
         $ip_address = self::get_client_ip();
         
-        // Use both user ID and IP for rate limiting
-        $key = self::RATE_LIMIT_PREFIX . $action . '_' . ( $user_id ?: $ip_address );
-        $count = get_transient( $key );
+        // Track rate limits separately for IP and (if available) user ID
+        $limits = array();
         
-        if ( $count === false ) {
-            // First request in this period
-            set_transient( $key, 1, $period );
-            return true;
+        // Always enforce an IP-based limit
+        if ( ! empty( $ip_address ) && $ip_address !== '0.0.0.0' ) {
+            $limits[] = array(
+                'type' => 'ip',
+                'key' => self::RATE_LIMIT_PREFIX . $action . '_ip_' . $ip_address,
+                'identifier' => $ip_address,
+            );
         }
         
-        if ( $count >= $max_requests ) {
-            Membership_Manager::log( sprintf(
-                'Rate limit exceeded for action "%s" by user %d (IP: %s)',
-                $action,
-                $user_id,
-                $ip_address
-            ), 'WARNING' );
+        // Additionally enforce a user-based limit for logged-in users
+        if ( ! empty( $user_id ) ) {
+            $limits[] = array(
+                'type' => 'user',
+                'key' => self::RATE_LIMIT_PREFIX . $action . '_user_' . $user_id,
+                'identifier' => $user_id,
+            );
+        }
+        
+        foreach ( $limits as $limit ) {
+            $key = $limit['key'];
+            $count = get_transient( $key );
             
-            wp_send_json_error( array(
-                'message' => __( 'Rate limit exceeded. Please try again later.', 'membership-manager' ),
-                'retry_after' => self::get_rate_limit_reset_time( $key ),
-            ), 429 );
+            if ( $count === false ) {
+                // First request in this period for this key
+                set_transient( $key, 1, $period );
+                continue;
+            }
+            
+            if ( $count >= $max_requests ) {
+                // Log which dimension triggered the rate limit
+                $dimension = $limit['type'] === 'user' ? 'user' : 'IP';
+                $id_value = $limit['identifier'];
+                
+                Membership_Manager::log( sprintf(
+                    'Rate limit exceeded for action "%s" by %s %s (user: %d, IP: %s)',
+                    $action,
+                    $dimension,
+                    $id_value,
+                    $user_id,
+                    $ip_address
+                ), 'WARNING' );
+                
+                wp_send_json_error( array(
+                    'message' => __( 'Rate limit exceeded. Please try again later.', 'membership-manager' ),
+                    'retry_after' => self::get_rate_limit_reset_time( $key ),
+                ), 429 );
+            }
+            
+            // Increment counter for this key
+            set_transient( $key, $count + 1, $period );
         }
         
-        // Increment counter
-        set_transient( $key, $count + 1, $period );
         return true;
     }
     

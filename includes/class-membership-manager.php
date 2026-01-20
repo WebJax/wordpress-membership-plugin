@@ -88,7 +88,16 @@ class Membership_Manager {
         // Create .htaccess to protect logs directory
         $htaccess_file = $log_dir . '/.htaccess';
         if ( ! file_exists( $htaccess_file ) ) {
-            file_put_contents( $htaccess_file, "Deny from all\n" );
+            $bytes_written = file_put_contents( $htaccess_file, "Deny from all\n" );
+            if ( false === $bytes_written ) {
+                self::log(
+                    sprintf(
+                        __( 'Warning: Failed to create .htaccess file in logs directory (%s). Please check directory permissions.', 'membership-manager' ),
+                        $log_dir
+                    ),
+                    'WARNING'
+                );
+            }
         }
 
         // Flush rewrite rules
@@ -1161,11 +1170,15 @@ class Membership_Manager {
         $status = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : 'active';
         $renewal_type = isset( $_POST['renewal_type'] ) ? sanitize_text_field( $_POST['renewal_type'] ) : 'manual';
 
-        // Validate data using utility class
+        // Sanitize and validate dates first
+        $start_date_validated = Membership_Utils::sanitize_date( $start_date );
+        $end_date_validated = Membership_Utils::sanitize_date( $end_date );
+
+        // Validate data using utility class with validated dates
         $validation = Membership_Utils::validate_subscription_data( array(
             'user_id' => $user_id,
-            'start_date' => $start_date,
-            'end_date' => $end_date,
+            'start_date' => $start_date_validated ?: $start_date,
+            'end_date' => $end_date_validated ?: $end_date,
             'status' => $status,
             'renewal_type' => $renewal_type,
         ) );
@@ -1363,7 +1376,7 @@ class Membership_Manager {
      * @return bool True if logged successfully, false otherwise
      */
     public static function log( $message, $type = 'INFO' ) {
-        $log_file = plugin_dir_path( __FILE__ ) . '../logs/membership.log';
+        $log_file = trailingslashit( MEMBERSHIP_MANAGER_PLUGIN_DIR ) . 'logs/membership.log';
         $log_dir = dirname( $log_file );
         
         // Ensure log directory exists

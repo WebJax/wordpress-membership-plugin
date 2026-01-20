@@ -47,10 +47,7 @@ wp_clear_scheduled_hook( 'membership_renewal_cron' );
 // Clear rewrite rules
 flush_rewrite_rules();
 
-// Log uninstallation (only if log file already exists)
-$log_file = plugin_dir_path( __FILE__ ) . 'logs/membership.log';
-if ( file_exists( $log_file ) && is_writable( $log_file ) ) {
-    $timestamp = date( 'Y-m-d H:i:s' );
-    $log_message = "[$timestamp] [INFO] - Plugin uninstalled and all data removed." . PHP_EOL;
-    file_put_contents( $log_file, $log_message, FILE_APPEND );
-}
+// Log uninstallation via PHP error log to avoid filesystem operations
+$timestamp = date( 'Y-m-d H:i:s' );
+$log_message = "[$timestamp] [INFO] - Membership Manager plugin uninstalled and all data removed.";
+error_log( $log_message );
