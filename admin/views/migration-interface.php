@@ -146,4 +146,108 @@
         <input type="hidden" name="action" value="cleanup_invalid_dates">
         <?php submit_button( __( 'Fix Invalid Dates', 'membership-manager' ), 'secondary', 'submit', false ); ?>
     </form>
+    
+    <hr style="margin: 30px 0;">
+    
+    <h2><?php _e( 'Validate Membership Data', 'membership-manager' ); ?></h2>
+    <p><?php _e( 'Run a validation check to verify that membership numbers are correct in relation to WooCommerce orders. This will:', 'membership-manager' ); ?></p>
+    <ul style="list-style: disc; margin-left: 30px; margin-bottom: 20px;">
+        <li><?php _e( 'Check that all completed orders with membership products have corresponding memberships', 'membership-manager' ); ?></li>
+        <li><?php _e( 'Verify that memberships have valid associated orders', 'membership-manager' ); ?></li>
+        <li><?php _e( 'Identify data inconsistencies between orders and memberships', 'membership-manager' ); ?></li>
+        <li><?php _e( 'Generate a detailed report of any issues found', 'membership-manager' ); ?></li>
+    </ul>
+    
+    <?php
+    // Display validation results if available
+    $validation_param = isset( $_GET['validation'] ) ? sanitize_text_field( $_GET['validation'] ) : '';
+    if ( $validation_param === 'completed' ) {
+        $validation_results = get_transient( 'membership_validation_results' );
+        
+        if ( $validation_results ) {
+            echo '<div class="notice notice-success is-dismissible"><p>' . __( 'Validation completed successfully!', 'membership-manager' ) . '</p></div>';
+            
+            // Display statistics
+            echo '<div style="background: #fff; border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; border-radius: 4px;">';
+            echo '<h3>' . __( 'Validation Summary', 'membership-manager' ) . '</h3>';
+            echo '<table class="widefat" style="margin-top: 15px;">';
+            echo '<thead><tr><th>' . __( 'Metric', 'membership-manager' ) . '</th><th>' . __( 'Count', 'membership-manager' ) . '</th></tr></thead>';
+            echo '<tbody>';
+            echo '<tr><td>' . __( 'Total Orders Checked', 'membership-manager' ) . '</td><td><strong>' . esc_html( $validation_results['total_orders_checked'] ) . '</strong></td></tr>';
+            echo '<tr><td>' . __( 'Total Memberships Checked', 'membership-manager' ) . '</td><td><strong>' . esc_html( $validation_results['total_memberships_checked'] ) . '</strong></td></tr>';
+            echo '<tr><td style="color: #00a32a;">' . __( 'Orders with Valid Membership', 'membership-manager' ) . '</td><td><strong style="color: #00a32a;">' . esc_html( $validation_results['orders_with_membership'] ) . '</strong></td></tr>';
+            echo '<tr><td style="color: #d63638;">' . __( 'Orders Missing Membership', 'membership-manager' ) . '</td><td><strong style="color: #d63638;">' . esc_html( $validation_results['orders_without_membership'] ) . '</strong></td></tr>';
+            echo '<tr><td style="color: #00a32a;">' . __( 'Memberships with Order', 'membership-manager' ) . '</td><td><strong style="color: #00a32a;">' . esc_html( $validation_results['memberships_with_order'] ) . '</strong></td></tr>';
+            echo '<tr><td style="color: #826eb4;">' . __( 'Orphaned Memberships', 'membership-manager' ) . '</td><td><strong style="color: #826eb4;">' . esc_html( $validation_results['orphaned_memberships'] ) . '</strong></td></tr>';
+            echo '<tr><td style="color: #d63638;">' . __( 'Data Mismatches', 'membership-manager' ) . '</td><td><strong style="color: #d63638;">' . esc_html( $validation_results['data_mismatches'] ) . '</strong></td></tr>';
+            echo '</tbody>';
+            echo '</table>';
+            
+            // Display issues if any
+            if ( ! empty( $validation_results['issues'] ) ) {
+                echo '<h3 style="margin-top: 25px;">' . sprintf( __( 'Issues Found (%d)', 'membership-manager' ), count( $validation_results['issues'] ) ) . '</h3>';
+                echo '<div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f9f9f9;">';
+                
+                foreach ( $validation_results['issues'] as $issue ) {
+                    $icon = '⚠️';
+                    $color = '#f0ad4e';
+                    
+                    switch ( $issue['type'] ) {
+                        case 'error':
+                            $icon = '❌';
+                            $color = '#d63638';
+                            break;
+                        case 'warning':
+                            $icon = '⚠️';
+                            $color = '#f0ad4e';
+                            break;
+                        case 'info':
+                            $icon = 'ℹ️';
+                            $color = '#2271b1';
+                            break;
+                    }
+                    
+                    echo '<div style="margin-bottom: 10px; padding: 10px; background: #fff; border-left: 4px solid ' . esc_attr( $color ) . ';">';
+                    echo '<span style="font-size: 16px;">' . $icon . '</span> ';
+                    echo '<strong style="text-transform: uppercase; color: ' . esc_attr( $color ) . ';">' . esc_html( $issue['type'] ) . ':</strong> ';
+                    echo esc_html( $issue['message'] );
+                    
+                    if ( isset( $issue['order_id'] ) ) {
+                        $order_edit_url = admin_url( 'post.php?post=' . $issue['order_id'] . '&action=edit' );
+                        echo ' <a href="' . esc_url( $order_edit_url ) . '" target="_blank" style="text-decoration: none;">[' . __( 'View Order', 'membership-manager' ) . ']</a>';
+                    }
+                    
+                    if ( isset( $issue['membership_id'] ) ) {
+                        $membership_view_url = admin_url( 'admin.php?page=membership-manager&action=view&id=' . $issue['membership_id'] );
+                        echo ' <a href="' . esc_url( $membership_view_url ) . '" target="_blank" style="text-decoration: none;">[' . __( 'View Membership', 'membership-manager' ) . ']</a>';
+                    }
+                    
+                    echo '</div>';
+                }
+                
+                echo '</div>';
+            } else {
+                echo '<div class="notice notice-success inline" style="margin-top: 20px;"><p>✅ <strong>' . __( 'No issues found! All membership data is consistent with WooCommerce orders.', 'membership-manager' ) . '</strong></p></div>';
+            }
+            
+            echo '</div>';
+            
+            // Clear transient after display
+            delete_transient( 'membership_validation_results' );
+        }
+    }
+    ?>
+    
+    <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" style="display: inline-block;">
+        <?php wp_nonce_field( 'validate_membership_data_nonce' ); ?>
+        <input type="hidden" name="action" value="validate_membership_data">
+        <?php submit_button( __( 'Run Validation Check', 'membership-manager' ), 'secondary', 'submit', false ); ?>
+    </form>
+    
+    <div class="notice notice-info inline" style="margin-top: 15px; max-width: 800px;">
+        <p>
+            <strong><?php _e( 'Note:', 'membership-manager' ); ?></strong>
+            <?php _e( 'This validation is read-only and will not modify any data. It only reports discrepancies for manual review.', 'membership-manager' ); ?>
+        </p>
+    </div>
 </div>

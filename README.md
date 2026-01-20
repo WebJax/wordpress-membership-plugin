@@ -87,6 +87,19 @@ Et professionelt WordPress-plugin til at håndtere medlemskaber, fornyelser og u
    - Bevare abonnementdata
    - Generere fornyelsestokens
 
+### Test af Automatisk Fornyelse og Påmindelsesmails
+
+For at teste at automatisk fornyelse og påmindelsesmails fungerer korrekt:
+
+1. Gå til **Medlemskaber** → **Test Tools** i WordPress admin
+2. Brug test-værktøjerne til at:
+   - Sende test påmindelsesmails for alle intervaller (30, 14, 7, 1 dage)
+   - Teste automatisk oprettelse af fornyelsesordrer gennem WooCommerce
+   - Køre den fulde fornyelsesproces manuelt
+   - Se logs for at verificere resultater
+
+Se den detaljerede [Test Tools Guide](docs/TEST-TOOLS-GUIDE.md) for mere information.
+
 ### Tilpasning af E-mail Skabeloner
 
 For at tilpasse e-mail-skabelonerne:

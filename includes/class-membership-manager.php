@@ -39,6 +39,9 @@ class Membership_Manager {
         
         // Handle cleanup of invalid dates
         add_action( 'admin_post_cleanup_invalid_dates', array( __CLASS__, 'handle_cleanup_invalid_dates' ) );
+        
+        // Handle validation check
+        add_action( 'admin_post_validate_membership_data', array( __CLASS__, 'handle_validate_membership_data' ) );
     }
 
     public static function load_textdomain() {
@@ -1512,5 +1515,251 @@ class Membership_Manager {
         }
         
         return false;
+    }
+    
+    /**
+     * Handle validation request from admin interface
+     */
+    public static function handle_validate_membership_data() {
+        // Check capabilities
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to access this page.', 'membership-manager' ) );
+        }
+
+        // Verify nonce
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'validate_membership_data_nonce' ) ) {
+            self::log( __( 'Nonce verification failed for validation.', 'membership-manager' ), 'ERROR' );
+            wp_die( __( 'Security check failed. Please try again.', 'membership-manager' ) );
+        }
+
+        // Perform validation
+        $validation_results = self::validate_membership_data();
+        
+        // Store results in transient for display
+        set_transient( 'membership_validation_results', $validation_results, 300 ); // 5 minutes
+        
+        // Redirect with success message
+        $redirect_url = add_query_arg( 
+            array( 
+                'page' => 'membership-migration',
+                'validation' => 'completed'
+            ),
+            admin_url( 'admin.php' )
+        );
+        
+        wp_redirect( $redirect_url );
+        exit;
+    }
+    
+    /**
+     * Validate membership data against WooCommerce orders
+     * 
+     * This method checks that membership numbers are correct in relation to WooCommerce orders.
+     * It verifies:
+     * - All completed orders with membership products have corresponding memberships
+     * - Memberships have valid associated orders
+     * - Data consistency between orders and memberships
+     * 
+     * @return array Validation results with statistics and discrepancies
+     */
+    public static function validate_membership_data() {
+        self::log( __( 'Starting membership data validation.', 'membership-manager' ) );
+        
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+        
+        // Initialize results
+        $results = array(
+            'total_orders_checked' => 0,
+            'total_memberships_checked' => 0,
+            'orders_with_membership' => 0,
+            'orders_without_membership' => 0,
+            'memberships_with_order' => 0,
+            'orphaned_memberships' => 0,
+            'data_mismatches' => 0,
+            'issues' => array(),
+            'success' => true,
+        );
+        
+        // Get membership product IDs
+        $automatic_products = get_option( 'membership_automatic_renewal_products', array() );
+        $manual_products = get_option( 'membership_manual_renewal_products', array() );
+        $all_membership_products = array_merge( $automatic_products, $manual_products );
+        
+        if ( empty( $all_membership_products ) ) {
+            $results['success'] = false;
+            $results['issues'][] = array(
+                'type' => 'error',
+                'message' => __( 'No membership products configured. Please configure membership products in settings first.', 'membership-manager' )
+            );
+            self::log( __( 'Validation failed: No membership products configured.', 'membership-manager' ), 'WARNING' );
+            return $results;
+        }
+        
+        try {
+            // Part 1: Check completed orders with membership products
+            // Also build a map of users with membership orders for Part 2
+            $orders = wc_get_orders( array(
+                'limit' => -1,
+                'status' => array( 'completed', 'processing' ),
+                'return' => 'ids',
+            ) );
+            
+            $results['total_orders_checked'] = count( $orders );
+            
+            // Map to track which users have orders with membership products
+            $users_with_orders = array();
+            
+            foreach ( $orders as $order_id ) {
+                $order = wc_get_order( $order_id );
+                
+                if ( ! $order ) {
+                    continue;
+                }
+                
+                // Check if order contains membership products
+                $has_membership_product = false;
+                $expected_renewal_type = 'manual';
+                
+                foreach ( $order->get_items() as $item ) {
+                    $product_id = $item->get_product_id();
+                    $product = $item->get_product();
+                    
+                    if ( in_array( $product_id, $all_membership_products ) ) {
+                        $has_membership_product = true;
+                        if ( in_array( $product_id, $automatic_products ) ) {
+                            $expected_renewal_type = 'automatic';
+                        }
+                        break;
+                    }
+                    
+                    // Also check for subscription products
+                    if ( $product && class_exists( 'WC_Subscriptions_Product' ) && \WC_Subscriptions_Product::is_subscription( $product ) ) {
+                        $has_membership_product = true;
+                        $expected_renewal_type = 'automatic';
+                        break;
+                    }
+                }
+                
+                if ( ! $has_membership_product ) {
+                    continue;
+                }
+                
+                // Order has membership product - check if membership exists
+                $user_id = $order->get_user_id();
+                
+                if ( ! $user_id ) {
+                    $results['orders_without_membership']++;
+                    $results['issues'][] = array(
+                        'type' => 'warning',
+                        'order_id' => $order_id,
+                        'message' => sprintf( __( 'Order #%d has membership product but no user ID (guest order).', 'membership-manager' ), $order_id )
+                    );
+                    continue;
+                }
+                
+                // Mark user as having an order with membership products (for Part 2)
+                $users_with_orders[ $user_id ] = true;
+                
+                // Check if membership was marked as created for this order
+                $membership_created = get_post_meta( $order_id, '_membership_created', true );
+                $membership_ids = get_post_meta( $order_id, '_membership_ids', true );
+                
+                if ( $membership_created && ! empty( $membership_ids ) ) {
+                    $results['orders_with_membership']++;
+                    
+                    // Verify the membership still exists in database
+                    foreach ( (array) $membership_ids as $membership_id ) {
+                        $membership = self::get_membership( $membership_id );
+                        
+                        if ( ! $membership ) {
+                            $results['issues'][] = array(
+                                'type' => 'error',
+                                'order_id' => $order_id,
+                                'membership_id' => $membership_id,
+                                'message' => sprintf( __( 'Order #%d references membership #%d which no longer exists in database.', 'membership-manager' ), $order_id, $membership_id )
+                            );
+                            $results['data_mismatches']++;
+                        } else {
+                            // Verify user_id matches
+                            if ( $membership->user_id !== $user_id ) {
+                                $results['issues'][] = array(
+                                    'type' => 'error',
+                                    'order_id' => $order_id,
+                                    'membership_id' => $membership_id,
+                                    'message' => sprintf( __( 'Order #%d (user %d) has membership #%d but membership belongs to user %d.', 'membership-manager' ), $order_id, $user_id, $membership_id, $membership->user_id )
+                                );
+                                $results['data_mismatches']++;
+                            }
+                        }
+                    }
+                } else {
+                    // Order should have membership but doesn't
+                    $results['orders_without_membership']++;
+                    
+                    // Check if user has ANY membership (might be created but not linked)
+                    $user_membership = self::get_user_membership( $user_id );
+                    
+                    if ( $user_membership ) {
+                        $results['issues'][] = array(
+                            'type' => 'warning',
+                            'order_id' => $order_id,
+                            'user_id' => $user_id,
+                            'membership_id' => $user_membership->id,
+                            'message' => sprintf( __( 'Order #%d (user %d) should have membership but meta is not set. User has membership #%d.', 'membership-manager' ), $order_id, $user_id, $user_membership->id )
+                        );
+                    } else {
+                        $results['issues'][] = array(
+                            'type' => 'error',
+                            'order_id' => $order_id,
+                            'user_id' => $user_id,
+                            'message' => sprintf( __( 'Order #%d (user %d) should have membership but none exists for this user.', 'membership-manager' ), $order_id, $user_id )
+                        );
+                    }
+                }
+            }
+            
+            // Part 2: Check all memberships to see if they have valid orders
+            // Use the user map built in Part 1 to avoid re-querying orders
+            self::log( __( 'Checking memberships against order map...', 'membership-manager' ) );
+            
+            // Now fetch memberships and check against the order map
+            $all_memberships = $wpdb->get_results( "SELECT id, user_id FROM $table_name" );
+            $results['total_memberships_checked'] = count( $all_memberships );
+            
+            foreach ( $all_memberships as $membership ) {
+                $user_id = $membership->user_id;
+                
+                // Check if user has any order with membership products
+                if ( isset( $users_with_orders[ $user_id ] ) && $users_with_orders[ $user_id ] ) {
+                    $results['memberships_with_order']++;
+                } else {
+                    $results['orphaned_memberships']++;
+                    $results['issues'][] = array(
+                        'type' => 'info',
+                        'membership_id' => $membership->id,
+                        'user_id' => $user_id,
+                        'message' => sprintf( __( 'Membership #%d (user %d) has no associated completed order with membership products. May be manually created or migrated.', 'membership-manager' ), $membership->id, $user_id )
+                    );
+                }
+            }
+            
+            self::log( sprintf( 
+                __( 'Validation completed: %d orders checked, %d memberships checked, %d issues found.', 'membership-manager' ),
+                $results['total_orders_checked'],
+                $results['total_memberships_checked'],
+                count( $results['issues'] )
+            ) );
+            
+        } catch ( Exception $e ) {
+            $results['success'] = false;
+            $results['issues'][] = array(
+                'type' => 'error',
+                'message' => sprintf( __( 'Validation failed with error: %s', 'membership-manager' ), $e->getMessage() )
+            );
+            self::log( sprintf( __( 'Validation failed with error: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
+        }
+        
+        return $results;
     }
 }

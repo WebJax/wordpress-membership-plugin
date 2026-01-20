@@ -37,7 +37,6 @@ require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-dashboar
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-product-types.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-checkout.php';
 
-
 // Initialize the plugin.
 Membership_Manager::init();
 new Membership_Admin();
@@ -46,6 +45,7 @@ Membership_Roles::init();
 Membership_Dashboard::init();
 Membership_Product_Types::init();
 Membership_Checkout::init();
+new Membership_Test_Tools();
 
 // Activation hook.
 register_activation_hook( __FILE__, array( 'Membership_Manager', 'activate' ) );
