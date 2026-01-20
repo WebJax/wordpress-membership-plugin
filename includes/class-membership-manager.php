@@ -42,6 +42,8 @@ class Membership_Manager {
         
         // Handle validation check
         add_action( 'admin_post_validate_membership_data', array( __CLASS__, 'handle_validate_membership_data' ) );
+        add_action( 'admin_post_fix_membership_data', array( __CLASS__, 'handle_fix_membership_data' ) );
+        add_action( 'admin_post_batch_delete_orders', array( __CLASS__, 'handle_batch_delete_orders' ) );
     }
 
     public static function load_textdomain() {
@@ -1619,6 +1621,113 @@ class Membership_Manager {
     }
     
     /**
+     * Handle fix membership data request from admin
+     * 
+     * @since 1.0.0
+     */
+    public static function handle_fix_membership_data() {
+        // Check capabilities
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
+        }
+
+        // Verify nonce
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'fix_membership_data_nonce' ) ) {
+            self::log( __( 'Nonce verificering mislykkedes for reparation.', 'membership-manager' ), 'ERROR' );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
+        }
+
+        // Perform fixes
+        $fix_results = self::fix_membership_data();
+        
+        // Store results in transient for display
+        set_transient( 'membership_fix_results', $fix_results, 300 ); // 5 minutes
+        
+        // Redirect with success message
+        $redirect_url = add_query_arg( 
+            array( 
+                'page' => 'membership-migration',
+                'fix' => 'completed'
+            ),
+            admin_url( 'admin.php' )
+        );
+        
+        wp_redirect( $redirect_url );
+        exit;
+    }
+    
+    /**
+     * Handle batch delete orders request from admin
+     * 
+     * @since 1.0.0
+     */
+    public static function handle_batch_delete_orders() {
+        // Check capabilities
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( __( 'Du har ikke tilstrækkelige rettigheder til at tilgå denne side.', 'membership-manager' ) );
+        }
+
+        // Verify nonce
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'batch_delete_orders_nonce' ) ) {
+            self::log( __( 'Nonce verificering mislykkedes for batch sletning.', 'membership-manager' ), 'ERROR' );
+            wp_die( __( 'Sikkerhedstjek mislykkedes. Prøv venligst igen.', 'membership-manager' ) );
+        }
+
+        // Get order IDs to delete
+        $order_ids = isset( $_POST['order_ids'] ) ? array_map( 'absint', $_POST['order_ids'] ) : array();
+        
+        if ( empty( $order_ids ) ) {
+            wp_die( __( 'Ingen ordrer valgt til sletning.', 'membership-manager' ) );
+        }
+        
+        // Perform batch delete
+        $deleted_count = 0;
+        $failed_count = 0;
+        $failed_orders = array();
+        
+        foreach ( $order_ids as $order_id ) {
+            $order = wc_get_order( $order_id );
+            
+            if ( ! $order ) {
+                $failed_count++;
+                $failed_orders[] = $order_id;
+                continue;
+            }
+            
+            // Delete the order
+            if ( $order->delete( true ) ) { // true = force delete (skip trash)
+                $deleted_count++;
+                self::log( sprintf( __( 'Slettet ordre #%d via batch sletning.', 'membership-manager' ), $order_id ) );
+            } else {
+                $failed_count++;
+                $failed_orders[] = $order_id;
+                self::log( sprintf( __( 'Kunne ikke slette ordre #%d.', 'membership-manager' ), $order_id ), 'ERROR' );
+            }
+        }
+        
+        // Store results in transient for display
+        $results = array(
+            'deleted' => $deleted_count,
+            'failed' => $failed_count,
+            'failed_orders' => $failed_orders,
+            'total_requested' => count( $order_ids )
+        );
+        set_transient( 'membership_batch_delete_results', $results, 300 ); // 5 minutes
+        
+        // Redirect with success message
+        $redirect_url = add_query_arg( 
+            array( 
+                'page' => 'membership-migration',
+                'batch_delete' => 'completed'
+            ),
+            admin_url( 'admin.php' )
+        );
+        
+        wp_redirect( $redirect_url );
+        exit;
+    }
+    
+    /**
      * Validate membership data against WooCommerce orders
      * 
      * This method checks that membership numbers are correct in relation to WooCommerce orders.
@@ -1717,11 +1826,80 @@ class Membership_Manager {
                 
                 if ( ! $user_id ) {
                     $results['orders_without_membership']++;
-                    $results['issues'][] = array(
-                        'type' => 'warning',
-                        'order_id' => $order_id,
-                        'message' => sprintf( __( 'Ordre #%d har medlemskabsprodukt men intet bruger-ID (gæsteordre).', 'membership-manager' ), $order_id )
-                    );
+                    
+                    // Check if this is a manually created membership with cash payment
+                    $notes = wc_get_order_notes( array( 'order_id' => $order_id, 'limit' => 10 ) );
+                    $is_manual_membership = false;
+                    $admin_email = '';
+                    
+                    foreach ( $notes as $note ) {
+                        if ( strpos( $note->content, 'Manuelt oprettet medlemskab' ) !== false ) {
+                            $is_manual_membership = true;
+                            // Extract email if present
+                            if ( preg_match( '/mailadresse:\s*([^\s]+@[^\s]+)/', $note->content, $matches ) ) {
+                                $admin_email = $matches[1];
+                            }
+                            break;
+                        }
+                    }
+                    
+                    if ( $is_manual_membership ) {
+                        // Get product name to determine type (pensionist, privat, forening)
+                        $product_name = '';
+                        $renewal_type = '';
+                        
+                        foreach ( $order->get_items() as $item ) {
+                            $product_id = $item->get_product_id();
+                            if ( in_array( $product_id, $all_membership_products ) ) {
+                                $product_name = $item->get_name();
+                                if ( in_array( $product_id, $automatic_products ) ) {
+                                    $renewal_type = 'automatisk fornyelse';
+                                } else {
+                                    $renewal_type = 'manuel fornyelse';
+                                }
+                                break;
+                            }
+                        }
+                        
+                        $results['issues'][] = array(
+                            'type' => 'warning',
+                            'order_id' => $order_id,
+                            'message' => sprintf( 
+                                __( 'Ordre #%d: Manuelt oprettet medlemskab (kontant betaling) - %s (%s)%s', 'membership-manager' ), 
+                                $order_id, 
+                                $product_name,
+                                $renewal_type,
+                                $admin_email ? ' - Admin: ' . $admin_email : ''
+                            )
+                        );
+                    } else {
+                        // Regular guest order without manual membership note
+                        // These are "guest checkout" orders - customers who purchased without creating an account
+                        $email = $order->get_billing_email();
+                        $name = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
+                        
+                        // Get product info
+                        $product_info = '';
+                        foreach ( $order->get_items() as $item ) {
+                            $product_id = $item->get_product_id();
+                            if ( in_array( $product_id, $all_membership_products ) ) {
+                                $product_info = $item->get_name();
+                                break;
+                            }
+                        }
+                        
+                        $results['issues'][] = array(
+                            'type' => 'warning',
+                            'order_id' => $order_id,
+                            'message' => sprintf( 
+                                __( 'Ordre #%d: Guest checkout (ingen brugerkonto) - %s%s%s', 'membership-manager' ), 
+                                $order_id,
+                                $name ? $name : 'Ingen navn',
+                                $email ? ' (' . $email . ')' : '',
+                                $product_info ? ' - ' . $product_info : ''
+                            )
+                        );
+                    }
                     continue;
                 }
                 
@@ -1748,8 +1926,8 @@ class Membership_Manager {
                             );
                             $results['data_mismatches']++;
                         } else {
-                            // Verify user_id matches
-                            if ( $membership->user_id !== $user_id ) {
+                            // Verify user_id matches (use != instead of !== to handle string/int comparison)
+                            if ( $membership->user_id != $user_id ) {
                                 $results['issues'][] = array(
                                     'type' => 'error',
                                     'order_id' => $order_id,
@@ -1761,27 +1939,64 @@ class Membership_Manager {
                         }
                     }
                 } else {
-                    // Order should have membership but doesn't
-                    $results['orders_without_membership']++;
-                    
-                    // Check if user has ANY membership (might be created but not linked)
+                    // Order should have membership but doesn't - check if it's a renewal or parent order
                     $user_membership = self::get_user_membership( $user_id );
                     
+                    // Check if this is a WooCommerce Subscriptions renewal order
+                    $is_renewal = false;
+                    $is_parent = false;
+                    $subscription_id = null;
+                    
+                    if ( function_exists( 'wcs_order_contains_renewal' ) && wcs_order_contains_renewal( $order ) ) {
+                        $is_renewal = true;
+                        $subscriptions = wcs_get_subscriptions_for_renewal_order( $order );
+                        if ( ! empty( $subscriptions ) ) {
+                            $subscription_id = key( $subscriptions );
+                        }
+                    } elseif ( function_exists( 'wcs_order_contains_subscription' ) && wcs_order_contains_subscription( $order ) ) {
+                        $is_parent = true;
+                        $subscriptions = wcs_get_subscriptions_for_order( $order );
+                        if ( ! empty( $subscriptions ) ) {
+                            $subscription_id = key( $subscriptions );
+                        }
+                    }
+                    
                     if ( $user_membership ) {
+                        // User has a membership, just missing the link - this is expected for renewal orders
+                        $issue_type = ( $is_renewal || $is_parent ) ? 'info' : 'warning';
                         $results['issues'][] = array(
-                            'type' => 'warning',
+                            'type' => $issue_type,
                             'order_id' => $order_id,
                             'user_id' => $user_id,
                             'membership_id' => $user_membership->id,
-                            'message' => sprintf( __( 'Ordre #%d (bruger %d) burde have medlemskab men meta er ikke sat. Bruger har medlemskab #%d.', 'membership-manager' ), $order_id, $user_id, $user_membership->id )
+                            'message' => sprintf( 
+                                __( 'Ordre #%d (%s) mangler link til medlemskab #%d%s', 'membership-manager' ), 
+                                $order_id,
+                                $is_renewal ? 'fornyelse' : ( $is_parent ? 'parent' : 'bruger ' . $user_id ),
+                                $user_membership->id,
+                                $subscription_id ? ' (Abonnement #' . $subscription_id . ')' : ''
+                            )
                         );
+                        $results['orders_without_membership']++;
                     } else {
-                        $results['issues'][] = array(
-                            'type' => 'error',
-                            'order_id' => $order_id,
-                            'user_id' => $user_id,
-                            'message' => sprintf( __( 'Ordre #%d (bruger %d) burde have medlemskab men der eksisterer ikke noget for denne bruger.', 'membership-manager' ), $order_id, $user_id )
-                        );
+                        // No membership exists at all - only an error if it's NOT a renewal order
+                        if ( $is_renewal ) {
+                            // Renewal order without membership - parent order should have created it
+                            $results['issues'][] = array(
+                                'type' => 'info',
+                                'order_id' => $order_id,
+                                'user_id' => $user_id,
+                                'message' => sprintf( __( 'Fornyelsesordre #%d (bruger %d) uden medlemskab - forventer parent ordre har oprettet det%s', 'membership-manager' ), $order_id, $user_id, $subscription_id ? ' (Abonnement #' . $subscription_id . ')' : '' )
+                            );
+                        } else {
+                            $results['issues'][] = array(
+                                'type' => 'error',
+                                'order_id' => $order_id,
+                                'user_id' => $user_id,
+                                'message' => sprintf( __( 'Ordre #%d (bruger %d) burde have medlemskab men der eksisterer ikke noget for denne bruger.', 'membership-manager' ), $order_id, $user_id )
+                            );
+                        }
+                        $results['orders_without_membership']++;
                     }
                 }
             }
@@ -1829,4 +2044,193 @@ class Membership_Manager {
         
         return $results;
     }
+    
+    /**
+     * Fix membership data issues
+     * 
+     * This method automatically fixes simple data consistency issues:
+     * - Links memberships to their orders when meta is missing
+     * - Links orders to their memberships when meta is missing
+     * 
+     * @return array Fix results with statistics and details
+     */
+    public static function fix_membership_data() {
+        self::log( __( 'Starter automatisk reparation af medlemskabsdata.', 'membership-manager' ) );
+        
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'membership_subscriptions';
+        
+        // Initialize results
+        $results = array(
+            'total_fixed' => 0,
+            'orders_linked' => 0,
+            'memberships_created' => 0,
+            'errors' => 0,
+            'fixes' => array(),
+            'success' => true,
+        );
+        
+        // Get membership product IDs
+        $automatic_products = get_option( 'membership_automatic_renewal_products', array() );
+        $manual_products = get_option( 'membership_manual_renewal_products', array() );
+        $all_membership_products = array_merge( $automatic_products, $manual_products );
+        
+        if ( empty( $all_membership_products ) ) {
+            $results['success'] = false;
+            $results['fixes'][] = array(
+                'type' => 'error',
+                'message' => __( 'Ingen medlemskabsprodukter konfigureret.', 'membership-manager' )
+            );
+            return $results;
+        }
+        
+        try {
+            // Fix 1: Find orders with membership products but missing meta
+            $orders = wc_get_orders( array(
+                'limit' => -1,
+                'status' => array( 'completed', 'processing' ),
+                'return' => 'ids',
+            ) );
+            
+            foreach ( $orders as $order_id ) {
+                $order = wc_get_order( $order_id );
+                
+                if ( ! $order ) {
+                    continue;
+                }
+                
+                // Check if order contains membership products
+                $has_membership_product = false;
+                
+                foreach ( $order->get_items() as $item ) {
+                    $product_id = $item->get_product_id();
+                    if ( in_array( $product_id, $all_membership_products ) ) {
+                        $has_membership_product = true;
+                        break;
+                    }
+                }
+                
+                if ( ! $has_membership_product ) {
+                    continue;
+                }
+                
+                $user_id = $order->get_user_id();
+                if ( ! $user_id ) {
+                    continue; // Skip guest orders
+                }
+                
+                // Check if membership meta is missing
+                $membership_created = get_post_meta( $order_id, '_membership_created', true );
+                
+                if ( ! $membership_created ) {
+                    // First, check if this is a renewal/parent order from WooCommerce Subscriptions
+                    $subscription_membership_id = null;
+                    
+                    if ( function_exists( 'wcs_order_contains_renewal' ) && wcs_order_contains_renewal( $order ) ) {
+                        // This is a renewal order - find the parent order's membership
+                        $subscriptions = wcs_get_subscriptions_for_renewal_order( $order );
+                        if ( ! empty( $subscriptions ) ) {
+                            $subscription = reset( $subscriptions );
+                            $parent_order = $subscription->get_parent();
+                            if ( $parent_order ) {
+                                $parent_membership_ids = get_post_meta( $parent_order->get_id(), '_membership_ids', true );
+                                if ( ! empty( $parent_membership_ids ) && is_array( $parent_membership_ids ) ) {
+                                    $subscription_membership_id = $parent_membership_ids[0];
+                                }
+                            }
+                        }
+                    } elseif ( function_exists( 'wcs_order_contains_subscription' ) && wcs_order_contains_subscription( $order ) ) {
+                        // This is a parent order - check if there are renewal orders with memberships
+                        $subscriptions = wcs_get_subscriptions_for_order( $order );
+                        if ( ! empty( $subscriptions ) ) {
+                            $subscription = reset( $subscriptions );
+                            $related_orders = $subscription->get_related_orders();
+                            foreach ( $related_orders as $related_order_id => $relationship ) {
+                                $related_membership_ids = get_post_meta( $related_order_id, '_membership_ids', true );
+                                if ( ! empty( $related_membership_ids ) && is_array( $related_membership_ids ) ) {
+                                    $subscription_membership_id = $related_membership_ids[0];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Use subscription membership if found, otherwise look for user's membership
+                    $user_membership = null;
+                    if ( $subscription_membership_id ) {
+                        global $wpdb;
+                        $user_membership = $wpdb->get_row( $wpdb->prepare(
+                            "SELECT * FROM {$wpdb->prefix}membership_subscriptions WHERE id = %d",
+                            $subscription_membership_id
+                        ) );
+                    }
+                    
+                    if ( ! $user_membership ) {
+                        $user_membership = self::get_user_membership( $user_id );
+                    }
+                    
+                    if ( $user_membership ) {
+                        // Link order to existing membership
+                        update_post_meta( $order_id, '_membership_created', '1' );
+                        update_post_meta( $order_id, '_membership_ids', array( $user_membership->id ) );
+                        
+                        $results['orders_linked']++;
+                        $results['total_fixed']++;
+                        $results['fixes'][] = array(
+                            'type' => 'success',
+                            'order_id' => $order_id,
+                            'membership_id' => $user_membership->id,
+                            'message' => sprintf( __( 'Linkede ordre #%d til eksisterende medlemskab #%d%s', 'membership-manager' ), $order_id, $user_membership->id, $subscription_membership_id ? ' (via subscription)' : '' )
+                        );
+                        
+                        self::log( sprintf( __( 'Rettede manglende ordre-link: Ordre #%d → Medlemskab #%d', 'membership-manager' ), $order_id, $user_membership->id ) );
+                    } else {
+                        // No membership exists - create one from order using existing method
+                        self::create_membership_subscription( $order_id );
+                        
+                        // Check if membership was created successfully
+                        $new_membership = self::get_user_membership( $user_id );
+                        if ( $new_membership ) {
+                            $results['memberships_created']++;
+                            $results['total_fixed']++;
+                            $results['fixes'][] = array(
+                                'type' => 'success',
+                                'order_id' => $order_id,
+                                'membership_id' => $new_membership->id,
+                                'message' => sprintf( __( 'Oprettede nyt medlemskab #%d for ordre #%d (bruger #%d)', 'membership-manager' ), $new_membership->id, $order_id, $user_id )
+                            );
+                            
+                            self::log( sprintf( __( 'Oprettede manglende medlemskab #%d fra ordre #%d', 'membership-manager' ), $new_membership->id, $order_id ) );
+                        } else {
+                            $results['errors']++;
+                            $results['fixes'][] = array(
+                                'type' => 'error',
+                                'order_id' => $order_id,
+                                'message' => sprintf( __( 'Kunne ikke oprette medlemskab for ordre #%d', 'membership-manager' ), $order_id )
+                            );
+                        }
+                    }
+                }
+            }
+            
+            self::log( sprintf( 
+                __( 'Reparation fuldført: %d problemer rettet (%d ordrer linket, %d medlemskaber oprettet)', 'membership-manager' ),
+                $results['total_fixed'],
+                $results['orders_linked'],
+                $results['memberships_created']
+            ) );
+            
+        } catch ( Exception $e ) {
+            $results['success'] = false;
+            $results['errors']++;
+            $results['fixes'][] = array(
+                'type' => 'error',
+                'message' => sprintf( __( 'Reparation mislykkedes med fejl: %s', 'membership-manager' ), $e->getMessage() )
+            );
+            self::log( sprintf( __( 'Reparation mislykkedes med fejl: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
+        }
+        
+        return $results;
+    }
 }
+

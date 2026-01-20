@@ -360,6 +360,36 @@ TRANSLATIONS = {
     "Starting test reminder email process. Target: %s, Type: %s, Renewal: %s": "Starter test påmindelses-e-mail proces. Mål: %s, Type: %s, Fornyelse: %s",
     "Sent test email: %s to %s": "Sendte test e-mail: %s til %s",
     "Test reminder email process completed. Sent %d emails.": "Test påmindelses-e-mail proces fuldført. Sendte %d e-mails.",
+    
+    # New fix data issues strings
+    "Problemer fundet (%d)": "Problemer fundet (%d)",
+    "%d Fejl": "%d Fejl",
+    "%d Advarsler": "%d Advarsler",
+    "%d Info": "%d Info",
+    "Dette vil automatisk rette simple dataproblemer (manglende ordre-links). Vil du fortsætte?": "Dette vil automatisk rette simple dataproblemer (manglende ordre-links). Vil du fortsætte?",
+    "Ret dataproblemer": "Ret dataproblemer",
+    "Denne validering er skrivebeskyttet og vil ikke ændre nogen data. Den rapporterer kun uoverensstemmelser til manuel gennemgang.": "Denne validering er skrivebeskyttet og vil ikke ændre nogen data. Den rapporterer kun uoverensstemmelser til manuel gennemgang.",
+    "Nonce verificering mislykkedes for reparation.": "Nonce verificering mislykkedes for reparation.",
+    "Starter automatisk reparation af medlemskabsdata.": "Starter automatisk reparation af medlemskabsdata.",
+    "Ingen medlemskabsprodukter konfigureret.": "Ingen medlemskabsprodukter konfigureret.",
+    "Linkede ordre #%d til medlemskab #%d": "Linkede ordre #%d til medlemskab #%d",
+    "Rettede manglende ordre-link: Ordre #%d → Medlemskab #%d": "Rettede manglende ordre-link: Ordre #%d → Medlemskab #%d",
+    "Reparation fuldført: %d problemer rettet (%d ordrer linket)": "Reparation fuldført: %d problemer rettet (%d ordrer linket)",
+    "Reparation mislykkedes med fejl: %s": "Reparation mislykkedes med fejl: %s",
+    "Reparation fuldført! %d problemer rettet.": "Reparation fuldført! %d problemer rettet.",
+    "Ingen problemer fundet der kunne rettes automatisk.": "Ingen problemer fundet der kunne rettes automatisk.",
+    "Reparation mislykkedes. Tjek logs for detaljer.": "Reparation mislykkedes. Tjek logs for detaljer.",
+    "Reparationsdetaljer": "Reparationsdetaljer",
+    "Total rettelser: %d": "Total rettelser: %d",
+    "Ordrer linket: %d": "Ordrer linket: %d",
+    
+    # Extended fix functionality strings
+    "Linkede ordre #%d til eksisterende medlemskab #%d": "Linkede ordre #%d til eksisterende medlemskab #%d",
+    "Oprettede nyt medlemskab #%d for ordre #%d (bruger #%d)": "Oprettede nyt medlemskab #%d for ordre #%d (bruger #%d)",
+    "Oprettede manglende medlemskab #%d fra ordre #%d": "Oprettede manglende medlemskab #%d fra ordre #%d",
+    "Kunne ikke oprette medlemskab for ordre #%d": "Kunne ikke oprette medlemskab for ordre #%d",
+    "Reparation fuldført: %d problemer rettet (%d ordrer linket, %d medlemskaber oprettet)": "Reparation fuldført: %d problemer rettet (%d ordrer linket, %d medlemskaber oprettet)",
+    "Medlemskaber oprettet: %d": "Medlemskaber oprettet: %d",
 }
 
 def find_translatable_strings(content):

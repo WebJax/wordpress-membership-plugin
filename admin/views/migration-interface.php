@@ -33,6 +33,24 @@
             echo '<div class="notice notice-error is-dismissible"><p>' . __( 'Oprydning mislykkedes. Tjek venligst logs for flere detaljer.', 'membership-manager' ) . '</p></div>';
         }
     }
+    
+    // Show batch delete result messages
+    if ( isset( $_GET['batch_delete'] ) && $_GET['batch_delete'] === 'completed' ) {
+        $delete_results = get_transient( 'membership_batch_delete_results' );
+        
+        if ( $delete_results ) {
+            if ( $delete_results['deleted'] > 0 ) {
+                echo '<div class="notice notice-success is-dismissible"><p>' . sprintf( __( 'Batch sletning fuldført! %d ordrer slettet succesfuldt.', 'membership-manager' ), $delete_results['deleted'] ) . '</p></div>';
+            }
+            
+            if ( $delete_results['failed'] > 0 ) {
+                echo '<div class="notice notice-error is-dismissible"><p>' . sprintf( __( 'Kunne ikke slette %d ordrer: ', 'membership-manager' ), $delete_results['failed'] ) . implode( ', ', array_map( function( $id ) { return '#' . $id; }, $delete_results['failed_orders'] ) ) . '</p></div>';
+            }
+            
+            // Clear transient after display
+            delete_transient( 'membership_batch_delete_results' );
+        }
+    }
     ?>
     
     <h2><?php _e( 'WooCommerce Subscriptions Migration', 'membership-manager' ); ?></h2>
@@ -159,6 +177,67 @@
     </ul>
     
     <?php
+    // Display fix results if available
+    $fix_param = isset( $_GET['fix'] ) ? sanitize_text_field( $_GET['fix'] ) : '';
+    if ( $fix_param === 'completed' ) {
+        $fix_results = get_transient( 'membership_fix_results' );
+        
+        if ( $fix_results ) {
+            if ( $fix_results['success'] && $fix_results['total_fixed'] > 0 ) {
+                echo '<div class="notice notice-success is-dismissible"><p>✅ <strong>' . sprintf( __( 'Reparation fuldført! %d problemer rettet.', 'membership-manager' ), $fix_results['total_fixed'] ) . '</strong></p></div>';
+            } elseif ( $fix_results['total_fixed'] === 0 ) {
+                echo '<div class="notice notice-info is-dismissible"><p>ℹ️ <strong>' . __( 'Ingen problemer fundet der kunne rettes automatisk.', 'membership-manager' ) . '</strong></p></div>';
+            } else {
+                echo '<div class="notice notice-error is-dismissible"><p>❌ <strong>' . __( 'Reparation mislykkedes. Tjek logs for detaljer.', 'membership-manager' ) . '</strong></p></div>';
+            }
+            
+            // Display statistics
+            if ( ! empty( $fix_results['fixes'] ) ) {
+                echo '<div style="background: #fff; border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; border-radius: 4px;">';
+                echo '<h3>' . __( 'Reparationsdetaljer', 'membership-manager' ) . '</h3>';
+                echo '<p><strong>' . sprintf( __( 'Total rettelser: %d', 'membership-manager' ), $fix_results['total_fixed'] ) . '</strong></p>';
+                echo '<ul style="list-style: disc; margin-left: 20px;">';
+                echo '<li>' . sprintf( __( 'Ordrer linket: %d', 'membership-manager' ), $fix_results['orders_linked'] ) . '</li>';
+                if ( isset( $fix_results['memberships_created'] ) && $fix_results['memberships_created'] > 0 ) {
+                    echo '<li>' . sprintf( __( 'Medlemskaber oprettet: %d', 'membership-manager' ), $fix_results['memberships_created'] ) . '</li>';
+                }
+                echo '</ul>';
+                
+                echo '<div style="max-height: 300px; overflow-y: auto; margin-top: 15px; border: 1px solid #ddd; padding: 10px; background: #f9f9f9;">';
+                foreach ( $fix_results['fixes'] as $fix ) {
+                    $icon = '✅';
+                    $color = '#00a32a';
+                    
+                    if ( $fix['type'] === 'error' ) {
+                        $icon = '❌';
+                        $color = '#d63638';
+                    }
+                    
+                    echo '<div style="margin-bottom: 8px; padding: 8px; background: #fff; border-left: 4px solid ' . esc_attr( $color ) . ';">';
+                    echo '<span style="font-size: 16px;">' . $icon . '</span> ';
+                    echo esc_html( $fix['message'] );
+                    
+                    if ( isset( $fix['order_id'] ) ) {
+                        $order_edit_url = admin_url( 'post.php?post=' . $fix['order_id'] . '&action=edit' );
+                        echo ' <a href="' . esc_url( $order_edit_url ) . '" target="_blank" style="text-decoration: none;">[' . __( 'View Order', 'membership-manager' ) . ']</a>';
+                    }
+                    
+                    if ( isset( $fix['membership_id'] ) ) {
+                        $membership_view_url = admin_url( 'admin.php?page=membership-manager&action=view&id=' . $fix['membership_id'] );
+                        echo ' <a href="' . esc_url( $membership_view_url ) . '" target="_blank" style="text-decoration: none;">[' . __( 'View Membership', 'membership-manager' ) . ']</a>';
+                    }
+                    
+                    echo '</div>';
+                }
+                echo '</div>';
+                echo '</div>';
+            }
+            
+            // Clear transient after display
+            delete_transient( 'membership_fix_results' );
+        }
+    }
+    
     // Display validation results if available
     $validation_param = isset( $_GET['validation'] ) ? sanitize_text_field( $_GET['validation'] ) : '';
     if ( $validation_param === 'completed' ) {
@@ -185,10 +264,54 @@
             
             // Display issues if any
             if ( ! empty( $validation_results['issues'] ) ) {
-                echo '<h3 style="margin-top: 25px;">' . sprintf( __( 'Issues Found (%d)', 'membership-manager' ), count( $validation_results['issues'] ) ) . '</h3>';
-                echo '<div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f9f9f9;">';
+                // Count issues by type
+                $error_count = 0;
+                $warning_count = 0;
+                $info_count = 0;
                 
                 foreach ( $validation_results['issues'] as $issue ) {
+                    switch ( $issue['type'] ) {
+                        case 'error':
+                            $error_count++;
+                            break;
+                        case 'warning':
+                            $warning_count++;
+                            break;
+                        case 'info':
+                            $info_count++;
+                            break;
+                    }
+                }
+                
+                echo '<h3 style="margin-top: 25px;">' . sprintf( __( 'Problemer fundet (%d)', 'membership-manager' ), count( $validation_results['issues'] ) ) . '</h3>';
+                echo '<p style="margin: 10px 0 15px 0;">';
+                if ( $error_count > 0 ) {
+                    echo '<span style="display: inline-block; margin-right: 15px; padding: 5px 10px; background: #fff; border-left: 4px solid #d63638;">❌ <strong>' . sprintf( __( '%d Fejl', 'membership-manager' ), $error_count ) . '</strong></span> ';
+                }
+                if ( $warning_count > 0 ) {
+                    echo '<span style="display: inline-block; margin-right: 15px; padding: 5px 10px; background: #fff; border-left: 4px solid #f0ad4e;">⚠️ <strong>' . sprintf( __( '%d Advarsler', 'membership-manager' ), $warning_count ) . '</strong></span> ';
+                }
+                if ( $info_count > 0 ) {
+                    echo '<span style="display: inline-block; padding: 5px 10px; background: #fff; border-left: 4px solid #2271b1;">ℹ️ <strong>' . sprintf( __( '%d Info', 'membership-manager' ), $info_count ) . '</strong></span>';
+                }
+                echo '</p>';
+                
+                // Add batch delete form for warnings
+                if ( $warning_count > 0 ) {
+                    echo '<form method="post" action="' . admin_url( 'admin-post.php' ) . '" id="batch-delete-orders-form" onsubmit="return confirm(\'' . esc_js( __( 'Er du sikker på at du vil slette de valgte ordrer? Dette kan ikke fortrydes!', 'membership-manager' ) ) . '\');">';
+                    wp_nonce_field( 'batch_delete_orders_nonce' );
+                    echo '<input type="hidden" name="action" value="batch_delete_orders">';
+                    echo '<p style="margin-bottom: 10px;">';
+                    echo '<button type="button" id="select-all-warnings" class="button button-secondary">' . __( 'Vælg alle advarsler', 'membership-manager' ) . '</button> ';
+                    echo '<button type="button" id="deselect-all-warnings" class="button button-secondary">' . __( 'Fravælg alle', 'membership-manager' ) . '</button> ';
+                    echo '<button type="submit" class="button button-primary" style="background: #d63638; border-color: #d63638; margin-left: 10px;" disabled id="batch-delete-btn">' . __( 'Slet valgte ordrer', 'membership-manager' ) . '</button>';
+                    echo '<span id="selected-count" style="margin-left: 10px; font-weight: bold;"></span>';
+                    echo '</p>';
+                }
+                
+                echo '<div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f9f9f9;">';
+                
+                foreach ( $validation_results['issues'] as $idx => $issue ) {
                     $icon = '⚠️';
                     $color = '#f0ad4e';
                     
@@ -208,6 +331,14 @@
                     }
                     
                     echo '<div style="margin-bottom: 10px; padding: 10px; background: #fff; border-left: 4px solid ' . esc_attr( $color ) . ';">';
+                    
+                    // Add checkbox for warnings with order_id
+                    if ( $issue['type'] === 'warning' && isset( $issue['order_id'] ) ) {
+                        echo '<label style="display: inline-block; margin-right: 10px;">';
+                        echo '<input type="checkbox" name="order_ids[]" value="' . esc_attr( $issue['order_id'] ) . '" class="warning-checkbox" style="margin: 0; vertical-align: middle;">';
+                        echo '</label>';
+                    }
+                    
                     echo '<span style="font-size: 16px;">' . $icon . '</span> ';
                     echo '<strong style="text-transform: uppercase; color: ' . esc_attr( $color ) . ';">' . esc_html( $issue['type'] ) . ':</strong> ';
                     echo esc_html( $issue['message'] );
@@ -226,6 +357,33 @@
                 }
                 
                 echo '</div>';
+                
+                if ( $warning_count > 0 ) {
+                    echo '</form>';
+                    
+                    // Add JavaScript for checkbox handling
+                    echo '<script>
+                    jQuery(document).ready(function($) {
+                        function updateDeleteButton() {
+                            var checked = $(".warning-checkbox:checked").length;
+                            $("#selected-count").text(checked > 0 ? "(" + checked + " valgt)" : "");
+                            $("#batch-delete-btn").prop("disabled", checked === 0);
+                        }
+                        
+                        $(".warning-checkbox").on("change", updateDeleteButton);
+                        
+                        $("#select-all-warnings").on("click", function() {
+                            $(".warning-checkbox").prop("checked", true);
+                            updateDeleteButton();
+                        });
+                        
+                        $("#deselect-all-warnings").on("click", function() {
+                            $(".warning-checkbox").prop("checked", false);
+                            updateDeleteButton();
+                        });
+                    });
+                    </script>';
+                }
             } else {
                 echo '<div class="notice notice-success inline" style="margin-top: 20px;"><p>✅ <strong>' . __( 'Ingen problemer fundet! Alle medlemskabsdata er konsistente med WooCommerce-ordrer.', 'membership-manager' ) . '</strong></p></div>';
             }
@@ -244,10 +402,16 @@
         <?php submit_button( __( 'Kør valideringstjek', 'membership-manager' ), 'secondary', 'submit', false ); ?>
     </form>
     
+    <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" style="display: inline-block; margin-left: 10px;" onsubmit="return confirm('<?php echo esc_js( __( 'Dette vil automatisk rette simple dataproblemer (manglende ordre-links). Vil du fortsætte?', 'membership-manager' ) ); ?>');">
+        <?php wp_nonce_field( 'fix_membership_data_nonce' ); ?>
+        <input type="hidden" name="action" value="fix_membership_data">
+        <?php submit_button( __( 'Ret dataproblemer', 'membership-manager' ), 'primary', 'submit', false ); ?>
+    </form>
+    
     <div class="notice notice-info inline" style="margin-top: 15px; max-width: 800px;">
         <p>
             <strong><?php _e( 'Note:', 'membership-manager' ); ?></strong>
-            <?php _e( 'This validation is read-only and will not modify any data. It only reports discrepancies for manual review.', 'membership-manager' ); ?>
+            <?php _e( 'Denne validering er skrivebeskyttet og vil ikke ændre nogen data. Den rapporterer kun uoverensstemmelser til manuel gennemgang.', 'membership-manager' ); ?>
         </p>
     </div>
 </div>
