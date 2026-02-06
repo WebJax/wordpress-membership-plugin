@@ -47,6 +47,8 @@ class Membership_Constants {
     
     // Default membership duration
     const DEFAULT_MEMBERSHIP_DURATION_YEARS = 1;
+    const DEFAULT_MEMBERSHIP_DURATION_MONTHS = 12;
+    const DEFAULT_MEMBERSHIP_DURATION_DAYS = 365;
     
     // Cron hook name
     const CRON_HOOK = 'membership_renewal_cron';
@@ -88,6 +90,8 @@ class Membership_Constants {
     const OPTION_ENABLE_WELCOME = 'membership_enable_welcome_email';
     const OPTION_WELCOME_SUBJECT = 'membership_welcome_subject';
     const OPTION_DB_VERSION = 'membership_manager_db_version';
+    const OPTION_DURATION_VALUE = 'membership_duration_value';
+    const OPTION_DURATION_UNIT = 'membership_duration_unit';
     
     /**
      * Get all valid statuses
@@ -134,5 +138,54 @@ class Membership_Constants {
      */
     public static function is_valid_renewal_type( $type ) {
         return in_array( $type, self::get_valid_renewal_types(), true );
+    }
+    
+    /**
+     * Get membership duration settings
+     * 
+     * @return array Array with 'value' and 'unit' keys
+     */
+    public static function get_membership_duration() {
+        $value = get_option( self::OPTION_DURATION_VALUE, self::DEFAULT_MEMBERSHIP_DURATION_YEARS );
+        $unit = get_option( self::OPTION_DURATION_UNIT, 'year' );
+        
+        return array(
+            'value' => (int) $value,
+            'unit' => $unit,
+        );
+    }
+    
+    /**
+     * Get valid duration units
+     * 
+     * @return array
+     */
+    public static function get_valid_duration_units() {
+        return array( 'day', 'week', 'month', 'year' );
+    }
+    
+    /**
+     * Apply membership duration to a DateTime object
+     * 
+     * @param DateTime $date The date to modify
+     * @return DateTime Modified date
+     */
+    public static function apply_membership_duration( $date ) {
+        $duration = self::get_membership_duration();
+        $value = $duration['value'];
+        $unit = $duration['unit'];
+        
+        // Ensure valid unit
+        if ( ! in_array( $unit, self::get_valid_duration_units(), true ) ) {
+            $unit = 'year';
+            $value = self::DEFAULT_MEMBERSHIP_DURATION_YEARS;
+        }
+        
+        // PHP's DateTime::modify() expects plural forms for values > 1
+        $unit_str = ( $value === 1 ) ? $unit : $unit . 's';
+        
+        $date->modify( "+{$value} {$unit_str}" );
+        
+        return $date;
     }
 }

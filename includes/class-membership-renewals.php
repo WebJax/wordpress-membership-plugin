@@ -14,11 +14,17 @@ class Membership_Renewals {
 
     /**
      * Create a WooCommerce renewal order for automatic renewal subscriptions
+     * Uses database transactions to ensure data consistency
+     * 
+     * Note: Requires InnoDB table engine for transaction support.
+     * MyISAM tables do not support transactions.
      * 
      * @param object $subscription The membership subscription object
      * @return int|false Order ID if successful, false on failure
      */
     public function create_renewal_order( $subscription ) {
+        global $wpdb;
+        
         // Check for staging mode
         if ( defined( 'MEMBERSHIP_STAGING_MODE' ) && MEMBERSHIP_STAGING_MODE ) {
             Membership_Manager::log( 
@@ -34,11 +40,53 @@ class Membership_Renewals {
         
         Membership_Manager::log( sprintf( __( 'Forsøger at oprette fornyelsesordre for abonnements-ID: %d (Bruger: %d)', 'membership-manager' ), $subscription->id, $subscription->user_id ) );
         
-        // Get automatic renewal products from settings
-        $automatic_products = get_option( 'membership_automatic_renewal_products', array() );
+        // Validate product availability before starting transaction
+        $product = $this->get_renewal_product();
+        if ( ! $product ) {
+            return false;
+        }
+        
+        // Start database transaction (requires InnoDB engine)
+        // Using standard SQL for broader database compatibility
+        $wpdb->query( 'START TRANSACTION' );
+        
+        try {
+            // Create the order
+            $order = $this->create_wc_order( $subscription, $product );
+            
+            if ( ! $order ) {
+                throw new Exception( __( 'Kunne ikke oprette WooCommerce ordre', 'membership-manager' ) );
+            }
+            
+            Membership_Manager::log( sprintf( __( 'Oprettede fornyelsesordre #%d for abonnements-ID: %d', 'membership-manager' ), $order->get_id(), $subscription->id ) );
+            
+            // Commit transaction before payment processing
+            $wpdb->query( 'COMMIT' );
+            
+            // Try to process payment automatically if payment method is available
+            // This is done after commit since payment processing is external
+            $this->process_automatic_payment( $order, $subscription );
+            
+            return $order->get_id();
+            
+        } catch ( Exception $e ) {
+            // Rollback transaction on any error
+            $wpdb->query( 'ROLLBACK' );
+            Membership_Manager::log( sprintf( __( 'Undtagelse ved oprettelse af fornyelsesordre: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
+            return false;
+        }
+    }
+    
+    /**
+     * Get the renewal product for order creation
+     * 
+     * @return WC_Product|false Product object or false if not found
+     */
+    private function get_renewal_product() {
+        $automatic_products = get_option( Membership_Constants::OPTION_AUTO_PRODUCTS, array() );
         
         if ( empty( $automatic_products ) ) {
-            Membership_Manager::log( sprintf( __( 'Ingen automatiske fornyelsesprodukter konfigureret. Kan ikke oprette fornyelsesordre for abonnements-ID: %d', 'membership-manager' ), $subscription->id ), 'ERROR' );
+            Membership_Manager::log( __( 'Ingen automatiske fornyelsesprodukter konfigureret.', 'membership-manager' ), 'ERROR' );
             return false;
         }
         
@@ -47,49 +95,48 @@ class Membership_Renewals {
         $product = wc_get_product( $product_id );
         
         if ( ! $product ) {
-            Membership_Manager::log( sprintf( __( 'Produkt-ID %d ikke fundet. Kan ikke oprette fornyelsesordre for abonnements-ID: %d', 'membership-manager' ), $product_id, $subscription->id ), 'ERROR' );
+            Membership_Manager::log( sprintf( __( 'Produkt-ID %d ikke fundet.', 'membership-manager' ), $product_id ), 'ERROR' );
             return false;
         }
         
-        try {
-            // Create a new order
-            $order = wc_create_order( array(
-                'customer_id' => $subscription->user_id,
-                'status' => 'pending',
-            ) );
-            
-            if ( is_wp_error( $order ) ) {
-                Membership_Manager::log( sprintf( __( 'Kunne ikke oprette ordre: %s', 'membership-manager' ), $order->get_error_message() ), 'ERROR' );
-                return false;
-            }
-            
-            // Add product to order
-            $order->add_product( $product, 1 );
-            
-            // Add order note
-            $order->add_order_note( sprintf( __( 'Automatisk fornyelsesordre for medlemskabsabonnement ID: %d', 'membership-manager' ), $subscription->id ) );
-            
-            // Add custom meta to link order to subscription
-            $order->update_meta_data( '_membership_subscription_id', $subscription->id );
-            $order->update_meta_data( '_is_membership_renewal', 'yes' );
-            
-            // Calculate totals
-            $order->calculate_totals();
-            
-            // Save order
-            $order->save();
-            
-            Membership_Manager::log( sprintf( __( 'Oprettede fornyelsesordre #%d for abonnements-ID: %d', 'membership-manager' ), $order->get_id(), $subscription->id ) );
-            
-            // Try to process payment automatically if payment method is available
-            $this->process_automatic_payment( $order, $subscription );
-            
-            return $order->get_id();
-            
-        } catch ( Exception $e ) {
-            Membership_Manager::log( sprintf( __( 'Undtagelse ved oprettelse af fornyelsesordre: %s', 'membership-manager' ), $e->getMessage() ), 'ERROR' );
+        return $product;
+    }
+    
+    /**
+     * Create a WooCommerce order for renewal
+     * 
+     * @param object $subscription The subscription object
+     * @param WC_Product $product The product to add to the order
+     * @return WC_Order|false Order object or false on failure
+     */
+    private function create_wc_order( $subscription, $product ) {
+        $order = wc_create_order( array(
+            'customer_id' => $subscription->user_id,
+            'status' => 'pending',
+        ) );
+        
+        if ( is_wp_error( $order ) ) {
+            Membership_Manager::log( sprintf( __( 'Kunne ikke oprette ordre: %s', 'membership-manager' ), $order->get_error_message() ), 'ERROR' );
             return false;
         }
+        
+        // Add product to order
+        $order->add_product( $product, 1 );
+        
+        // Add order note
+        $order->add_order_note( sprintf( __( 'Automatisk fornyelsesordre for medlemskabsabonnement ID: %d', 'membership-manager' ), $subscription->id ) );
+        
+        // Add custom meta to link order to subscription
+        $order->update_meta_data( Membership_Constants::ORDER_META_SUBSCRIPTION_ID, $subscription->id );
+        $order->update_meta_data( Membership_Constants::ORDER_META_IS_RENEWAL, 'yes' );
+        
+        // Calculate totals
+        $order->calculate_totals();
+        
+        // Save order
+        $order->save();
+        
+        return $order;
     }
     
     /**
@@ -99,52 +146,72 @@ class Membership_Renewals {
      * @param object $subscription The subscription object
      */
     private function process_automatic_payment( $order, $subscription ) {
-        // Check if customer has a saved payment method (for gateways that support it)
-        $payment_tokens = WC_Payment_Tokens::get_customer_tokens( $subscription->user_id );
+        // Get saved payment method
+        $payment_token = $this->get_customer_payment_token( $subscription->user_id );
         
-        if ( ! empty( $payment_tokens ) ) {
-            // Get the default payment token
-            $default_token = null;
-            foreach ( $payment_tokens as $token ) {
-                if ( $token->is_default() ) {
-                    $default_token = $token;
-                    break;
-                }
-            }
-            
-            if ( ! $default_token && ! empty( $payment_tokens ) ) {
-                // Use first available token if no default
-                $default_token = reset( $payment_tokens );
-            }
-            
-            if ( $default_token ) {
-                // Set payment method on order
-                $order->set_payment_method( $default_token->get_gateway_id() );
-                $order->add_payment_token( $default_token );
-                $order->save();
-                
-                Membership_Manager::log( sprintf( __( 'Payment method set for order #%d, attempting automatic payment', 'membership-manager' ), $order->get_id() ) );
-                
-                // Trigger payment processing
-                // Note: This will need the gateway to support automatic charges
-                do_action( 'membership_manager_process_renewal_payment', $order, $subscription );
-                
-                // Some gateways auto-process, try to complete if it was successful
-                if ( $order->needs_payment() ) {
-                    // Mark as pending payment
-                    $order->update_status( 'pending', __( 'Afventer automatisk betalingsbehandling.', 'membership-manager' ) );
-                    
-                    // Send email to customer about pending payment
-                    $this->send_payment_required_email( $order, $subscription );
-                }
-            } else {
-                Membership_Manager::log( sprintf( __( 'Intet betalingstoken fundet for bruger %d. Manuel betaling påkrævet for ordre #%d', 'membership-manager' ), $subscription->user_id, $order->get_id() ), 'WARNING' );
-                $this->handle_failed_automatic_renewal( $order, $subscription, 'no_payment_method' );
-            }
-        } else {
+        if ( ! $payment_token ) {
             Membership_Manager::log( sprintf( __( 'Ingen gemte betalingsmetoder for bruger %d. Manuel betaling påkrævet for ordre #%d', 'membership-manager' ), $subscription->user_id, $order->get_id() ), 'WARNING' );
             $this->handle_failed_automatic_renewal( $order, $subscription, 'no_payment_method' );
+            return;
         }
+        
+        // Set payment method on order
+        $this->set_order_payment_method( $order, $payment_token );
+        
+        Membership_Manager::log( sprintf( __( 'Payment method set for order #%d, attempting automatic payment', 'membership-manager' ), $order->get_id() ) );
+        
+        // Allow payment gateways to process the renewal payment
+        // Payment gateways should hook into this action to process the payment
+        do_action( Membership_Constants::HOOK_PROCESS_RENEWAL_PAYMENT, $order, $subscription );
+        
+        // Allow third-party gateways to implement custom payment processing
+        // Filter allows gateways to indicate if they've handled payment
+        $payment_processed = apply_filters( 'membership_manager_renewal_payment_processed', false, $order, $subscription, $payment_token );
+        
+        // Check if payment still needs to be completed
+        if ( $order->needs_payment() && ! $payment_processed ) {
+            // Mark as pending payment
+            $order->update_status( 'pending', __( 'Afventer automatisk betalingsbehandling.', 'membership-manager' ) );
+            
+            // Send email to customer about pending payment
+            $this->send_payment_required_email( $order, $subscription );
+        }
+    }
+    
+    /**
+     * Get the customer's preferred payment token
+     * 
+     * @param int $user_id The customer user ID
+     * @return WC_Payment_Token|false Payment token or false if not found
+     */
+    private function get_customer_payment_token( $user_id ) {
+        $payment_tokens = WC_Payment_Tokens::get_customer_tokens( $user_id );
+        
+        if ( empty( $payment_tokens ) ) {
+            return false;
+        }
+        
+        // Try to find default token
+        foreach ( $payment_tokens as $token ) {
+            if ( $token->is_default() ) {
+                return $token;
+            }
+        }
+        
+        // Use first available token if no default
+        return reset( $payment_tokens );
+    }
+    
+    /**
+     * Set payment method on order
+     * 
+     * @param WC_Order $order The order
+     * @param WC_Payment_Token $token The payment token
+     */
+    private function set_order_payment_method( $order, $token ) {
+        $order->set_payment_method( $token->get_gateway_id() );
+        $order->add_payment_token( $token );
+        $order->save();
     }
     
     /**
