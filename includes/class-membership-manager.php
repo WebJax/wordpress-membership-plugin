@@ -142,6 +142,15 @@ class Membership_Manager {
             'membership-migration',
             array( __CLASS__, 'render_migration_page' )
         );
+
+        add_submenu_page(
+            'membership-manager',
+            __( 'E-mail Kø', 'membership-manager' ),
+            __( 'E-mail Kø', 'membership-manager' ),
+            'manage_options',
+            'membership-email-queue',
+            array( __CLASS__, 'render_email_queue_page' )
+        );
     }
 
     public static function render_admin_page() {
@@ -160,6 +169,26 @@ class Membership_Manager {
 
     public static function render_migration_page() {
         include_once plugin_dir_path( __FILE__ ) . '../admin/views/migration-interface.php';
+    }
+
+    public static function render_email_queue_page() {
+        // Handle actions
+        if ( isset( $_POST['action'] ) && check_admin_referer( 'membership_email_queue_action' ) ) {
+            $action = sanitize_text_field( $_POST['action'] );
+            
+            if ( $action === 'clear_queue' ) {
+                Membership_Email_Queue::clear_queue();
+                echo '<div class="notice notice-success"><p>' . __( 'E-mail køen blev ryddet.', 'membership-manager' ) . '</p></div>';
+            } elseif ( $action === 'retry_failed' ) {
+                $count = Membership_Email_Queue::retry_failed();
+                echo '<div class="notice notice-success"><p>' . sprintf( __( '%d fejlede e-mails blev sat til retry.', 'membership-manager' ), $count ) . '</p></div>';
+            } elseif ( $action === 'process_now' ) {
+                Membership_Email_Queue::process_queue();
+                echo '<div class="notice notice-success"><p>' . __( 'E-mail køen blev behandlet.', 'membership-manager' ) . '</p></div>';
+            }
+        }
+        
+        include_once plugin_dir_path( __FILE__ ) . '../admin/views/email-queue-page.php';
     }
 
     public static function enqueue_admin_scripts( $hook ) {
