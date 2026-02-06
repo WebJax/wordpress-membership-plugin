@@ -16,6 +16,9 @@ class Membership_Renewals {
      * Create a WooCommerce renewal order for automatic renewal subscriptions
      * Uses database transactions to ensure data consistency
      * 
+     * Note: Requires InnoDB table engine for transaction support.
+     * MyISAM tables do not support transactions.
+     * 
      * @param object $subscription The membership subscription object
      * @return int|false Order ID if successful, false on failure
      */
@@ -43,7 +46,8 @@ class Membership_Renewals {
             return false;
         }
         
-        // Start database transaction
+        // Start database transaction (requires InnoDB engine)
+        // Using standard SQL for broader database compatibility
         $wpdb->query( 'START TRANSACTION' );
         
         try {

@@ -181,7 +181,10 @@ class Membership_Constants {
             $value = self::DEFAULT_MEMBERSHIP_DURATION_YEARS;
         }
         
-        $date->modify( "+{$value} {$unit}" );
+        // PHP's DateTime::modify() expects plural forms for values > 1
+        $unit_str = ( $value === 1 ) ? $unit : $unit . 's';
+        
+        $date->modify( "+{$value} {$unit_str}" );
         
         return $date;
     }
