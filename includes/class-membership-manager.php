@@ -530,10 +530,10 @@ class Membership_Manager {
 
                 // Handle missing or invalid end_date
                 if ( empty( $end_date ) || $end_date === '0000-00-00 00:00:00' ) {
-                    // If no end date, set it to one year from start date or current date
+                    // If no end date, set it based on configured duration from start date or current date
                     $start_datetime = !empty( $start_date ) ? new DateTime( $start_date ) : new DateTime();
                     $end_datetime = clone $start_datetime;
-                    $end_datetime->modify( '+1 year' );
+                    Membership_Constants::apply_membership_duration( $end_datetime );
                     $end_date = $end_datetime->format( 'Y-m-d H:i:s' );
                     
                     self::log( sprintf( __( 'Genererede slutdato for abonnement bruger-ID %d: %s', 'membership-manager' ), $user_id, $end_date ) );
@@ -795,7 +795,7 @@ class Membership_Manager {
                 $end_date = $now;
             }
 
-            $end_date->modify( '+1 year' );
+            Membership_Constants::apply_membership_duration( $end_date );
             
             $wpdb->update(
                 $table_name,
@@ -810,7 +810,7 @@ class Membership_Manager {
             // Create a new subscription
             $start_date = new DateTime();
             $end_date = new DateTime();
-            $end_date->modify( '+1 year' );
+            Membership_Constants::apply_membership_duration( $end_date );
             
             // Generate unique renewal token
             $renewal_token = self::generate_renewal_token();
@@ -1012,7 +1012,7 @@ class Membership_Manager {
                         continue;
                     }
                     
-                    // Generate a new end date based on start date + 1 year
+                    // Generate a new end date based on start date + configured duration
                     if ( !empty( $membership->start_date ) && $membership->start_date !== '0000-00-00 00:00:00' ) {
                         try {
                             $start_datetime = new \DateTime( $membership->start_date );
@@ -1025,7 +1025,7 @@ class Membership_Manager {
                     }
                         
                     $end_datetime = clone $start_datetime;
-                    $end_datetime->modify( '+1 year' );
+                    Membership_Constants::apply_membership_duration( $end_datetime );
                     
                     $result = $wpdb->update(
                         $table_name,
