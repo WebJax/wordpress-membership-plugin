@@ -27,6 +27,11 @@ class Membership_Email_Queue {
     const BATCH_SIZE = 10;
 
     /**
+     * Delay in seconds before immediate queue processing
+     */
+    const IMMEDIATE_PROCESS_DELAY = 60;
+
+    /**
      * Initialize the email queue
      */
     public static function init() {
@@ -93,7 +98,7 @@ class Membership_Email_Queue {
 
             // Schedule immediate processing if not already scheduled
             if ( ! wp_next_scheduled( 'membership_process_email_queue' ) ) {
-                wp_schedule_single_event( time() + 60, 'membership_process_email_queue' );
+                wp_schedule_single_event( time() + self::IMMEDIATE_PROCESS_DELAY, 'membership_process_email_queue' );
             }
 
             return true;
@@ -286,7 +291,7 @@ class Membership_Email_Queue {
             Membership_Manager::log( sprintf( __( 'Nulstillede %d fejlede e-mails til retry', 'membership-manager' ), $reset_count ) );
 
             // Schedule immediate processing
-            wp_schedule_single_event( time() + 60, 'membership_process_email_queue' );
+            wp_schedule_single_event( time() + self::IMMEDIATE_PROCESS_DELAY, 'membership_process_email_queue' );
         }
 
         return $reset_count;

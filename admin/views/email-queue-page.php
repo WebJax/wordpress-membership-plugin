@@ -112,7 +112,7 @@ usort( $queue, function( $a, $b ) {
                 <td>
                     <?php 
                     echo esc_html( 
-                        human_time_diff( $email['queued_at'], current_time( 'timestamp' ) ) 
+                        human_time_diff( $email['queued_at'], time() ) 
                     ) . ' ' . __( 'siden', 'membership-manager' ); 
                     ?>
                 </td>
@@ -120,7 +120,7 @@ usort( $queue, function( $a, $b ) {
                     <?php 
                     if ( $email['last_attempt'] > 0 ) {
                         echo esc_html( 
-                            human_time_diff( $email['last_attempt'], current_time( 'timestamp' ) ) 
+                            human_time_diff( $email['last_attempt'], time() ) 
                         ) . ' ' . __( 'siden', 'membership-manager' );
                     } else {
                         echo '—';

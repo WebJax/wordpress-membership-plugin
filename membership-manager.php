@@ -56,6 +56,7 @@ require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-test-too
 
 // Initialize the plugin.
 Membership_Manager::init();
+Membership_Email_Queue::init();
 Membership_Emails::init();
 new Membership_Admin();
 Membership_Shortcodes::init();

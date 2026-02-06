@@ -145,8 +145,8 @@ class Membership_Manager {
 
         add_submenu_page(
             'membership-manager',
-            __( 'E-mail Kø', 'membership-manager' ),
-            __( 'E-mail Kø', 'membership-manager' ),
+            __( 'Email Kø', 'membership-manager' ),
+            __( 'Email Kø', 'membership-manager' ),
             'manage_options',
             'membership-email-queue',
             array( __CLASS__, 'render_email_queue_page' )

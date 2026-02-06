@@ -10,8 +10,8 @@ class Membership_Emails {
      * Initialize email hooks
      */
     public static function init() {
-        // Initialize email queue
-        Membership_Email_Queue::init();
+        // Email queue is initialized separately in membership-manager.php
+        // This ensures proper initialization order
     }
 
     /**
