@@ -7,6 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Membership_Emails {
 
     /**
+     * Initialize email hooks
+     */
+    public static function init() {
+        // Email queue is initialized separately in membership-manager.php
+        // This ensures proper initialization order
+    }
+
+    /**
      * Send welcome email when membership is created
      * 
      * @param WP_User $user The user object
@@ -52,12 +60,16 @@ class Membership_Emails {
         
         $message .= __( 'Tak for at være medlem!\n', 'membership-manager' );
         
-        $result = self::send_email( $to, $subject, $message );
+        // Prepare headers
+        $headers = self::get_email_headers();
+        
+        // Enqueue email for async sending
+        $result = Membership_Email_Queue::enqueue( $to, $subject, $message, $headers, 'welcome' );
         
         if ( $result ) {
-            Membership_Manager::log( 'Sent welcome email to: ' . $to );
+            Membership_Manager::log( 'Queued welcome email to: ' . $to );
         } else {
-            Membership_Manager::log( 'Failed to send welcome email to: ' . $to, 'ERROR' );
+            Membership_Manager::log( 'Failed to queue welcome email to: ' . $to, 'ERROR' );
         }
         
         return $result;
@@ -91,8 +103,17 @@ class Membership_Emails {
         }
 
         if ( ! empty( $to ) && ! empty( $subject ) && ! empty( $message ) ) {
-            $this->send_email( $to, $subject, $message );
-            Membership_Manager::log( sprintf( __( 'Sendte automatisk fornyelsespåmindelse (%s) til: %s', 'membership-manager' ), $reminder_type, $to ) );
+            // Prepare headers
+            $headers = self::get_email_headers();
+            
+            // Enqueue email for async sending
+            $result = Membership_Email_Queue::enqueue( $to, $subject, $message, $headers, 'automatic_renewal_reminder_' . $reminder_type );
+            
+            if ( $result ) {
+                Membership_Manager::log( sprintf( __( 'Tilføjede automatisk fornyelsespåmindelse (%s) til kø for: %s', 'membership-manager' ), $reminder_type, $to ) );
+            } else {
+                Membership_Manager::log( sprintf( __( 'Kunne ikke tilføje automatisk fornyelsespåmindelse (%s) til kø for: %s', 'membership-manager' ), $reminder_type, $to ), 'ERROR' );
+            }
         } else {
             Membership_Manager::log( sprintf( __( 'Kunne ikke sende automatisk fornyelsespåmindelse (%s) til: %s. Mangler modtager, emne eller besked.', 'membership-manager' ), $reminder_type, $to ), 'WARNING' );
         }
@@ -129,8 +150,17 @@ class Membership_Emails {
         }
 
         if ( ! empty( $to ) && ! empty( $subject ) && ! empty( $message ) ) {
-            $this->send_email( $to, $subject, $message );
-            Membership_Manager::log( sprintf( __( 'Sendte manuel fornyelsespåmindelse (%s) til: %s', 'membership-manager' ), $reminder_type, $to ) );
+            // Prepare headers
+            $headers = self::get_email_headers();
+            
+            // Enqueue email for async sending
+            $result = Membership_Email_Queue::enqueue( $to, $subject, $message, $headers, 'manual_renewal_reminder_' . $reminder_type );
+            
+            if ( $result ) {
+                Membership_Manager::log( sprintf( __( 'Tilføjede manuel fornyelsespåmindelse (%s) til kø for: %s', 'membership-manager' ), $reminder_type, $to ) );
+            } else {
+                Membership_Manager::log( sprintf( __( 'Kunne ikke tilføje manuel fornyelsespåmindelse (%s) til kø for: %s', 'membership-manager' ), $reminder_type, $to ), 'ERROR' );
+            }
         } else {
             Membership_Manager::log( sprintf( __( 'Kunne ikke sende manuel fornyelsespåmindelse (%s) til: %s. Mangler modtager, emne eller besked.', 'membership-manager' ), $reminder_type, $to ), 'WARNING' );
         }
@@ -151,27 +181,36 @@ class Membership_Emails {
     }
 
     /**
-     * Send email with proper error handling
+     * Get email headers
+     * 
+     * @return array Email headers
+     */
+    private static function get_email_headers() {
+        $from_name = get_option( 'membership_email_from_name', get_bloginfo( 'name' ) );
+        $from_address = get_option( 'membership_email_from_address', get_option( 'admin_email' ) );
+        
+        // Validate from address
+        if ( ! is_email( $from_address ) ) {
+            $from_address = get_option( 'admin_email' );
+        }
+        
+        return array(
+            'Content-Type: text/html; charset=UTF-8',
+            'From: ' . sanitize_text_field( $from_name ) . ' <' . sanitize_email( $from_address ) . '>'
+        );
+    }
+
+    /**
+     * Send email with proper error handling (Legacy - kept for backward compatibility)
+     * Now uses the queue system by default
      * 
      * @param string $to Email recipient
      * @param string $subject Email subject
      * @param string $message Email message
-     * @return bool True if email sent successfully, false otherwise
+     * @param bool $immediate Set to true to send immediately without queuing (not recommended)
+     * @return bool True if email sent/queued successfully, false otherwise
      */
-    private function send_email( $to, $subject, $message ) {
-        // Check for staging mode
-        if ( defined( 'MEMBERSHIP_STAGING_MODE' ) && MEMBERSHIP_STAGING_MODE ) {
-            Membership_Manager::log( 
-                sprintf( 
-                    __( '[STAGING MODE] E-mail blokeret - Til: %s, Emne: %s', 'membership-manager' ), 
-                    $to, 
-                    $subject 
-                ), 
-                'INFO' 
-            );
-            return true; // Return true to prevent error logging
-        }
-        
+    private function send_email( $to, $subject, $message, $immediate = false ) {
         // Validate email address
         if ( ! is_email( $to ) ) {
             Membership_Manager::log( sprintf( __( 'Ugyldig e-mailadresse: %s', 'membership-manager' ), $to ), 'ERROR' );
@@ -184,25 +223,34 @@ class Membership_Emails {
             return false;
         }
         
-        $from_name = get_option( 'membership_email_from_name', get_bloginfo( 'name' ) );
-        $from_address = get_option( 'membership_email_from_address', get_option( 'admin_email' ) );
+        // Get headers
+        $headers = self::get_email_headers();
         
-        // Validate from address
-        if ( ! is_email( $from_address ) ) {
-            $from_address = get_option( 'admin_email' );
+        // If immediate sending is requested (not recommended), send directly
+        if ( $immediate ) {
+            // Check for staging mode
+            if ( defined( 'MEMBERSHIP_STAGING_MODE' ) && MEMBERSHIP_STAGING_MODE ) {
+                Membership_Manager::log( 
+                    sprintf( 
+                        __( '[STAGING MODE] E-mail blokeret - Til: %s, Emne: %s', 'membership-manager' ), 
+                        $to, 
+                        $subject 
+                    ), 
+                    'INFO' 
+                );
+                return true; // Return true to prevent error logging
+            }
+            
+            $sent = wp_mail( $to, $subject, $message, $headers );
+            
+            if ( ! $sent ) {
+                Membership_Manager::log( sprintf( __( 'Kunne ikke sende e-mail til: %s med emne: %s', 'membership-manager' ), $to, $subject ), 'ERROR' );
+            }
+            
+            return $sent;
         }
         
-        $headers = array(
-            'Content-Type: text/html; charset=UTF-8',
-            'From: ' . sanitize_text_field( $from_name ) . ' <' . sanitize_email( $from_address ) . '>'
-        );
-        
-        $sent = wp_mail( $to, $subject, $message, $headers );
-        
-        if ( ! $sent ) {
-            Membership_Manager::log( sprintf( __( 'Kunne ikke sende e-mail til: %s med emne: %s', 'membership-manager' ), $to, $subject ), 'ERROR' );
-        }
-        
-        return $sent;
+        // Use queue system by default (recommended)
+        return Membership_Email_Queue::enqueue( $to, $subject, $message, $headers, 'legacy' );
     }
 }

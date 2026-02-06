@@ -43,6 +43,7 @@ require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-constant
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-utils.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-security.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-manager.php';
+require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-email-queue.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-emails.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-renewals.php';
 require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-admin.php';
@@ -55,6 +56,8 @@ require_once MEMBERSHIP_MANAGER_PLUGIN_DIR . 'includes/class-membership-test-too
 
 // Initialize the plugin.
 Membership_Manager::init();
+Membership_Email_Queue::init();
+Membership_Emails::init();
 new Membership_Admin();
 Membership_Shortcodes::init();
 Membership_Roles::init();
@@ -76,3 +79,4 @@ if ( MEMBERSHIP_STAGING_MODE ) {
 // Activation hook.
 register_activation_hook( __FILE__, array( 'Membership_Manager', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'Membership_Manager', 'deactivate' ) );
+register_deactivation_hook( __FILE__, array( 'Membership_Email_Queue', 'deactivate' ) );
